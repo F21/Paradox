@@ -1,0 +1,49 @@
+{
+	"name" : "f21/paradox",
+	"description" : "Paradox is an elegant Object Document Mananger (ODM) to use with the ArangoDB Document/Graph database server.",
+	"type" : "library",
+	"authors" : [{
+			"name" : "Francis Chuang",
+			"email" : "francis.chuang@gmail.com",
+			"homepage" : "https://github.com/F21",
+			"role" : "Creator"
+		}
+	],
+	"keywords" : [
+		"ArangoDB",
+		"PHP",
+		"ODM",
+		"NoSQL",
+		"document store",
+		"graph",
+		"database"
+	],
+	"homepage" : "https://github.com/F21/Paradox",
+	"license" : [
+		"Apache-2.0"
+	],
+	"require" : {
+		"triagens/arangodb" : "1.2.3",
+		"php" : ">=5.4.0"
+	},
+	"require-dev" : {
+		"triagens/arangodb" : "devel-dev",
+		"php" : ">=5.4.0"
+	},
+	"autoload" : {
+		"psr-0" : {
+			"Paradox" : "Paradox/"
+		}
+	},
+	"support" : {
+		"source" : "https://github.com/F21/Paradox",
+		"issues" : "https://github.com/F21/Paradox/issues",
+		"wiki" : "https://github.com/F21/Paradox/wiki"
+	},
+	"repositories" : [{
+			"name" : "Paradox",
+			"type" : "vcs",
+			"url" : "https://github.com/triAGENS/ArangoDB-PHP"
+		}
+	]
+}
