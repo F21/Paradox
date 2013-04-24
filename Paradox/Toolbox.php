@@ -387,26 +387,27 @@ class Toolbox
 
         return array('collection' => $collection, 'key' => $key);
     }
-    
+
     /**
      * Sets the model formatter for this toolbox.
      * @param IModelFormatter $formatter The model formatter.
      */
-    public function setModelFormatter(IModelFormatter $formatter){
-    	$this->_formatter = $formatter;
+    public function setModelFormatter(IModelFormatter $formatter)
+    {
+        $this->_formatter = $formatter;
     }
-    
+
     /**
      * Normalises the exceptions thrown by ArangoDB-PHP.
-     * @param \Exception $exception
+     * @param  \Exception $exception
      * @return array
      */
-    public function normaliseDriverExceptions(\Exception $exception){
-    	
-    	if($exception instanceof \triagens\ArangoDb\ServerException){
-    		return array('message' => $exception->getServerMessage(), 'code' => $exception->getServerCode());
-    	}else{
-    		return array('message' => $exception->getMessage(), 'code' => $exception->getCode());
-    	}
+    public function normaliseDriverExceptions(\Exception $exception)
+    {
+        if ($exception instanceof \triagens\ArangoDb\ServerException) {
+            return array('message' => $exception->getServerMessage(), 'code' => $exception->getServerCode());
+        } else {
+            return array('message' => $exception->getMessage(), 'code' => $exception->getCode());
+        }
     }
 }

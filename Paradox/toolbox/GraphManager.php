@@ -38,7 +38,7 @@ class GraphManager
     /**
      * Create a graph using the current connection's settings and add it as a connection.
      * You do not need to set the vertex and edge collections. They are automatically named for you.
-     * @param  string          $name The name of the graph.
+     * @param  string                $name The name of the graph.
      * @throws GraphManagerException
      * @return boolean
      */
@@ -61,7 +61,7 @@ class GraphManager
 
     /**
      * Delete a graph.
-     * @param  string          $name The name of the graph.
+     * @param  string                $name The name of the graph.
      * @throws GraphManagerException
      */
     public function deleteGraph($name)

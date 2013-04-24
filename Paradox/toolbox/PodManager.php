@@ -1,7 +1,6 @@
 <?php
 namespace Paradox\toolbox;
 use Paradox\exceptions\PodManagerException;
-use Paradox\exceptions\PodException;
 use Paradox\Toolbox;
 use Paradox\pod\Document;
 use Paradox\pod\Vertex;
@@ -258,15 +257,15 @@ class PodManager extends AObservable
                 return $this->convertDriverDocumentToPod($document);
             }
         } catch (\Exception $e) {
-        	
-        	//Rethrow the exception from the try block
-        	if($e instanceof PodManagerException){
-        		throw $e;
-        	
-        	//Otherwise just return a null if the pod does not exist, or if there is an error.
-        	}else{
-        		return null;
-        	}
+
+            //Rethrow the exception from the try block
+            if ($e instanceof PodManagerException) {
+                throw $e;
+
+            //Otherwise just return a null if the pod does not exist, or if there is an error.
+            } else {
+                return null;
+            }
         }
 
     }

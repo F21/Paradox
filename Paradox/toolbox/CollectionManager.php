@@ -41,22 +41,23 @@ class CollectionManager
 
     /**
      * Create a collection.
-     * @param  string          $name The name of the collection.
+     * @param  string                     $name The name of the collection.
      * @throws CollectionManagerException
+     * @return string
      */
     public function createCollection($name)
     {
         try {
             return $this->_toolbox->getCollectionHandler()->create($name);
         } catch (\Exception $e) {
-        	$normalised = $this->_toolbox->normaliseDriverExceptions($e);
+            $normalised = $this->_toolbox->normaliseDriverExceptions($e);
             throw new CollectionManagerException($normalised['message'], $normalised['code']);
         }
     }
 
     /**
      * Delete a collection.
-     * @param  string          $name The name of the collection.
+     * @param  string                     $name The name of the collection.
      * @throws CollectionManagerException
      */
     public function deleteCollection($name)
@@ -71,8 +72,8 @@ class CollectionManager
 
     /**
      * Renames a collection.
-     * @param  string          $collection The collection we wish to rename.
-     * @param  string          $newName    The new name of the collection.
+     * @param  string                     $collection The collection we wish to rename.
+     * @param  string                     $newName    The new name of the collection.
      * @throws CollectionManagerException
      */
     public function renameCollection($collection, $newName)
@@ -87,7 +88,7 @@ class CollectionManager
 
     /**
      * Deletes all the documents inside the collection, but leaves the indexes and metadata intact.
-     * @param  string          $collection The name of the collection.
+     * @param  string                     $collection The name of the collection.
      * @throws CollectionManagerException
      */
     public function wipe($collection)
@@ -102,7 +103,7 @@ class CollectionManager
 
     /**
      * Get information about a collection.
-     * @param  string          $collection The name of the collection.
+     * @param  string                     $collection The name of the collection.
      * @throws CollectionManagerException
      * @return array
      */
@@ -133,7 +134,7 @@ class CollectionManager
 
     /**
      * Get statistics from a collection.
-     * @param  string          $collection The name of the collection.
+     * @param  string                     $collection The name of the collection.
      * @throws CollectionManagerException
      * @return array
      */
@@ -149,7 +150,7 @@ class CollectionManager
 
     /**
      * Counts the number of documents in a collection.
-     * @param  string          $collection The collection.
+     * @param  string                     $collection The collection.
      * @throws CollectionManagerException
      * @return integer
      */
@@ -165,8 +166,8 @@ class CollectionManager
 
     /**
      * List all the collections on the server.
-     * @param  boolean         $excludeSystem Whether we want to include system collections in the list or not.
-     * @param  boolean         $includeInfo   Whether we want to include information about each collection. If false, only a list of collection names will be returned.
+     * @param  boolean                    $excludeSystem Whether we want to include system collections in the list or not.
+     * @param  boolean                    $includeInfo   Whether we want to include information about each collection. If false, only a list of collection names will be returned.
      * @throws CollectionManagerException
      * @return array
      */
@@ -192,7 +193,7 @@ class CollectionManager
 
     /**
      * Load a collection on the server.
-     * @param  string          $collection The name of the collection.
+     * @param  string                     $collection The name of the collection.
      * @throws CollectionManagerException
      */
     public function loadCollection($collection)
@@ -207,7 +208,7 @@ class CollectionManager
 
     /**
      * Unload a collection on the server.
-     * @param  string          $collection The name of the collection.
+     * @param  string                     $collection The name of the collection.
      * @throws CollectionManagerException
      */
     public function unloadCollection($collection)

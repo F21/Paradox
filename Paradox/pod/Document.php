@@ -385,9 +385,9 @@ class Document implements IObserver
             }
         }
 
-		$this->setId($driverDocument->getInternalId());
-		$this->setRevision($driverDocument->getRevision());
-		$this->setSaved();
+        $this->setId($driverDocument->getInternalId());
+        $this->setRevision($driverDocument->getRevision());
+        $this->setSaved();
     }
 
     /**
