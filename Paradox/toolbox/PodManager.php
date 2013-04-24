@@ -47,7 +47,7 @@ class PodManager extends AObservable
      */
     public function dispense($type, $label = null)
     {
-        if ($label != null && (!$this->_toolbox->isGraph() || ($this->_toolbox->isGraph() && strtolower($type) != "edge"))) {
+        if ($label !== null && (!$this->_toolbox->isGraph() || ($this->_toolbox->isGraph() && strtolower($type) != "edge"))) {
             throw new PodManagerException("Only Edge pods can have a label passed into dispense().");
         }
 
@@ -102,11 +102,11 @@ class PodManager extends AObservable
 
                 case $pod instanceof Vertex:
                     if ($pod->isNew()) {
-                        $doc = $pod->toDriverVertex();
+                        $doc = $pod->toDriverDocument();
                         $driver->saveVertex($this->_toolbox->getGraph(), $doc);
                         $pod->setId($doc->getInternalId());
                     } else {
-                        $doc = $pod->toDriverVertex();
+                        $doc = $pod->toDriverDocument();
                         $driver->replaceVertex($this->_toolbox->getGraph(), $pod->getId(), $doc);
                     }
                     break;
@@ -132,7 +132,7 @@ class PodManager extends AObservable
 
                             //If there are no vertices, throw an error
                         } else {
-                            throw new PodException("An edge must have a valid 'from' vertex.");
+                            throw new PodManagerException("An edge must have a valid 'from' vertex.");
                         }
                     }
 
@@ -151,19 +151,19 @@ class PodManager extends AObservable
 
                             //If there are no vertices, throw an error
                         } else {
-                            throw new PodException("An edge must have a valid 'to' vertex.");
+                            throw new PodManagerException("An edge must have a valid 'to' vertex.");
                         }
                     }
 
                     if ($pod->isNew()) {
-                        $doc = $pod->toDriverEdge();
+                        $doc = $pod->toDriverDocument();
 
                         $driver->saveEdge($this->_toolbox->getGraph(), $fromKey, $toKey, null, $doc);
                         $pod->setId($doc->getInternalId());
                     } else {
                         //We delete the pod then save it, because ArangoDB does not provide a way to update the To and From vertices.
                         $this->delete($model);
-                        $doc = $pod->toDriverEdge();
+                        $doc = $pod->toDriverDocument();
                         $driver->saveEdge($this->_toolbox->getGraph(), $fromKey, $toKey, null, $doc);
                     }
                     break;
@@ -179,8 +179,9 @@ class PodManager extends AObservable
                     }
 
             }
-        } catch (\triagens\ArangoDb\ServerException $e) {
-            throw new PodManagerException($e->getServerMessage(), $e->getServerCode());
+        } catch (\Exception $e) {
+            $normalised = $this->_toolbox->normaliseDriverExceptions($e);
+            throw new PodManagerException($normalised['message'], $normalised['code']);
         }
 
         $pod->setSaved();
@@ -213,8 +214,9 @@ class PodManager extends AObservable
             } else {
                 $driver->delete($pod->toDriverDocument());
             }
-        } catch (\triagens\ArangoDb\ServerException $e) {
-            throw new PodManagerException($e->getServerMessage(), $e->getServerCode());
+        } catch (\Exception $e) {
+            $normalised = $this->_toolbox->normaliseDriverExceptions($e);
+            throw new PodManagerException($normalised['message'], $normalised['code']);
         }
 
         //Signal here
@@ -224,7 +226,7 @@ class PodManager extends AObservable
     }
 
     /**
-     * Loads a model from the server using the collection type and the id.
+     * Loads a model from the server using the collection type and the id. Returns null if the pod could not be found or loaded.
      * @param  string $collection The collection to load from. For graphs, this can only be "vertex" or "edge".
      * @param  string $id         The id (key in ArangoDB jargon) of the document, edge or vertex.
      * @return AModel
@@ -255,8 +257,16 @@ class PodManager extends AObservable
 
                 return $this->convertDriverDocumentToPod($document);
             }
-        } catch (\triagens\ArangoDb\ServerException $e) {
-            throw new PodManagerException($e->getServerMessage(), $e->getServerCode());
+        } catch (\Exception $e) {
+        	
+        	//Rethrow the exception from the try block
+        	if($e instanceof PodManagerException){
+        		throw $e;
+        	
+        	//Otherwise just return a null if the pod does not exist, or if there is an error.
+        	}else{
+        		return null;
+        	}
         }
 
     }
@@ -276,11 +286,7 @@ class PodManager extends AObservable
             if ($document instanceof \triagens\ArangoDb\Document) {
                 $model = $this->convertDriverDocumentToPod($document);
 
-                if ($document->getInternalId()) {
-                    $result[$document->getInternalId()] = $model;
-                } else {
-                    $result[] = $model;
-                }
+                $result[$document->getInternalId()] = $model;
 
             } else {
                 $model = $this->convertArrayToPod($type, $document);

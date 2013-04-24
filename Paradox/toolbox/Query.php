@@ -54,8 +54,9 @@ class Query
 
         try {
             $cursor = $statement->execute();
-        } catch (\triagens\ArangoDb\ServerException $e) {
-            throw new QueryException($e->getServerMessage(), $e->getServerCode());
+        } catch (\Exception $e) {
+            $normalised = $this->_toolbox->normaliseDriverExceptions($e);
+            throw new QueryException($normalised['message'], $normalised['code']);
         }
 
         $results = $cursor->getAll();
@@ -83,8 +84,9 @@ class Query
 
         try {
             $cursor = $statement->execute();
-        } catch (\triagens\ArangoDb\ServerException $e) {
-            throw new QueryException($e->getServerMessage(), $e->getServerCode());
+        } catch (\Exception $e) {
+            $normalised = $this->_toolbox->normaliseDriverExceptions($e);
+            throw new QueryException($normalised['message'], $normalised['code']);
         }
 
         if ($cursor->valid()) {
@@ -114,8 +116,9 @@ class Query
 
         try {
             return $statement->explain();
-        } catch (\triagens\ArangoDb\ServerException $e) {
-            throw new QueryException($e->getServerMessage(), $e->getServerCode());
+        } catch (\Exception $e) {
+            $normalised = $this->_toolbox->normaliseDriverExceptions($e);
+            throw new QueryException($normalised['message'], $normalised['code']);
         }
     }
 }

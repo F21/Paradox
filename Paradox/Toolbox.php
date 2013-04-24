@@ -387,4 +387,18 @@ class Toolbox
 
         return array('collection' => $collection, 'key' => $key);
     }
+    
+    /**
+     * Normalises the exceptions thrown by ArangoDB-PHP.
+     * @param \Exception $exception
+     * @return array
+     */
+    public function normaliseDriverExceptions(\Exception $exception){
+    	
+    	if($exception instanceof \triagens\ArangoDb\ServerException){
+    		return array('message' => $exception->getServerMessage(), 'code' => $exception->getServerCode());
+    	}else{
+    		return array('message' => $exception->getMessage(), 'code' => $exception->getCode());
+    	}
+    }
 }

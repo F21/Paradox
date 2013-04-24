@@ -186,7 +186,7 @@ class Edge extends Document
      * Returns an ArangoDB-PHP edge object representing this edge.
      * @return \triagens\ArangoDb\Edge
      */
-    public function toDriverEdge()
+    public function toDriverDocument()
     {
         $edge = new \triagens\ArangoDb\Edge;
 

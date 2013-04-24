@@ -42,28 +42,30 @@ class CollectionManager
     /**
      * Create a collection.
      * @param  string          $name The name of the collection.
-     * @throws ServerException
+     * @throws CollectionManagerException
      */
     public function createCollection($name)
     {
         try {
             return $this->_toolbox->getCollectionHandler()->create($name);
-        } catch (\triagens\ArangoDb\ServerException $e) {
-            throw new CollectionManagerException($e->getServerMessage(), $e->getServerCode());
+        } catch (\Exception $e) {
+        	$normalised = $this->_toolbox->normaliseDriverExceptions($e);
+            throw new CollectionManagerException($normalised['message'], $normalised['code']);
         }
     }
 
     /**
      * Delete a collection.
      * @param  string          $name The name of the collection.
-     * @throws ServerException
+     * @throws CollectionManagerException
      */
     public function deleteCollection($name)
     {
         try {
             return $this->_toolbox->getCollectionHandler()->delete($name);
-        } catch (\triagens\ArangoDb\ServerException $e) {
-            throw new CollectionManagerException($e->getServerMessage(), $e->getServerCode());
+        } catch (\Exception $e) {
+            $normalised = $this->_toolbox->normaliseDriverExceptions($e);
+            throw new CollectionManagerException($normalised['message'], $normalised['code']);
         }
     }
 
@@ -71,35 +73,37 @@ class CollectionManager
      * Renames a collection.
      * @param  string          $collection The collection we wish to rename.
      * @param  string          $newName    The new name of the collection.
-     * @throws ServerException
+     * @throws CollectionManagerException
      */
     public function renameCollection($collection, $newName)
     {
         try {
             return $this->_toolbox->getCollectionHandler()->rename($collection, $newName);
-        } catch (\triagens\ArangoDb\ServerException $e) {
-            throw new CollectionManagerException($e->getServerMessage(), $e->getServerCode());
+        } catch (\Exception $e) {
+            $normalised = $this->_toolbox->normaliseDriverExceptions($e);
+            throw new CollectionManagerException($normalised['message'], $normalised['code']);
         }
     }
 
     /**
      * Deletes all the documents inside the collection, but leaves the indexes and metadata intact.
      * @param  string          $collection The name of the collection.
-     * @throws ServerException
+     * @throws CollectionManagerException
      */
     public function wipe($collection)
     {
         try {
             return $this->_toolbox->getCollectionHandler()->truncate($collection);
-        } catch (\triagens\ArangoDb\ServerException $e) {
-            throw new CollectionManagerException($e->getServerMessage(), $e->getServerCode());
+        } catch (\Exception $e) {
+            $normalised = $this->_toolbox->normaliseDriverExceptions($e);
+            throw new CollectionManagerException($normalised['message'], $normalised['code']);
         }
     }
 
     /**
      * Get information about a collection.
      * @param  string          $collection The name of the collection.
-     * @throws ServerException
+     * @throws CollectionManagerException
      * @return array
      */
     public function getCollectionInfo($collection)
@@ -121,38 +125,41 @@ class CollectionManager
 
             return $result;
 
-        } catch (\triagens\ArangoDb\ServerException $e) {
-            throw new CollectionManagerException($e->getServerMessage(), $e->getServerCode());
+        } catch (\Exception $e) {
+            $normalised = $this->_toolbox->normaliseDriverExceptions($e);
+            throw new CollectionManagerException($normalised['message'], $normalised['code']);
         }
     }
 
     /**
      * Get statistics from a collection.
      * @param  string          $collection The name of the collection.
-     * @throws ServerException
+     * @throws CollectionManagerException
      * @return array
      */
     public function getCollectionStatistics($collection)
     {
         try {
             return $this->_toolbox->getCollectionHandler()->getFigures($collection);
-        } catch (\triagens\ArangoDb\ServerException $e) {
-            throw new CollectionManagerException($e->getServerMessage(), $e->getServerCode());
+        } catch (\Exception $e) {
+            $normalised = $this->_toolbox->normaliseDriverExceptions($e);
+            throw new CollectionManagerException($normalised['message'], $normalised['code']);
         }
     }
 
     /**
      * Counts the number of documents in a collection.
      * @param  string          $collection The collection.
-     * @throws ServerException
+     * @throws CollectionManagerException
      * @return integer
      */
     public function count($collection)
     {
         try {
             return $this->_toolbox->getCollectionHandler()->count($collection);
-        } catch (\triagens\ArangoDb\ServerException $e) {
-            throw new CollectionManagerException($e->getServerMessage(), $e->getServerCode());
+        } catch (\Exception $e) {
+            $normalised = $this->_toolbox->normaliseDriverExceptions($e);
+            throw new CollectionManagerException($normalised['message'], $normalised['code']);
         }
     }
 
@@ -160,7 +167,7 @@ class CollectionManager
      * List all the collections on the server.
      * @param  boolean         $excludeSystem Whether we want to include system collections in the list or not.
      * @param  boolean         $includeInfo   Whether we want to include information about each collection. If false, only a list of collection names will be returned.
-     * @throws ServerException
+     * @throws CollectionManagerException
      * @return array
      */
     public function listCollections($excludeSystem = true, $includeInfo = false)
@@ -177,36 +184,39 @@ class CollectionManager
             } else {
                 return $result;
             }
-        } catch (\triagens\ArangoDb\ServerException $e) {
-            throw new CollectionManagerException($e->getServerMessage(), $e->getServerCode());
+        } catch (\Exception $e) {
+            $normalised = $this->_toolbox->normaliseDriverExceptions($e);
+            throw new CollectionManagerException($normalised['message'], $normalised['code']);
         }
     }
 
     /**
      * Load a collection on the server.
      * @param  string          $collection The name of the collection.
-     * @throws ServerException
+     * @throws CollectionManagerException
      */
     public function loadCollection($collection)
     {
         try {
             return $this->_toolbox->getCollectionHandler()->load($collection);
-        } catch (\triagens\ArangoDb\ServerException $e) {
-            throw new CollectionManagerException($e->getServerMessage(), $e->getServerCode());
+        } catch (\Exception $e) {
+            $normalised = $this->_toolbox->normaliseDriverExceptions($e);
+            throw new CollectionManagerException($normalised['message'], $normalised['code']);
         }
     }
 
     /**
      * Unload a collection on the server.
      * @param  string          $collection The name of the collection.
-     * @throws ServerException
+     * @throws CollectionManagerException
      */
     public function unloadCollection($collection)
     {
         try {
             return $this->_toolbox->getCollectionHandler()->unload($collection);
-        } catch (\triagens\ArangoDb\ServerException $e) {
-            throw new CollectionManagerException($e->getServerMessage(), $e->getServerCode());
+        } catch (\Exception $e) {
+            $normalised = $this->_toolbox->normaliseDriverExceptions($e);
+            throw new CollectionManagerException($normalised['message'], $normalised['code']);
         }
     }
 
@@ -224,8 +234,9 @@ class CollectionManager
             $result = $this->_toolbox->getCollectionHandler()->createCapConstraint($collection, $size);
 
             return $result['id'];
-        } catch (\triagens\ArangoDb\ServerException $e) {
-            throw new CollectionManagerException($e->getServerMessage(), $e->getServerCode());
+        } catch (\Exception $e) {
+            $normalised = $this->_toolbox->normaliseDriverExceptions($e);
+            throw new CollectionManagerException($normalised['message'], $normalised['code']);
         }
     }
 
@@ -250,8 +261,9 @@ class CollectionManager
             $result = $this->_toolbox->getCollectionHandler()->createGeoIndex($collection, $fields, $geoJson, $constraint, $ignoreNull);
 
             return $result['id'];
-        } catch (\triagens\ArangoDb\ServerException $e) {
-            throw new CollectionManagerException($e->getServerMessage(), $e->getServerCode());
+        } catch (\Exception $e) {
+            $normalised = $this->_toolbox->normaliseDriverExceptions($e);
+            throw new CollectionManagerException($normalised['message'], $normalised['code']);
         }
     }
 
@@ -274,8 +286,9 @@ class CollectionManager
             $result = $this->_toolbox->getCollectionHandler()->createHashIndex($collection, $fields, $unique);
 
             return $result['id'];
-        } catch (\triagens\ArangoDb\ServerException $e) {
-            throw new CollectionManagerException($e->getServerMessage(), $e->getServerCode());
+        } catch (\Exception $e) {
+            $normalised = $this->_toolbox->normaliseDriverExceptions($e);
+            throw new CollectionManagerException($normalised['message'], $normalised['code']);
         }
     }
 
@@ -300,8 +313,9 @@ class CollectionManager
             $result = $this->_toolbox->getCollectionHandler()->createFulltextIndex($collection, $fields, $minLength);
 
             return $result['id'];
-        } catch (\triagens\ArangoDb\ServerException $e) {
-            throw new CollectionManagerException($e->getServerMessage(), $e->getServerCode());
+        } catch (\Exception $e) {
+            $normalised = $this->_toolbox->normaliseDriverExceptions($e);
+            throw new CollectionManagerException($normalised['message'], $normalised['code']);
         }
     }
 
@@ -324,8 +338,9 @@ class CollectionManager
             $result = $this->_toolbox->getCollectionHandler()->createSkipListIndex($collection, $fields, $unique);
 
             return $result['id'];
-        } catch (\triagens\ArangoDb\ServerException $e) {
-            throw new CollectionManagerException($e->getServerMessage(), $e->getServerCode());
+        } catch (\Exception $e) {
+            $normalised = $this->_toolbox->normaliseDriverExceptions($e);
+            throw new CollectionManagerException($normalised['message'], $normalised['code']);
         }
     }
 
@@ -345,8 +360,9 @@ class CollectionManager
             unset($this->_indexInfoCache[$collection]);
 
             return true;
-        } catch (\triagens\ArangoDb\ServerException $e) {
-            throw new CollectionManagerException($e->getServerMessage(), $e->getServerCode());
+        } catch (\Exception $e) {
+            $normalised = $this->_toolbox->normaliseDriverExceptions($e);
+            throw new CollectionManagerException($normalised['message'], $normalised['code']);
         }
     }
 
@@ -387,8 +403,9 @@ class CollectionManager
                 return array_keys($this->_indexInfoCache[$collection]);
             }
 
-        } catch (\triagens\ArangoDb\ServerException $e) {
-            throw new CollectionManagerException($e->getServerMessage(), $e->getServerCode());
+        } catch (\Exception $e) {
+            $normalised = $this->_toolbox->normaliseDriverExceptions($e);
+            throw new CollectionManagerException($normalised['message'], $normalised['code']);
         }
     }
 

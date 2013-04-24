@@ -39,7 +39,7 @@ class GraphManager
      * Create a graph using the current connection's settings and add it as a connection.
      * You do not need to set the vertex and edge collections. They are automatically named for you.
      * @param  string          $name The name of the graph.
-     * @throws ClientException
+     * @throws GraphManagerException
      * @return boolean
      */
     public function createGraph($name)
@@ -51,8 +51,9 @@ class GraphManager
         try {
             return $this->_toolbox->getGraphHandler()->createGraph($graph);
 
-        } catch (\triagens\ArangoDb\ServerException $e) {
-            throw new GraphManagerException($e->getServerMessage(), $e->getServerCode());
+        } catch (\Exception $e) {
+            $normalised = $this->_toolbox->normaliseDriverExceptions($e);
+            throw new GraphManagerException($normalised['message'], $normalised['code']);
         }
 
         return true;
@@ -61,7 +62,7 @@ class GraphManager
     /**
      * Delete a graph.
      * @param  string          $name The name of the graph.
-     * @throws ClientException
+     * @throws GraphManagerException
      */
     public function deleteGraph($name)
     {
@@ -69,8 +70,9 @@ class GraphManager
             $graphHandler = $this->_toolbox->getGraphHandler();
 
             return $graphHandler->dropGraph($name);
-        } catch (\triagens\ArangoDb\ServerException $e) {
-            throw new GraphManagerException($e->getServerMessage(), $e->getServerCode());
+        } catch (\Exception $e) {
+            $normalised = $this->_toolbox->normaliseDriverExceptions($e);
+            throw new GraphManagerException($normalised['message'], $normalised['code']);
         }
     }
 

@@ -99,7 +99,7 @@ class Client
      * @throws ClientException
      * @return Toolbox
      */
-    public function getToolbox($name)
+    public function getToolbox($name = 'default')
     {
         if (!array_key_exists($name, $this->_toolboxes)) {
             throw new ClientException("The toolbox for connection ($name) does not exist! Is the connection added to the client?");
@@ -125,7 +125,7 @@ class Client
      */
     public function dispense($collection, $label = null)
     {
-        return $this->getToolbox($this->_currentConnection)->getPodManager()->dispense($collection, $label = null);
+        return $this->getToolbox($this->_currentConnection)->getPodManager()->dispense($collection, $label);
     }
 
     /**

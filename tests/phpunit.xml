@@ -5,4 +5,11 @@
         <directory>.</directory>
     </testsuite>
   </testsuites>
+  
+  <filter>
+    <whitelist addUncoveredFilesFromWhitelist="true">
+      <directory suffix=".php">../Paradox</directory>
+    </whitelist>
+  </filter>
+
 </phpunit>

@@ -123,8 +123,9 @@ class Finder
 
             return reset($converted);
 
-        } catch (\triagens\ArangoDb\ServerException $e) {
-            throw new FinderException($e->getServerMessage(), $e->getServerCode());
+        } catch (\Exception $e) {
+            $normalised = $this->_toolbox->normaliseDriverExceptions($e);
+            throw new FinderException($normalised['message'], $normalised['code']);
         }
     }
 

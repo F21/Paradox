@@ -1,45 +1,18 @@
 <?php
 /**
- * ArangoDB PHP client testsuite
- * File: bootstrap.php
+ * Test suite for Paradox.
  *
- * @package ArangoDbPhpClient
- * @author Frank Mayer
+ * @author Francis Chuang <francis.chuang@gmail.com>
+ * @link https://github.com/F21/Paradox
+ * @license http://www.apache.org/licenses/LICENSE-2.0.html Apache 2 License
  */
 
-namespace triagens\ArangoDb;
+//Setup the autoloader
+require_once __DIR__ . "/../Paradox/Autoloader.php";
+Paradox\Autoloader::init();
 
+//Set up the autoloader for vendors
+require_once __DIR__ . "/../vendor/autoload.php";
 
-require dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'autoload.php';
-
-/* set up a trace function that will be called for each communication with the server */
-
-
-function getConnectionOptions()
-{
-    $traceFunc = function($type, $data) {
-        print "TRACE FOR ". $type . PHP_EOL;
-    };
-
-    return array(
-        ConnectionOptions::OPTION_ENDPOINT        => 'tcp://localhost:8529/', // endpoint to connect to
-        ConnectionOptions::OPTION_CONNECTION      => 'Close',                 // can use either 'Close' (one-time connections) or 'Keep-Alive' (re-used connections)
-        ConnectionOptions::OPTION_AUTH_TYPE       => 'Basic',                 // use basic authorization
-        /*
-        ConnectionOptions::OPTION_AUTH_USER       => '',                      // user for basic authorization
-        ConnectionOptions::OPTION_AUTH_PASSWD     => '',                      // password for basic authorization
-        ConnectionOptions::OPTION_PORT            => 8529,                    // port to connect to (deprecated, should use endpoint instead)
-        ConnectionOptions::OPTION_HOST            => "localhost",             // host to connect to (deprecated, should use endpoint instead)
-        */
-        ConnectionOptions::OPTION_TIMEOUT         => 5,                       // timeout in seconds
-        //ConnectionOptions::OPTION_TRACE           => $traceFunc,              // tracer function, can be used for debugging
-        ConnectionOptions::OPTION_CREATE          => false,                   // do not create unknown collections automatically
-        ConnectionOptions::OPTION_UPDATE_POLICY   => UpdatePolicy::LAST,      // last update wins
-    );
-}
-
-
-function getConnection()
-{
-    return new Connection(getConnectionOptions());
-}
+//Require the base
+require_once __dir__ . "/Base.php";

@@ -44,6 +44,8 @@ class Autoloader
         $className = str_replace(__NAMESPACE__, '', $className);
         $className = str_replace("\\", DIRECTORY_SEPARATOR, $className);
 
-        require_once self::$dirRoot . $className . self::EXTENSION;
+        if(file_exists(self::$dirRoot . $className . self::EXTENSION)){
+        	require_once self::$dirRoot . $className . self::EXTENSION;
+        }
     }
 }

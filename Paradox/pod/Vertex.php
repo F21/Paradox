@@ -105,7 +105,7 @@ class Vertex extends Document
      * Returns an ArangoDB-PHP vertex object representing this vertex.
      * @return \triagens\ArangoDb\Vertex
      */
-    public function toDriverVertex()
+    public function toDriverDocument()
     {
         $vertex = new \triagens\ArangoDb\Vertex;
 

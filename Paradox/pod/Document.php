@@ -376,7 +376,7 @@ class Document implements IObserver
      */
     public function loadFromDriver(\triagens\ArangoDb\Document $driverDocument)
     {
-        $values = $driverDocument->getAll(array('_includeInternals' => true));
+        $values = $driverDocument->getAll();
 
         foreach ($values as $key => $value) {
 
@@ -385,9 +385,9 @@ class Document implements IObserver
             }
         }
 
-        $this->setId($driverDocument->getInternalId());
-        $this->setRevision($driverDocument->getRevision());
-        $this->setSaved();
+		$this->setId($driverDocument->getInternalId());
+		$this->setRevision($driverDocument->getRevision());
+		$this->setSaved();
     }
 
     /**

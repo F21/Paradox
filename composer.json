@@ -23,7 +23,7 @@
 		"Apache-2.0"
 	],
 	"require" : {
-		"triagens/arangodb" : "1.2.3",
+		"triagens/arangodb" : "devel-dev",
 		"php" : ">=5.4.0"
 	},
 	"require-dev" : {
