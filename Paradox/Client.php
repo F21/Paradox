@@ -115,6 +115,10 @@ class Client
     public function setModelFormatter(IModelFormatter $formatter)
     {
         $this->_modelFormatter = $formatter;
+        
+        foreach ($this->_toolboxes as $toolbox) {
+        	$toolbox->setModelFormatter($formatter);
+        }
     }
 
     /**

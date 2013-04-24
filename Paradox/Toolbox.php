@@ -389,6 +389,14 @@ class Toolbox
     }
     
     /**
+     * Sets the model formatter for this toolbox.
+     * @param IModelFormatter $formatter The model formatter.
+     */
+    public function setModelFormatter(IModelFormatter $formatter){
+    	$this->_formatter = $formatter;
+    }
+    
+    /**
      * Normalises the exceptions thrown by ArangoDB-PHP.
      * @param \Exception $exception
      * @return array
