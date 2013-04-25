@@ -44,19 +44,16 @@ class GraphManager
      */
     public function createGraph($name)
     {
-        $graph = new \triagens\ArangoDb\Graph($name);
-        $graph->setVerticesCollection($name . 'VertexCollection');
-        $graph->setEdgesCollection($name . 'EdgeCollection');
-
         try {
+        	$graph = new \triagens\ArangoDb\Graph($name);
+        	$graph->setVerticesCollection($name . 'VertexCollection');
+        	$graph->setEdgesCollection($name . 'EdgeCollection');
             return $this->_toolbox->getGraphHandler()->createGraph($graph);
 
         } catch (\Exception $e) {
             $normalised = $this->_toolbox->normaliseDriverExceptions($e);
             throw new GraphManagerException($normalised['message'], $normalised['code']);
         }
-
-        return true;
     }
 
     /**
