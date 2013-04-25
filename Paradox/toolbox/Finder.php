@@ -50,7 +50,11 @@ class Finder
 
         $params['@collection'] = $this->getCollectionName($type);
 
-        $result = $this->_toolbox->getQuery()->getAll($query, $params);
+        try {
+            $result = $this->_toolbox->getQuery()->getAll($query, $params);
+        } catch (\Exception $e) {
+            throw new FinderException($e->getMessage(), $e->getCode());
+        }
 
         if (empty($result)) {
             return array();
@@ -74,7 +78,11 @@ class Finder
 
         $params['@collection'] = $this->getCollectionName($type);
 
-        $result = $this->_toolbox->getQuery()->getAll($query, $params);
+        try {
+            $result = $this->_toolbox->getQuery()->getAll($query, $params);
+        } catch (\Exception $e) {
+            throw new FinderException($e->getMessage(), $e->getCode());
+        }
 
         if (empty($result)) {
             return array();
@@ -98,7 +106,11 @@ class Finder
 
         $params['@collection'] = $this->getCollectionName($type);
 
-        $result = $this->_toolbox->getQuery()->getOne($query, $params);
+        try {
+            $result = $this->_toolbox->getQuery()->getOne($query, $params);
+        } catch (\Exception $e) {
+            throw new FinderException($e->getMessage(), $e->getCode());
+        }
 
         if (!$result) {
             return null;
@@ -166,7 +178,11 @@ class Finder
         $params['longitude'] = $coordinates['longitude'];
         $params['limit'] = $limit;
 
-        $result = $this->_toolbox->getQuery()->getAll($query, $params);
+        try {
+            $result = $this->_toolbox->getQuery()->getAll($query, $params);
+        } catch (\Exception $e) {
+            throw new FinderException($e->getMessage(), $e->getCode());
+        }
 
         if (empty($result)) {
             return array();
@@ -213,7 +229,11 @@ class Finder
         $params['longitude'] = $coordinates['longitude'];
         $params['limit'] = $limit;
 
-        $result = $this->_toolbox->getQuery()->getAll($query, $params);
+        try {
+            $result = $this->_toolbox->getQuery()->getAll($query, $params);
+        } catch (\Exception $e) {
+            throw new FinderException($e->getMessage(), $e->getCode());
+        }
 
         if (empty($result)) {
             return array();
@@ -258,7 +278,11 @@ class Finder
         $params['latitude'] = $coordinates['latitude'];
         $params['longitude'] = $coordinates['longitude'];
 
-        $result = $this->_toolbox->getQuery()->getOne($query, $params);
+        try {
+            $result = $this->_toolbox->getQuery()->getOne($query, $params);
+        } catch (\Exception $e) {
+            throw new FinderException($e->getMessage(), $e->getCode());
+        }
 
         if (!$result) {
             return null;
@@ -304,7 +328,11 @@ class Finder
         $params['longitude'] = $coordinates['longitude'];
         $params['radius'] = $radius;
 
-        $result = $this->_toolbox->getQuery()->getAll($query, $params);
+        try {
+            $result = $this->_toolbox->getQuery()->getAll($query, $params);
+        } catch (\Exception $e) {
+            throw new FinderException($e->getMessage(), $e->getCode());
+        }
 
         if (empty($result)) {
             return array();
@@ -348,7 +376,11 @@ class Finder
         $params['longitude'] = $coordinates['longitude'];
         $params['radius'] = $radius;
 
-        $result = $this->_toolbox->getQuery()->getAll($query, $params);
+        try {
+            $result = $this->_toolbox->getQuery()->getAll($query, $params);
+        } catch (\Exception $e) {
+            throw new FinderException($e->getMessage(), $e->getCode());
+        }
 
         if (empty($result)) {
             return array();
@@ -392,7 +424,11 @@ class Finder
         $params['longitude'] = $coordinates['longitude'];
         $params['radius'] = $radius;
 
-        $result = $this->_toolbox->getQuery()->getOne($query, $params);
+        try {
+            $result = $this->_toolbox->getQuery()->getOne($query, $params);
+        } catch (\Exception $e) {
+            throw new FinderException($e->getMessage(), $e->getCode());
+        }
 
         if (!$result) {
             return null;
@@ -422,7 +458,12 @@ class Finder
         $params['attribute'] = $attribute;
         $params['query'] = $query;
 
-        $result = $this->_toolbox->getQuery()->getAll($aqlStatement, $params);
+        try {
+            $result = $this->_toolbox->getQuery()->getAll($aqlStatement, $params);
+        } catch (\Exception $e) {
+            throw new FinderException($e->getMessage(), $e->getCode());
+
+        }
 
         if (empty($result)) {
             return array();
@@ -450,7 +491,11 @@ class Finder
         $params['attribute'] = $attribute;
         $params['query'] = $query;
 
-        $result = $this->_toolbox->getQuery()->getAll($aqlStatement, $params);
+        try {
+            $result = $this->_toolbox->getQuery()->getAll($aqlStatement, $params);
+        } catch (\Exception $e) {
+            throw new FinderException($e->getMessage(), $e->getCode());
+        }
 
         if (empty($result)) {
             return array();
@@ -478,7 +523,11 @@ class Finder
         $params['attribute'] = $attribute;
         $params['query'] = $query;
 
-        $result = $this->_toolbox->getQuery()->getOne($aqlStatement, $params);
+        try {
+            $result = $this->_toolbox->getQuery()->getOne($aqlStatement, $params);
+        } catch (\Exception $e) {
+            throw new FinderException($e->getMessage(), $e->getCode());
+        }
 
         if (!$result) {
             return null;
