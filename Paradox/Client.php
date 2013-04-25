@@ -423,9 +423,9 @@ class Client
      * @link http://www.arangodb.org/manuals/current/IndexFulltextHttp.html
      * @return int Id of the index created.
      */
-    public function createFulltextIndex($collection, $fields, $minLength = null)
+    public function createFulltextIndex($collection, $field, $minLength = null)
     {
-        return $this->getToolbox($this->_currentConnection)->getCollectionManager()->createFulltextIndex($collection, $fields, $minLength);
+        return $this->getToolbox($this->_currentConnection)->getCollectionManager()->createFulltextIndex($collection, $field, $minLength);
     }
 
     /**

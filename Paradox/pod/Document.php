@@ -376,7 +376,7 @@ class Document implements IObserver
      */
     public function loadFromDriver(\triagens\ArangoDb\Document $driverDocument)
     {
-        $values = $driverDocument->getAll();
+        $values = $driverDocument->getAll(array('_includeInternals' => true));
 
         foreach ($values as $key => $value) {
 

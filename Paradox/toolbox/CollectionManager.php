@@ -234,7 +234,7 @@ class CollectionManager
         try {
             $result = $this->_toolbox->getCollectionHandler()->createCapConstraint($collection, $size);
 
-            return $result['id'];
+            return $this->_toolbox->parseIdForKey($result['id']);
         } catch (\Exception $e) {
             $normalised = $this->_toolbox->normaliseDriverExceptions($e);
             throw new CollectionManagerException($normalised['message'], $normalised['code']);
@@ -261,7 +261,7 @@ class CollectionManager
         try {
             $result = $this->_toolbox->getCollectionHandler()->createGeoIndex($collection, $fields, $geoJson, $constraint, $ignoreNull);
 
-            return $result['id'];
+            return $this->_toolbox->parseIdForKey($result['id']);
         } catch (\Exception $e) {
             $normalised = $this->_toolbox->normaliseDriverExceptions($e);
             throw new CollectionManagerException($normalised['message'], $normalised['code']);
@@ -286,7 +286,7 @@ class CollectionManager
         try {
             $result = $this->_toolbox->getCollectionHandler()->createHashIndex($collection, $fields, $unique);
 
-            return $result['id'];
+            return $this->_toolbox->parseIdForKey($result['id']);
         } catch (\Exception $e) {
             $normalised = $this->_toolbox->normaliseDriverExceptions($e);
             throw new CollectionManagerException($normalised['message'], $normalised['code']);
@@ -302,18 +302,18 @@ class CollectionManager
      * @throws CollectionManagerException
      * @return int                        Id of the index created.
      */
-    public function createFulltextIndex($collection, $fields, $minLength = null)
+    public function createFulltextIndex($collection, $field, $minLength = null)
     {
-        if (!is_string($fields)) {
+        if (!is_string($field)) {
             throw new CollectionManagerException("Fulltext indices can currently only index one field.");
         }
 
-        $fields = array($fields);
+        $field = array($field);
 
         try {
-            $result = $this->_toolbox->getCollectionHandler()->createFulltextIndex($collection, $fields, $minLength);
+            $result = $this->_toolbox->getCollectionHandler()->createFulltextIndex($collection, $field, $minLength);
 
-            return $result['id'];
+            return $this->_toolbox->parseIdForKey($result['id']);
         } catch (\Exception $e) {
             $normalised = $this->_toolbox->normaliseDriverExceptions($e);
             throw new CollectionManagerException($normalised['message'], $normalised['code']);
@@ -338,7 +338,7 @@ class CollectionManager
         try {
             $result = $this->_toolbox->getCollectionHandler()->createSkipListIndex($collection, $fields, $unique);
 
-            return $result['id'];
+            return $this->_toolbox->parseIdForKey($result['id']);
         } catch (\Exception $e) {
             $normalised = $this->_toolbox->normaliseDriverExceptions($e);
             throw new CollectionManagerException($normalised['message'], $normalised['code']);
@@ -375,7 +375,7 @@ class CollectionManager
      */
     public function getIndexInfo($collection, $indexId)
     {
-        $result = $this->listIndices($collection);
+        $result = $this->listIndices($collection, true);
 
         return isset($result[$collection . '/' . $indexId]) ? $result[$collection . '/' . $indexId] : null;
     }
