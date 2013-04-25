@@ -269,7 +269,7 @@ class Document implements IObserver
         } else {
             $info = $this->_toolbox->parseId($this->_referencePodId);
 
-            return $this->_toolbox->getPodManager()->load($info['collection'], $info['id']);
+            return $this->_toolbox->getPodManager()->load($info['collection'], $info['key']);
         }
     }
 
@@ -282,20 +282,20 @@ class Document implements IObserver
         $fields = $this->_toolbox->getCollectionManager()->getGeoFieldsForAQL($this->getType());
 
         //A geo1 index (field is an array with the coordinates).
-        if($fields){
-        	if (count($fields) == 1) {
-        	
-        		$field = $this->get($fields[0]);
-        	
-        		return array('latitude' => $field[0], 'longitude' => $field[1]);
-        	
-        		//A geo2 index (2 fields each representing latitue and longitude).
-        	} else {
-        		$latitude = $this->get($fields[0]);
-        		$longitude = $this->get($fields[1]);
-        	
-        		return array('latitude' => $latitude, 'longitude' => $longitude);
-        	}
+        if ($fields) {
+            if (count($fields) == 1) {
+
+                $field = $this->get($fields[0]);
+
+                return array('latitude' => $field[0], 'longitude' => $field[1]);
+
+                //A geo2 index (2 fields each representing latitue and longitude).
+            } else {
+                $latitude = $this->get($fields[0]);
+                $longitude = $this->get($fields[1]);
+
+                return array('latitude' => $latitude, 'longitude' => $longitude);
+            }
         }
 
         return null;
