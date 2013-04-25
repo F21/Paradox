@@ -131,11 +131,11 @@ class Finder
     {
         try {
             $result = $this->_toolbox->getCollectionHandler()->any($type);
-            
-            if(!$result){
-            	return null;
+
+            if (!$result) {
+                return null;
             }
-            
+
             $converted = $this->convertToPods($type, array($result));
 
             return reset($converted);
