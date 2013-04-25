@@ -132,7 +132,7 @@ class Finder
         try {
             $result = $this->_toolbox->getCollectionHandler()->any($type);
             
-            if(!result){
+            if(!$result){
             	return null;
             }
             
