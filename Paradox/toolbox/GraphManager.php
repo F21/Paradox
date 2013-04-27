@@ -220,7 +220,7 @@ class GraphManager
         if ($model instanceof AModel) {
             return $model->getPod()->getId();
         } elseif ($model instanceof Document) {
-            return $model->getId();
+            return $model->getPod()->getId();
         } elseif (is_string($model)) {
             return $model;
         } else {
