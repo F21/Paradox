@@ -1,6 +1,7 @@
 <?php
 namespace Paradox;
 use Paradox\pod\Document;
+use Paradox\exceptions\ModelException;
 
 /**
  * Paradox is an elegant Object Document Mananger (ODM) to use with the ArangoDB Document/Graph database server.
@@ -31,6 +32,10 @@ abstract class AModel
      */
     public function loadPod(Document $pod)
     {
+        if ($this->_pod) {
+            throw new ModelException("You cannot change the pod for this model as things can break and lead to unexpected results.");
+        }
+
         $this->_pod = $pod;
     }
 
