@@ -1,6 +1,6 @@
 <?php
 namespace Paradox;
-use exceptions\ObservableException;
+use Paradox\exceptions\ObservableException;
 
 /**
  * Paradox is an elegant Object Document Mananger (ODM) to use with the ArangoDB Document/Graph database server.
