@@ -233,7 +233,7 @@ class GraphManager
      * Function to generate the array of filters that will be sent to the server.
      * @param string       $direction  The direction we wish to filter: "any", "in", "out".
      * @param array|string $label      A string representing one label or an array of labels we want the inbound edges to have.
-     * @param string       $properties An array of property filters. Each filter is an associative array with the following properties:
+     * @param array       $properties An array of property filters. Each filter is an associative array with the following properties:
      *                                     'key' - Filter the result vertices by a key value pair.
      *                                     'value' -  The value of the key.
      *                                     'compare' - A comparison operator. (==, >, <, >=, <= )
