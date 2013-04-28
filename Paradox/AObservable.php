@@ -35,7 +35,7 @@ abstract class AObservable
             foreach ($events as $event) {
                 $this->doAttach($event, $observer);
             }
-        } elseif (is_string($event)) {
+        } elseif (is_string($events)) {
             $this->doAttach($events, $observer);
         } else {
             throw new ObservableException("Event can only be a string containing the name of the event or an array of event names.");
