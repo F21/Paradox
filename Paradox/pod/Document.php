@@ -391,6 +391,34 @@ class Document implements IObserver
         $this->setRevision($driverDocument->getRevision());
         $this->setSaved();
     }
+    
+    /**
+     * Load this pod with document data from an array.
+     * @param array $data
+     */
+    public function loadFromArray($data)
+    {
+    	foreach ($data as $property => $value) {
+    
+    		switch ($property) {
+
+                case "_id":
+                    $this->setId($value);
+                    break;
+
+                case "_key":
+                    break;
+
+                case "_rev":
+                    $this->setRevision($value);
+                    break;
+
+                default:
+                    $this->_data[$property] = $value;
+                    break;
+    		}
+    	}
+    }
 
     /**
      * Set the model for this pod. This can only be set once, as changing the model can cause unexpected results.

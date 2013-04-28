@@ -312,26 +312,7 @@ class PodManager extends AObservable
         $model = $this->dispense($type);
         $pod = $model->getPod();
 
-        foreach ($data as $property => $value) {
-
-            switch ($property) {
-
-                case "_id":
-                    $pod->setId($value);
-                    break;
-
-                case "_key":
-                    break;
-
-                case "_rev":
-                    $pod->setRevision($value);
-                    break;
-
-                default:
-                    $pod->set($property, $value);
-                    break;
-            }
-        }
+        $pod->loadFromArray($data);
 
         //Signal here
         $this->notify("after_open", $model->getPod());
