@@ -188,7 +188,7 @@ class GraphManager
      */
     public function getNeighbours($model, $direction = "both", $label = null, array $properties = null)
     {
-           $id = $this->getVertexId($model);
+        $id = $this->getVertexId($model);
 
         if (!$id) {
             return array();
@@ -220,7 +220,7 @@ class GraphManager
         if ($model instanceof AModel) {
             return $model->getPod()->getId();
         } elseif ($model instanceof Document) {
-            return $model->getPod()->getId();
+            return $model->getId();
         } elseif (is_string($model)) {
             return $model;
         } else {
