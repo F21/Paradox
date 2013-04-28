@@ -105,7 +105,7 @@ class Query
      * @throws QueryException
      * @return array
      */
-    public function explain($query, $parameters)
+    public function explain($query, array $parameters = array())
     {
         $data = array(
                 'query' => $query,
@@ -115,7 +115,8 @@ class Query
         $statement = new Statement($this->_toolbox->getConnection(), $data);
 
         try {
-            return $statement->explain();
+            $result = $statement->explain();
+            return $result['plan'];
         } catch (\Exception $e) {
             $normalised = $this->_toolbox->normaliseDriverExceptions($e);
             throw new QueryException($normalised['message'], $normalised['code']);
