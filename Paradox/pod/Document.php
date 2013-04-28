@@ -391,16 +391,16 @@ class Document implements IObserver
         $this->setRevision($driverDocument->getRevision());
         $this->setSaved();
     }
-    
+
     /**
      * Load this pod with document data from an array.
      * @param array $data
      */
     public function loadFromArray($data)
     {
-    	foreach ($data as $property => $value) {
-    
-    		switch ($property) {
+        foreach ($data as $property => $value) {
+
+            switch ($property) {
 
                 case "_id":
                     $this->setId($value);
@@ -416,8 +416,8 @@ class Document implements IObserver
                 default:
                     $this->_data[$property] = $value;
                     break;
-    		}
-    	}
+            }
+        }
     }
 
     /**

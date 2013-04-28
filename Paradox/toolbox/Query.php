@@ -116,6 +116,7 @@ class Query
 
         try {
             $result = $statement->explain();
+
             return $result['plan'];
         } catch (\Exception $e) {
             $normalised = $this->_toolbox->normaliseDriverExceptions($e);
