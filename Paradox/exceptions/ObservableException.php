@@ -1,5 +1,5 @@
 <?php
-namespace exceptions;
+namespace Paradox\exceptions;
 
 /**
  * Paradox is an elegant Object Document Mananger (ODM) to use with the ArangoDB Document/Graph database server.
