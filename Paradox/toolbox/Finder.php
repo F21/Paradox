@@ -53,7 +53,8 @@ class Finder
         try {
             $result = $this->_toolbox->getQuery()->getAll($query, $params);
         } catch (\Exception $e) {
-            throw new FinderException($e->getMessage(), $e->getCode());
+        	$normalised = $this->_toolbox->normaliseDriverExceptions($e);
+            throw new FinderException($normalised['message'], $normalised['code']);
         }
 
         if (empty($result)) {
@@ -81,7 +82,8 @@ class Finder
         try {
             $result = $this->_toolbox->getQuery()->getAll($query, $params);
         } catch (\Exception $e) {
-            throw new FinderException($e->getMessage(), $e->getCode());
+        	$normalised = $this->_toolbox->normaliseDriverExceptions($e);
+            throw new FinderException($normalised['message'], $normalised['code']);
         }
 
         if (empty($result)) {
@@ -109,7 +111,8 @@ class Finder
         try {
             $result = $this->_toolbox->getQuery()->getOne($query, $params);
         } catch (\Exception $e) {
-            throw new FinderException($e->getMessage(), $e->getCode());
+        	$normalised = $this->_toolbox->normaliseDriverExceptions($e);
+            throw new FinderException($normalised['message'], $normalised['code']);
         }
 
         if (!$result) {
@@ -186,7 +189,8 @@ class Finder
         try {
             $result = $this->_toolbox->getQuery()->getAll($query, $params);
         } catch (\Exception $e) {
-            throw new FinderException($e->getMessage(), $e->getCode());
+        	$normalised = $this->_toolbox->normaliseDriverExceptions($e);
+            throw new FinderException($normalised['message'], $normalised['code']);
         }
 
         if (empty($result)) {
@@ -237,7 +241,8 @@ class Finder
         try {
             $result = $this->_toolbox->getQuery()->getAll($query, $params);
         } catch (\Exception $e) {
-            throw new FinderException($e->getMessage(), $e->getCode());
+        	$normalised = $this->_toolbox->normaliseDriverExceptions($e);
+            throw new FinderException($normalised['message'], $normalised['code']);
         }
 
         if (empty($result)) {
@@ -286,7 +291,8 @@ class Finder
         try {
             $result = $this->_toolbox->getQuery()->getOne($query, $params);
         } catch (\Exception $e) {
-            throw new FinderException($e->getMessage(), $e->getCode());
+        	$normalised = $this->_toolbox->normaliseDriverExceptions($e);
+            throw new FinderException($normalised['message'], $normalised['code']);
         }
 
         if (!$result) {
@@ -336,7 +342,8 @@ class Finder
         try {
             $result = $this->_toolbox->getQuery()->getAll($query, $params);
         } catch (\Exception $e) {
-            throw new FinderException($e->getMessage(), $e->getCode());
+        	$normalised = $this->_toolbox->normaliseDriverExceptions($e);
+            throw new FinderException($normalised['message'], $normalised['code']);
         }
 
         if (empty($result)) {
@@ -384,7 +391,8 @@ class Finder
         try {
             $result = $this->_toolbox->getQuery()->getAll($query, $params);
         } catch (\Exception $e) {
-            throw new FinderException($e->getMessage(), $e->getCode());
+        	$normalised = $this->_toolbox->normaliseDriverExceptions($e);
+            throw new FinderException($normalised['message'], $normalised['code']);
         }
 
         if (empty($result)) {
@@ -432,7 +440,8 @@ class Finder
         try {
             $result = $this->_toolbox->getQuery()->getOne($query, $params);
         } catch (\Exception $e) {
-            throw new FinderException($e->getMessage(), $e->getCode());
+        	$normalised = $this->_toolbox->normaliseDriverExceptions($e);
+            throw new FinderException($normalised['message'], $normalised['code']);
         }
 
         if (!$result) {
@@ -466,7 +475,8 @@ class Finder
         try {
             $result = $this->_toolbox->getQuery()->getAll($aqlStatement, $params);
         } catch (\Exception $e) {
-            throw new FinderException($e->getMessage(), $e->getCode());
+        	$normalised = $this->_toolbox->normaliseDriverExceptions($e);
+            throw new FinderException($normalised['message'], $normalised['code']);
 
         }
 
@@ -499,7 +509,8 @@ class Finder
         try {
             $result = $this->_toolbox->getQuery()->getAll($aqlStatement, $params);
         } catch (\Exception $e) {
-            throw new FinderException($e->getMessage(), $e->getCode());
+        	$normalised = $this->_toolbox->normaliseDriverExceptions($e);
+            throw new FinderException($normalised['message'], $normalised['code']);
         }
 
         if (empty($result)) {
@@ -531,7 +542,8 @@ class Finder
         try {
             $result = $this->_toolbox->getQuery()->getOne($aqlStatement, $params);
         } catch (\Exception $e) {
-            throw new FinderException($e->getMessage(), $e->getCode());
+        	$normalised = $this->_toolbox->normaliseDriverExceptions($e);
+            throw new FinderException($normalised['message'], $normalised['code']);
         }
 
         if (!$result) {
