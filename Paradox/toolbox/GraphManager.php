@@ -91,14 +91,14 @@ class GraphManager
             return array();
         }
 
-        $collectionParameter = $this->generateBindingParameter('@collection', $params);
-        $vertexParameter = $this->generateBindingParameter('vertexid', $params);
-        $directionParameter = $this->generateBindingParameter('direction', $params);
+        $collectionParameter = $this->_toolbox->generateBindingParameter('@collection', $params);
+        $vertexParameter = $this->_toolbox->generateBindingParameter('vertexid', $params);
+        $directionParameter = $this->_toolbox->generateBindingParameter('direction', $params);
 
         if (!$label) {
             $query = "FOR $placeholder in EDGES(@$collectionParameter, @$vertexParameter, @$directionParameter) " . $aql . " return $placeholder";
         } else {
-            $labelParameter = $this->generateBindingParameter('label', $params);
+            $labelParameter = $this->_toolbox->generateBindingParameter('label', $params);
             $params[$labelParameter] = $label;
             $query = "FOR $placeholder in EDGES(@$collectionParameter, @$vertexParameter, @$directionParameter, [{'\$label': @$labelParameter}]) " . $aql . " return $placeholder";
         }
@@ -137,14 +137,14 @@ class GraphManager
             return array();
         }
 
-        $collectionParameter = $this->generateBindingParameter('@collection', $params);
-        $vertexParameter = $this->generateBindingParameter('vertexid', $params);
-        $directionParameter = $this->generateBindingParameter('direction', $params);
+        $collectionParameter = $this->_toolbox->generateBindingParameter('@collection', $params);
+        $vertexParameter = $this->_toolbox->generateBindingParameter('vertexid', $params);
+        $directionParameter = $this->_toolbox->generateBindingParameter('direction', $params);
 
         if (!$label) {
             $query = "FOR $placeholder in EDGES(@$collectionParameter, @$vertexParameter, @$directionParameter) " . $aql . " return $placeholder";
         } else {
-            $labelParameter = $this->generateBindingParameter('label', $params);
+            $labelParameter = $this->_toolbox->generateBindingParameter('label', $params);
             $params[$labelParameter] = $label;
             $query = "FOR $placeholder in EDGES(@$collectionParameter, @$vertexParameter, @$directionParameter, [{'\$label': @$labelParameter}]) " . $aql . " return $placeholder";
         }
@@ -183,14 +183,14 @@ class GraphManager
             return array();
         }
 
-        $collectionParameter = $this->generateBindingParameter('@collection', $params);
-        $vertexParameter = $this->generateBindingParameter('vertexid', $params);
-        $directionParameter = $this->generateBindingParameter('direction', $params);
+        $collectionParameter = $this->_toolbox->generateBindingParameter('@collection', $params);
+        $vertexParameter = $this->_toolbox->generateBindingParameter('vertexid', $params);
+        $directionParameter = $this->_toolbox->generateBindingParameter('direction', $params);
 
         if (!$label) {
             $query = "FOR $placeholder in EDGES(@$collectionParameter, @$vertexParameter, @$directionParameter) " . $aql . " return $placeholder";
         } else {
-            $labelParameter = $this->generateBindingParameter('label', $params);
+            $labelParameter = $this->_toolbox->generateBindingParameter('label', $params);
             $params[$labelParameter] = $label;
             $query = "FOR $placeholder in EDGES(@$collectionParameter, @$vertexParameter, @$directionParameter, [{'\$label': @$labelParameter}]) " . $aql . " return $placeholder";
         }
@@ -231,15 +231,15 @@ class GraphManager
             return array();
         }
 
-        $vertexCollection = $this->generateBindingParameter('@vertexCollection', $params);
-        $edgeCollection = $this->generateBindingParameter('@edgeCollection', $params);
-        $vertexParameter = $this->generateBindingParameter('vertexid', $params);
-        $directionParameter = $this->generateBindingParameter('direction', $params);
+        $vertexCollection = $this->_toolbox->generateBindingParameter('@vertexCollection', $params);
+        $edgeCollection = $this->_toolbox->generateBindingParameter('@edgeCollection', $params);
+        $vertexParameter = $this->_toolbox->generateBindingParameter('vertexid', $params);
+        $directionParameter = $this->_toolbox->generateBindingParameter('direction', $params);
 
         if (!$label) {
             $query = "FOR $placeholder in NEIGHBORS(@$vertexCollection, @$edgeCollection, @$vertexParameter, @$directionParameter) " . $aql . " return $placeholder.vertex";
         } else {
-            $labelParameter = $this->generateBindingParameter('label', $params);
+            $labelParameter = $this->_toolbox->generateBindingParameter('label', $params);
             $params[$labelParameter] = $label;
             $query = "FOR $placeholder in NEIGHBORS(@$vertexCollection, @$edgeCollection, @$vertexParameter, @$directionParameter, [{'\$label': @$labelParameter}]) " . $aql . " return $placeholder.vertex";
         }
@@ -296,15 +296,5 @@ class GraphManager
         }
 
         return $converted;
-    }
-
-    /**
-     * This generates a binding parameter for filtering so that it does not clash with any user defined parameters.
-     * @param  array  $userParameters An array of binding parameters.
-     * @return string
-     */
-    private function generateBindingParameter($parameter, $userParameters)
-    {
-        return $this->_toolbox->generateBindingParameter($parameter, $userParameters);
     }
 }
