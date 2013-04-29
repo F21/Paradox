@@ -363,6 +363,27 @@ class Toolbox
 
         return $this->_driver;
     }
+    
+    /**
+     * This generates a binding parameter for filtering so that it does not clash with any user defined parameters.
+     * @param  array  $userParameters An array of binding parameters.
+     * @return string
+     */
+    public function generateBindingParameter($parameter, $userParameters)
+    {
+    	$userParameters = array_keys($userParameters);
+    
+    	while (in_array($parameter, $userParameters)) {
+    
+    		$characters = '0123456789abcdefghijklmnopqrstuvwxyz';
+    
+    		for ($i = 0; $i < 7; $i++) {
+    			$parameter .= $characters[rand(0, strlen($characters) - 1)];
+    		}
+    	}
+    
+    	return $parameter;
+    }
 
     /**
      * Given the id in ArangoDB format (mycollection/123456) parse it and return the key (123456).
