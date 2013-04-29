@@ -46,8 +46,8 @@ class Vertex extends Document
 
     /**
      * Get all inbound edges to this vertex. The edges can be filtered by their labels and AQL.
-     * @param string $label      A string representing one label or an array of labels we want the inbound edges to have.
-     * @param string $aql An optional AQL fragment if we want to filter the edges, for example: FILTER doc.someproperty == "somevalue"
+     * @param  string $label       A string representing one label or an array of labels we want the inbound edges to have.
+     * @param  string $aql         An optional AQL fragment if we want to filter the edges, for example: FILTER doc.someproperty == "somevalue"
      * @param  array  $params      An optional associative array containing parameters to bind to the query.
      * @param  string $placeholder Set this to something else if you do not wish to use "doc" to refer to documents in your query.
      * @return array
@@ -59,8 +59,8 @@ class Vertex extends Document
 
     /**
      * Get all outbound edges to this vertex. The edges can be filtered by their labels and AQL.
-     * @param string $label      A string representing one label or an array of labels we want the inbound edges to have.
-     * @param string $aql An optional AQL fragment if we want to filter the edges, for example: FILTER doc.someproperty == "somevalue"
+     * @param  string $label       A string representing one label or an array of labels we want the inbound edges to have.
+     * @param  string $aql         An optional AQL fragment if we want to filter the edges, for example: FILTER doc.someproperty == "somevalue"
      * @param  array  $params      An optional associative array containing parameters to bind to the query.
      * @param  string $placeholder Set this to something else if you do not wish to use "doc" to refer to documents in your query.
      * @return array
@@ -72,8 +72,8 @@ class Vertex extends Document
 
     /**
      * Get all edges connected to this vertex. The edges can be filtered by their labels and AQL.
-     * @param string $label      A string representing one label or an array of labels we want the inbound edges to have.
-     * @param string $aql An optional AQL fragment if we want to filter the edges, for example: FILTER doc.someproperty == "somevalue"
+     * @param  string $label       A string representing one label or an array of labels we want the inbound edges to have.
+     * @param  string $aql         An optional AQL fragment if we want to filter the edges, for example: FILTER doc.someproperty == "somevalue"
      * @param  array  $params      An optional associative array containing parameters to bind to the query.
      * @param  string $placeholder Set this to something else if you do not wish to use "doc" to refer to documents in your query.
      * @return array
@@ -85,9 +85,9 @@ class Vertex extends Document
 
     /**
      * Get the neighbour vertices connected to this vertex via some edge. The vertices and their connecting edges can be filtered by AQL.
-     * @param string $direction  "in" for inbound neighbours, "out" for outbound neighbours and "any" for all neighbours.
-     * @param string $label      A string representing one label or an array of labels we want the inbound edges to have.
-     * @param string $aql An optional AQL fragment if we want to filter the edges or vertices, for example: 
+     * @param string $direction "in" for inbound neighbours, "out" for outbound neighbours and "any" for all neighbours.
+     * @param string $label     A string representing one label or an array of labels we want the inbound edges to have.
+     * @param string $aql       An optional AQL fragment if we want to filter the edges or vertices, for example:
      *                    FILTER doc.edge.someproperty == "somevalue" && doc.vertex.anotherproperty == "anothervalue"
      * @param  array  $params      An optional associative array containing parameters to bind to the query.
      * @param  string $placeholder Set this to something else if you do not wish to use "doc" to refer to documents in your query.

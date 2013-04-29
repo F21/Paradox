@@ -46,8 +46,8 @@ class Finder
      */
     public function find($type, $aql, $params = array(), $placeholder = "doc")
     {
-    	$collectionParameter = $this->generateBindingParameter('@collection', $params);
-    	
+        $collectionParameter = $this->generateBindingParameter('@collection', $params);
+
         $query = "FOR $placeholder in @$collectionParameter FILTER " . $aql . " return $placeholder";
 
         $params[$collectionParameter] = $this->getCollectionName($type);
@@ -55,7 +55,7 @@ class Finder
         try {
             $result = $this->_toolbox->getQuery()->getAll($query, $params);
         } catch (\Exception $e) {
-        	$normalised = $this->_toolbox->normaliseDriverExceptions($e);
+            $normalised = $this->_toolbox->normaliseDriverExceptions($e);
             throw new FinderException($normalised['message'], $normalised['code']);
         }
 
@@ -77,8 +77,8 @@ class Finder
      */
     public function findAll($type, $aql = "", $params = array(), $placeholder = "doc")
     {
-    	$collectionParameter = $this->generateBindingParameter('@collection', $params);
-    	
+        $collectionParameter = $this->generateBindingParameter('@collection', $params);
+
         $query = "FOR $placeholder in @$collectionParameter " . $aql . " return $placeholder";
 
         $params[$collectionParameter] = $this->getCollectionName($type);
@@ -86,7 +86,7 @@ class Finder
         try {
             $result = $this->_toolbox->getQuery()->getAll($query, $params);
         } catch (\Exception $e) {
-        	$normalised = $this->_toolbox->normaliseDriverExceptions($e);
+            $normalised = $this->_toolbox->normaliseDriverExceptions($e);
             throw new FinderException($normalised['message'], $normalised['code']);
         }
 
@@ -108,8 +108,8 @@ class Finder
      */
     public function findOne($type, $aql, $params = array(), $placeholder = "doc")
     {
-    	$collectionParameter = $this->generateBindingParameter('@collection', $params);
-    	
+        $collectionParameter = $this->generateBindingParameter('@collection', $params);
+
         $query = "FOR $placeholder in @$collectionParameter FILTER " . $aql . " LIMIT 1 return $placeholder";
 
         $params[$collectionParameter] = $this->getCollectionName($type);
@@ -117,7 +117,7 @@ class Finder
         try {
             $result = $this->_toolbox->getQuery()->getOne($query, $params);
         } catch (\Exception $e) {
-        	$normalised = $this->_toolbox->normaliseDriverExceptions($e);
+            $normalised = $this->_toolbox->normaliseDriverExceptions($e);
             throw new FinderException($normalised['message'], $normalised['code']);
         }
 
@@ -171,7 +171,7 @@ class Finder
     public function findNear($type, $reference, $aql, $params = array(), $limit = 100, $placeholder = "doc")
     {
         $coordinates = $this->generateReferenceData($reference);
-        
+
         $collectionParameter = $this->generateBindingParameter('@collection', $params);
         $latitudeParameter = $this->generateBindingParameter('latitude', $params);
         $longitudeParameter = $this->generateBindingParameter('longitude', $params);
@@ -200,7 +200,7 @@ class Finder
         try {
             $result = $this->_toolbox->getQuery()->getAll($query, $params);
         } catch (\Exception $e) {
-        	$normalised = $this->_toolbox->normaliseDriverExceptions($e);
+            $normalised = $this->_toolbox->normaliseDriverExceptions($e);
             throw new FinderException($normalised['message'], $normalised['code']);
         }
 
@@ -228,7 +228,7 @@ class Finder
     public function findAllNear($type, $reference, $aql = "", $params = array(), $limit = 100, $placeholder = "doc")
     {
         $coordinates = $this->generateReferenceData($reference);
-        
+
         $collectionParameter = $this->generateBindingParameter('@collection', $params);
         $latitudeParameter = $this->generateBindingParameter('latitude', $params);
         $longitudeParameter = $this->generateBindingParameter('longitude', $params);
@@ -257,7 +257,7 @@ class Finder
         try {
             $result = $this->_toolbox->getQuery()->getAll($query, $params);
         } catch (\Exception $e) {
-        	$normalised = $this->_toolbox->normaliseDriverExceptions($e);
+            $normalised = $this->_toolbox->normaliseDriverExceptions($e);
             throw new FinderException($normalised['message'], $normalised['code']);
         }
 
@@ -284,7 +284,7 @@ class Finder
     public function findOneNear($type, $reference, $aql, $params = array(), $placeholder = "doc")
     {
         $coordinates = $this->generateReferenceData($reference);
-        
+
         $collectionParameter = $this->generateBindingParameter('@collection', $params);
         $latitudeParameter = $this->generateBindingParameter('latitude', $params);
         $longitudeParameter = $this->generateBindingParameter('longitude', $params);
@@ -312,7 +312,7 @@ class Finder
         try {
             $result = $this->_toolbox->getQuery()->getOne($query, $params);
         } catch (\Exception $e) {
-        	$normalised = $this->_toolbox->normaliseDriverExceptions($e);
+            $normalised = $this->_toolbox->normaliseDriverExceptions($e);
             throw new FinderException($normalised['message'], $normalised['code']);
         }
 
@@ -340,7 +340,7 @@ class Finder
     public function findWithin($type, $reference, $radius, $aql, $params = array(), $placeholder = "doc")
     {
         $coordinates = $this->generateReferenceData($reference);
-        
+
         $collectionParameter = $this->generateBindingParameter('@collection', $params);
         $latitudeParameter = $this->generateBindingParameter('latitude', $params);
         $longitudeParameter = $this->generateBindingParameter('longitude', $params);
@@ -368,7 +368,7 @@ class Finder
         try {
             $result = $this->_toolbox->getQuery()->getAll($query, $params);
         } catch (\Exception $e) {
-        	$normalised = $this->_toolbox->normaliseDriverExceptions($e);
+            $normalised = $this->_toolbox->normaliseDriverExceptions($e);
             throw new FinderException($normalised['message'], $normalised['code']);
         }
 
@@ -394,7 +394,7 @@ class Finder
     public function findAllWithin($type, $reference, $radius, $aql = "", $params = array(), $placeholder = "doc")
     {
         $coordinates = $this->generateReferenceData($reference);
-        
+
         $collectionParameter = $this->generateBindingParameter('@collection', $params);
         $latitudeParameter = $this->generateBindingParameter('latitude', $params);
         $longitudeParameter = $this->generateBindingParameter('longitude', $params);
@@ -422,7 +422,7 @@ class Finder
         try {
             $result = $this->_toolbox->getQuery()->getAll($query, $params);
         } catch (\Exception $e) {
-        	$normalised = $this->_toolbox->normaliseDriverExceptions($e);
+            $normalised = $this->_toolbox->normaliseDriverExceptions($e);
             throw new FinderException($normalised['message'], $normalised['code']);
         }
 
@@ -448,7 +448,7 @@ class Finder
     public function findOneWithin($type, $reference, $radius, $aql, $params = array(), $placeholder = "doc")
     {
         $coordinates = $this->generateReferenceData($reference);
-        
+
         $collectionParameter = $this->generateBindingParameter('@collection', $params);
         $latitudeParameter = $this->generateBindingParameter('latitude', $params);
         $longitudeParameter = $this->generateBindingParameter('longitude', $params);
@@ -476,7 +476,7 @@ class Finder
         try {
             $result = $this->_toolbox->getQuery()->getOne($query, $params);
         } catch (\Exception $e) {
-        	$normalised = $this->_toolbox->normaliseDriverExceptions($e);
+            $normalised = $this->_toolbox->normaliseDriverExceptions($e);
             throw new FinderException($normalised['message'], $normalised['code']);
         }
 
@@ -502,10 +502,10 @@ class Finder
      */
     public function search($type, $attribute, $query, $aql, $params = array(), $placeholder = "doc")
     {
-    	$collectionParameter = $this->generateBindingParameter('@collection', $params);
-    	$attributeParameter = $this->generateBindingParameter('attribute', $params);
-    	$queryParameter = $this->generateBindingParameter('query', $params);
-    	
+        $collectionParameter = $this->generateBindingParameter('@collection', $params);
+        $attributeParameter = $this->generateBindingParameter('attribute', $params);
+        $queryParameter = $this->generateBindingParameter('query', $params);
+
         $aqlStatement = "FOR $placeholder in FULLTEXT(@$collectionParameter, @$attributeParameter, @$queryParameter) FILTER " . $aql . " return $placeholder";
 
         $params[$collectionParameter] = $this->getCollectionName($type);
@@ -515,7 +515,7 @@ class Finder
         try {
             $result = $this->_toolbox->getQuery()->getAll($aqlStatement, $params);
         } catch (\Exception $e) {
-        	$normalised = $this->_toolbox->normaliseDriverExceptions($e);
+            $normalised = $this->_toolbox->normaliseDriverExceptions($e);
             throw new FinderException($normalised['message'], $normalised['code']);
 
         }
@@ -540,11 +540,11 @@ class Finder
      */
     public function searchAll($type, $attribute, $query, $aql = "", $params = array(), $placeholder = "doc")
     {
-    	$collectionParameter = $this->generateBindingParameter('@collection', $params);
-    	$attributeParameter = $this->generateBindingParameter('attribute', $params);
-    	$queryParameter = $this->generateBindingParameter('query', $params);
-    	
-    	$aqlStatement = "FOR $placeholder in FULLTEXT(@$collectionParameter, @$attributeParameter, @$queryParameter) " . $aql . " return $placeholder";
+        $collectionParameter = $this->generateBindingParameter('@collection', $params);
+        $attributeParameter = $this->generateBindingParameter('attribute', $params);
+        $queryParameter = $this->generateBindingParameter('query', $params);
+
+        $aqlStatement = "FOR $placeholder in FULLTEXT(@$collectionParameter, @$attributeParameter, @$queryParameter) " . $aql . " return $placeholder";
 
         $params[$collectionParameter] = $this->getCollectionName($type);
         $params[$attributeParameter] = $attribute;
@@ -553,7 +553,7 @@ class Finder
         try {
             $result = $this->_toolbox->getQuery()->getAll($aqlStatement, $params);
         } catch (\Exception $e) {
-        	$normalised = $this->_toolbox->normaliseDriverExceptions($e);
+            $normalised = $this->_toolbox->normaliseDriverExceptions($e);
             throw new FinderException($normalised['message'], $normalised['code']);
         }
 
@@ -577,10 +577,10 @@ class Finder
      */
     public function searchForOne($type, $attribute, $query, $aql, $params = array(), $placeholder = "doc")
     {
-    	$collectionParameter = $this->generateBindingParameter('@collection', $params);
-    	$attributeParameter = $this->generateBindingParameter('attribute', $params);
-    	$queryParameter = $this->generateBindingParameter('query', $params);
-    	
+        $collectionParameter = $this->generateBindingParameter('@collection', $params);
+        $attributeParameter = $this->generateBindingParameter('attribute', $params);
+        $queryParameter = $this->generateBindingParameter('query', $params);
+
         $aqlStatement = "FOR $placeholder in FULLTEXT(@$collectionParameter, @$attributeParameter, @$queryParameter) FILTER " . $aql . " LIMIT 1 return $placeholder";
 
         $params[$collectionParameter] = $this->getCollectionName($type);
@@ -590,7 +590,7 @@ class Finder
         try {
             $result = $this->_toolbox->getQuery()->getOne($aqlStatement, $params);
         } catch (\Exception $e) {
-        	$normalised = $this->_toolbox->normaliseDriverExceptions($e);
+            $normalised = $this->_toolbox->normaliseDriverExceptions($e);
             throw new FinderException($normalised['message'], $normalised['code']);
         }
 
