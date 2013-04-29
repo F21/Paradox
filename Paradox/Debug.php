@@ -34,7 +34,7 @@ class Debug
     /**
      * Allows this object to be called as a function to call the trace method.
      * @param string $type Whether the debug message was for sending a request or receiving a response.
-     * @param string $data The raw HTTP request or response.
+     * @param \triagens\ArangoDb\TraceResponse|\triagens\ArangoDb\TraceRequest $data The raw HTTP request or response.
      */
     public function __invoke($data)
     {
