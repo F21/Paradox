@@ -181,6 +181,15 @@ class Edge extends Document
     {
         $this->_data['_from'] = $from;
     }
+    
+    /**
+     * Get a list of reserved fields used by ArangoDB.
+     * @return array
+     */
+    protected function getReservedFields()
+    {
+    	return array('_id', '_key', '_rev', '_from', '_to');
+    }
 
     /**
      * Returns an ArangoDB-PHP edge object representing this edge.

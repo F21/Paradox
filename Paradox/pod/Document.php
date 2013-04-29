@@ -479,11 +479,7 @@ class Document implements IObserver
      */
     protected function getReservedFields()
     {
-        if ($this->isGraph() && $this->getType() == "edge") {
-            return array('_id', '_key', '_rev', '_from', '_to');
-        } else {
-            return array('_id', '_key', '_rev');
-        }
+    	return array('_id', '_key', '_rev');
     }
 
     /**
