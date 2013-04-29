@@ -237,11 +237,11 @@ class GraphManager
         $directionParameter = $this->generateBindingParameter('direction', $params);
 
         if (!$label) {
-            $query = "FOR $placeholder in NEIGHBORS(@$vertexCollection, @$edgeCollection, @$vertexParameter, @$directionParameter) " . $aql . " return $placeholder";
+            $query = "FOR $placeholder in NEIGHBORS(@$vertexCollection, @$edgeCollection, @$vertexParameter, @$directionParameter) " . $aql . " return $placeholder.vertex";
         } else {
             $labelParameter = $this->generateBindingParameter('label', $params);
             $params[$labelParameter] = $label;
-            $query = "FOR $placeholder in NEIGHBORS(@$vertexCollection, @$edgeCollection, @$vertexParameter, @$directionParameter, [{'\$label': @$labelParameter}]) " . $aql . " return $placeholder";
+            $query = "FOR $placeholder in NEIGHBORS(@$vertexCollection, @$edgeCollection, @$vertexParameter, @$directionParameter, [{'\$label': @$labelParameter}]) " . $aql . " return $placeholder.vertex";
         }
 
         $params[$vertexCollection] = $this->_toolbox->getVertexCollectionName();
@@ -259,14 +259,7 @@ class GraphManager
             return array();
         }
 
-        //Pick out the vertices (work around for https://github.com/triAGENS/ArangoDB/issues/494)
-        $finalResult = array();
-
-        foreach ($result as $resultItem) {
-            $finalResult[] = $resultItem['vertex'];
-        }
-
-        return $this->convertToPods("vertex", $finalResult);
+        return $this->convertToPods("vertex", $result);
     }
 
     /**
