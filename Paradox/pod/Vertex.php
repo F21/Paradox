@@ -45,60 +45,57 @@ class Vertex extends Document
     }
 
     /**
-     * Get all inbound edges to this vertex. The edges can be filtered by their labels and properties.
+     * Get all inbound edges to this vertex. The edges can be filtered by their labels and AQL.
      * @param string $label      A string representing one label or an array of labels we want the inbound edges to have.
-     * @param array  $properties An array of property filters. Each filter is an associative array with the following properties:
-     *                              'key' - Filter the result vertices by a key value pair.
-     *                              'value' -  The value of the key.
-     *                              'compare' - A comparison operator. (==, >, <, >=, <= )
+     * @param string $aql An optional AQL fragment if we want to filter the edges, for example: FILTER doc.someproperty == "somevalue"
+     * @param  array  $params      An optional associative array containing parameters to bind to the query.
+     * @param  string $placeholder Set this to something else if you do not wish to use "doc" to refer to documents in your query.
      * @return array
      */
-    public function getInboundEdges($label = null, array $properties = null)
+    public function getInboundEdges($label = null, $aql = "", $params = array(), $placeholder = "doc")
     {
-        return $this->_toolbox->getGraphManager()->getInboundEdgesEdges($this->getId(), $label, $properties);
+        return $this->_toolbox->getGraphManager()->getInboundEdgesEdges($this->getId(), $label, $aql, $params, $placeholder);
     }
 
     /**
-     * Get all outbound edges to this vertex. The edges can be filtered by their labels and properties.
+     * Get all outbound edges to this vertex. The edges can be filtered by their labels and AQL.
      * @param string $label      A string representing one label or an array of labels we want the inbound edges to have.
-     * @param array  $properties An array of property filters. Each filter is an associative array with the following properties:
-     *                              'key' - Filter the result vertices by a key value pair.
-     *                              'value' -  The value of the key.
-     *                              'compare' - A comparison operator. (==, >, <, >=, <= )
+     * @param string $aql An optional AQL fragment if we want to filter the edges, for example: FILTER doc.someproperty == "somevalue"
+     * @param  array  $params      An optional associative array containing parameters to bind to the query.
+     * @param  string $placeholder Set this to something else if you do not wish to use "doc" to refer to documents in your query.
      * @return array
      */
-    public function getOutboundEdges($label = null, array $properties = null)
+    public function getOutboundEdges($label = null, $aql = "", $params = array(), $placeholder = "doc")
     {
-        return $this->_toolbox->getGraphManager()->getOutboundEdges($this->getId(), $label, $properties);
+        return $this->_toolbox->getGraphManager()->getOutboundEdges($this->getId(), $label, $aql, $params, $placeholder);
     }
 
     /**
-     * Get all edges connected to this vertex. The edges can be filtered by their labels and properties.
+     * Get all edges connected to this vertex. The edges can be filtered by their labels and AQL.
      * @param string $label      A string representing one label or an array of labels we want the inbound edges to have.
-     * @param array  $properties An array of property filters. Each filter is an associative array with the following properties:
-     *                              'key' - Filter the result vertices by a key value pair.
-     *                              'value' -  The value of the key.
-     *                              'compare' - A comparison operator. (==, >, <, >=, <= )
+     * @param string $aql An optional AQL fragment if we want to filter the edges, for example: FILTER doc.someproperty == "somevalue"
+     * @param  array  $params      An optional associative array containing parameters to bind to the query.
+     * @param  string $placeholder Set this to something else if you do not wish to use "doc" to refer to documents in your query.
      * @return array
      */
-    public function getEdges($label = null, array $properties = null)
+    public function getEdges($label = null, $aql = "", $params = array(), $placeholder = "doc")
     {
-        return $this->_toolbox->getGraphManager()->getEdges($this->getId(), $label, $properties);
+        return $this->_toolbox->getGraphManager()->getEdges($this->getId(), $label, $aql, $params, $placeholder);
     }
 
     /**
-     * Get the neighbour vertices connected to this vertex via some edge.
+     * Get the neighbour vertices connected to this vertex via some edge. The vertices and their connecting edges can be filtered by AQL.
      * @param string $direction  "in" for inbound neighbours, "out" for outbound neighbours and "any" for all neighbours.
      * @param string $label      A string representing one label or an array of labels we want the inbound edges to have.
-     * @param string $properties An array of property filters. Each filter is an associative array with the following properties:
-     *                              'key' - Filter the result vertices by a key value pair.
-     *                              'value' -  The value of the key.
-     *                              'compare' - A comparison operator. (==, >, <, >=, <= )
+     * @param string $aql An optional AQL fragment if we want to filter the edges or vertices, for example: 
+     *                    FILTER doc.edge.someproperty == "somevalue" && doc.vertex.anotherproperty == "anothervalue"
+     * @param  array  $params      An optional associative array containing parameters to bind to the query.
+     * @param  string $placeholder Set this to something else if you do not wish to use "doc" to refer to documents in your query.
      * @return array
      */
-    public function getNeighbours($direction = "both", $label = null, array $properties = null)
+    public function getNeighbours($direction = "any", $label = null, $aql = "", $params = array(), $placeholder = "doc")
     {
-       return $this->_toolbox->getGraphManager()->getNeighbours($this->getId(), $direction, $label, $properties);
+       return $this->_toolbox->getGraphManager()->getNeighbours($this->getId(), $direction, $label, $aql, $params, $placeholder);
     }
 
     /**

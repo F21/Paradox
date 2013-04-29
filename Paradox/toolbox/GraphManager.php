@@ -75,140 +75,198 @@ class GraphManager
     }
 
     /**
-     * Get all inbound edges to this vertex. The edges can be filtered by their labels and properties.
+     * Get all inbound edges to this vertex. The edges can be filtered by their labels and AQL.
      * @param Document|Model|string A vertex pod, model or string of the vertex id.
      * @param string $label      A string representing one label or an array of labels we want the inbound edges to have.
-     * @param array  $properties An array of property filters. Each filter is an associative array with the following properties:
-     *                              'key' - Filter the result vertices by a key value pair.
-     *                              'value' -  The value of the key.
-     *                              'compare' - A comparison operator. (==, >, <, >=, <= )
+     * @param string $aql An optional AQL fragment if we want to filter the edges, for example: FILTER doc.someproperty == "somevalue"
+     * @param  array  $params      An optional associative array containing parameters to bind to the query.
+     * @param  string $placeholder Set this to something else if you do not wish to use "doc" to refer to documents in your query.
      * @return array
      */
-    public function getInboundEdges($model, $label = null, array $properties = null)
+    public function getInboundEdges($model, $label = null, $aql = "", $params = array(), $placeholder = "doc")
     {
         $id = $this->getVertexId($model);
 
         if (!$id) {
             return array();
         }
-
-        $filters = $this->generateFilter("in", $label, $properties);
-
-        $edges = $this->_toolbox->getGraphHandler()->getConnectedEdges($this->_toolbox->getGraph(), $id, $filters);
-        $result = $edges->getAll();
+        
+        $collectionParameter = $this->generateBindingParameter('@collection', $params);
+        $vertexParameter = $this->generateBindingParameter('vertexid', $params);
+        $directionParameter = $this->generateBindingParameter('direction', $params);
+        
+        if(!$label){
+        	$query = "FOR $placeholder in EDGES(@$collectionParameter, @$vertexParameter, @$directionParameter) " . $aql . " return $placeholder";
+        }else{
+        	$labelParameter = $this->generateBindingParameter('label', $params);
+        	$params[$labelParameter] = $label;
+        	$query = "FOR $placeholder in EDGES(@$collectionParameter, @$vertexParameter, @$directionParameter, [{'\$label': @$labelParameter}]) " . $aql . " return $placeholder";
+        }
+        
+        $params[$collectionParameter] = $this->_toolbox->getEdgeCollectionName();
+        $params[$vertexParameter] = $model->getPod()->getId();
+        $params[$directionParameter] = "inbound";
+        
+        try {
+        	$result = $this->_toolbox->getQuery()->getAll($query, $params);
+        } catch (\Exception $e) {
+        	throw new GraphManagerException($e->getMessage(), $e->getCode());
+        }
 
         if (empty($result)) {
             return array();
         }
 
-        foreach ($result as &$edge) {
-            $edge = $this->convertDocumentToEdge($edge);
-        }
-
-        return $this->_toolbox->getPodManager()->convertToPods("edge", $result);
+        return $this->convertToPods("edge", $result);
     }
 
     /**
-     * Get all outbound edges to this vertex. The edges can be filtered by their labels and properties.
+     * Get all outbound edges to this vertex. The edges can be filtered by their labels and AQL.
      * @param Document|Model|string A vertex pod, model or string of the vertex id.
      * @param string $label      A string representing one label or an array of labels we want the inbound edges to have.
-     * @param array  $properties An array of property filters. Each filter is an associative array with the following properties:
-     *                              'key' - Filter the result vertices by a key value pair.
-     *                              'value' -  The value of the key.
-     *                              'compare' - A comparison operator. (==, >, <, >=, <= )
+     * @param string $aql An optional AQL fragment if we want to filter the edges, for example: FILTER doc.someproperty == "somevalue"
+     * @param  array  $params      An optional associative array containing parameters to bind to the query.
+     * @param  string $placeholder Set this to something else if you do not wish to use "doc" to refer to documents in your query.
      * @return array
      */
-    public function getOutboundEdges($model, $label = null, array $properties = null)
-    {
-           $id = $this->getVertexId($model);
-
-        if (!$id) {
-            return array();
-        }
-
-        $filters = $this->generateFilter("out", $label, $properties);
-
-        $edges = $this->_toolbox->getGraphHandler()->getConnectedEdges($this->_toolbox->getGraph(), $id, $filters);
-        $result = $edges->getAll();
-
-        if (empty($result)) {
-            return array();
-        }
-
-        foreach ($result as &$edge) {
-            $edge = $this->convertDocumentToEdge($edge);
-        }
-
-        return $this->_toolbox->getPodManager()->convertToPods("edge", $result);
-    }
-
-    /**
-     * Get all edges connected to this vertex. The edges can be filtered by their labels and properties.
-     * @param Document|Model|string A vertex pod, model or string of the vertex id.
-     * @param string $label      A string representing one label or an array of labels we want the inbound edges to have.
-     * @param array  $properties An array of property filters. Each filter is an associative array with the following properties:
-     *                              'key' - Filter the result vertices by a key value pair.
-     *                              'value' -  The value of the key.
-     *                              'compare' - A comparison operator. (==, >, <, >=, <= )
-     * @return array
-     */
-    public function getEdges($model, $label = null, array $properties = null)
+    public function getOutboundEdges($model, $label = null, $aql = "", $params = array(), $placeholder = "doc")
     {
         $id = $this->getVertexId($model);
 
         if (!$id) {
             return array();
         }
-
-        $filters = $this->generateFilter(null, $label, $properties);
-
-        $edges = $this->_toolbox->getGraphHandler()->getConnectedEdges($this->_toolbox->getGraph(), $id, $filters);
-        $result = $edges->getAll();
+        
+        $collectionParameter = $this->generateBindingParameter('@collection', $params);
+        $vertexParameter = $this->generateBindingParameter('vertexid', $params);
+        $directionParameter = $this->generateBindingParameter('direction', $params);
+        
+        if(!$label){
+        	$query = "FOR $placeholder in EDGES(@$collectionParameter, @$vertexParameter, @$directionParameter) " . $aql . " return $placeholder";
+        }else{
+        	$labelParameter = $this->generateBindingParameter('label', $params);
+        	$params[$labelParameter] = $label;
+        	$query = "FOR $placeholder in EDGES(@$collectionParameter, @$vertexParameter, @$directionParameter, [{'\$label': @$labelParameter}]) " . $aql . " return $placeholder";
+        }
+        
+        $params[$collectionParameter] = $this->_toolbox->getEdgeCollectionName();
+        $params[$vertexParameter] = $model->getPod()->getId();
+        $params[$directionParameter] = "outbound";
+        
+        try {
+        	$result = $this->_toolbox->getQuery()->getAll($query, $params);
+        } catch (\Exception $e) {
+        	throw new GraphManagerException($e->getMessage(), $e->getCode());
+        }
 
         if (empty($result)) {
             return array();
         }
 
-        foreach ($result as &$edge) {
-            $edge = $this->convertDocumentToEdge($edge);
-        }
-
-        return $this->_toolbox->getPodManager()->convertToPods("edge", $result);
+        return $this->convertToPods("edge", $result);
     }
 
     /**
-     * Get the neighbour vertices connected to this vertex via some edge.
+     * Get all edges connected to this vertex. The edges can be filtered by their labels and AQL.
+     * @param Document|Model|string A vertex pod, model or string of the vertex id.
+     * @param string $label      A string representing one label or an array of labels we want the inbound edges to have.
+     * @param string $aql An optional AQL fragment if we want to filter the edges, for example: FILTER doc.someproperty == "somevalue"
+     * @param  array  $params      An optional associative array containing parameters to bind to the query.
+     * @param  string $placeholder Set this to something else if you do not wish to use "doc" to refer to documents in your query.
+     * @return array
+     */
+    public function getEdges($model, $label = null, $aql = "", $params = array(), $placeholder = "doc")
+    {
+        $id = $this->getVertexId($model);
+
+        if (!$id) {
+            return array();
+        }
+        
+        $collectionParameter = $this->generateBindingParameter('@collection', $params);
+        $vertexParameter = $this->generateBindingParameter('vertexid', $params);
+        $directionParameter = $this->generateBindingParameter('direction', $params);
+        
+        if(!$label){
+        	$query = "FOR $placeholder in EDGES(@$collectionParameter, @$vertexParameter, @$directionParameter) " . $aql . " return $placeholder";
+        }else{
+        	$labelParameter = $this->generateBindingParameter('label', $params);
+        	$params[$labelParameter] = $label;
+        	$query = "FOR $placeholder in EDGES(@$collectionParameter, @$vertexParameter, @$directionParameter, [{'\$label': @$labelParameter}]) " . $aql . " return $placeholder";
+        }
+        
+        $params[$collectionParameter] = $this->_toolbox->getEdgeCollectionName();
+        $params[$vertexParameter] = $model->getPod()->getId();
+        $params[$directionParameter] = "any";
+        
+        try {
+        	$result = $this->_toolbox->getQuery()->getAll($query, $params);
+        } catch (\Exception $e) {
+        	throw new GraphManagerException($e->getMessage(), $e->getCode());
+        }
+
+        if (empty($result)) {
+            return array();
+        }
+
+        return $this->convertToPods("edge", $result);
+    }
+
+    /**
+     * Get the neighbour vertices connected to this vertex via some edge. The vertices and their connecting edges can be filtered by AQL.
      * @param Document|AModel|string A vertex pod, model or string of the vertex id.
      * @param string $direction  "in" for inbound neighbours, "out" for outbound neighbours and "any" for all neighbours.
      * @param string $label      A string representing one label or an array of labels we want the inbound edges to have.
-     * @param string $properties An array of property filters. Each filter is an associative array with the following properties:
-     *                              'key' - Filter the result vertices by a key value pair.
-     *                              'value' -  The value of the key.
-     *                              'compare' - A comparison operator. (==, >, <, >=, <= )
+     * @param string $aql An optional AQL fragment if we want to filter the edges or vertices, for example: 
+     *                    FILTER doc.edge.someproperty == "somevalue" && doc.vertex.anotherproperty == "anothervalue"
+     * @param  array  $params      An optional associative array containing parameters to bind to the query.
+     * @param  string $placeholder Set this to something else if you do not wish to use "doc" to refer to documents in your query.
      * @return array
      */
-    public function getNeighbours($model, $direction = "both", $label = null, array $properties = null)
+    public function getNeighbours($model, $direction = "any", $label = null, $aql = "", $params = array(), $placeholder = "doc")
     {
         $id = $this->getVertexId($model);
 
         if (!$id) {
             return array();
         }
-
-        $filters = $this->generateFilter($direction, $label, $properties);
-
-        $vertices = $this->_toolbox->getGraphHandler()->getNeighborVertices($this->_toolbox->getGraph(), $id, $filters);
-        $result = $vertices->getAll();
+        
+        $vertexCollection = $this->generateBindingParameter('@vertexCollection', $params);
+        $edgeCollection = $this->generateBindingParameter('@edgeCollection', $params);
+        $vertexParameter = $this->generateBindingParameter('vertexid', $params);
+        $directionParameter = $this->generateBindingParameter('direction', $params);
+        
+        if(!$label){
+        	$query = "FOR $placeholder in NEIGHBORS(@$vertexCollection, @$edgeCollection, @$vertexParameter, @$directionParameter) " . $aql . " return $placeholder";
+        }else{
+        	$labelParameter = $this->generateBindingParameter('label', $params);
+        	$params[$labelParameter] = $label;
+        	$query = "FOR $placeholder in NEIGHBORS(@$vertexCollection, @$edgeCollection, @$vertexParameter, @$directionParameter, [{'\$label': @$labelParameter}]) " . $aql . " return $placeholder";
+        }
+        
+        $params[$vertexCollection] = $this->_toolbox->getVertexCollectionName();
+        $params[$edgeCollection] = $this->_toolbox->getEdgeCollectionName();
+        $params[$vertexParameter] = $model->getPod()->getId();
+        $params[$directionParameter] = $direction;
+        
+        try {
+        	$result = $this->_toolbox->getQuery()->getAll($query, $params);
+        } catch (\Exception $e) {
+        	throw new GraphManagerException($e->getMessage(), $e->getCode());
+        }
 
         if (empty($result)) {
             return array();
         }
 
-        foreach ($result as &$vertex) {
-            $vertex = $this->convertDocumentToVertex($vertex);
+        //Pick out the vertices (work around for https://github.com/triAGENS/ArangoDB/issues/494)
+        $finalResult = array();
+        
+        foreach ($result as $resultItem) {
+        	$finalResult[] = $resultItem['vertex'];
         }
-
-        return $this->_toolbox->getPodManager()->convertToPods("vertex", $result);
+        
+        return $this->convertToPods("vertex", $finalResult);
     }
 
     /**
@@ -227,6 +285,34 @@ class GraphManager
         } else {
             throw new GraphManagerException('$model can be either a model, a vertex pod or the id of the vertex.');
         }
+    }
+    
+    /**
+     * Converts the an array of associative arrays (each representing a document) received from the server into pods.
+     * @param  string $type    The collection type. For graphs, only "vertex" or "edge" is valid.
+     * @param  array  $result  The array of documents to convert.
+     * @return array
+     */
+    public function convertToPods($type, $result)
+    {
+    	$converted = $this->_toolbox->getPodManager()->convertToPods($type, $result);
+    
+    	foreach ($converted as $model) {
+
+    		$model->getPod()->setSaved();
+    	}
+    
+    	return $converted;
+    }
+    
+    /**
+     * This generates a binding parameter for filtering so that it does not clash with any user defined parameters.
+     * @param  array  $userParameters An array of binding parameters.
+     * @return string
+     */
+    private function generateBindingParameter($parameter, $userParameters)
+    {
+    	return $this->_toolbox->generateBindingParameter($parameter, $userParameters);
     }
 
     /**
