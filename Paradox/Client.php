@@ -261,6 +261,17 @@ class Client
     }
 
     /**
+     * Get information about a graph.
+     * @param  string                $name The name of the graph.
+     * @throws GraphManagerException
+     * @return array
+     */
+    public function getGraphInfo($name)
+    {
+        return $this->getToolbox($this->_currentConnection)->getGraphManager()->getGraphInfo($name);
+    }
+
+    /**
      * Delete a graph.
      * @param string $name The name of the graph.
      */

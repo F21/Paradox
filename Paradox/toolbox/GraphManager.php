@@ -75,6 +75,35 @@ class GraphManager
     }
 
     /**
+     * Get information about a graph.
+     * @param  string                $name The name of the graph.
+     * @throws GraphManagerException
+     * @return array
+     */
+    public function getGraphInfo($name)
+    {
+        try {
+            $graphHandler = $this->_toolbox->getGraphHandler();
+
+            $graph = $graphHandler->getGraph($name);
+
+            $result = array();
+
+            $result['id'] = $graph->getKey();
+            $result['name'] = $graph->getKey();
+            $result['revision'] = $graph->getRevision();
+            $result['verticesCollection'] = $graph->getVerticesCollection();
+            $result['edgesCollection'] = $graph->getEdgesCollection();
+
+            return $result;
+
+        } catch (\Exception $e) {
+            $normalised = $this->_toolbox->normaliseDriverExceptions($e);
+            throw new GraphManagerException($normalised['message'], $normalised['code']);
+        }
+    }
+
+    /**
      * Get all inbound edges to this vertex. The edges can be filtered by their labels and AQL.
      * @param Document|Model|string A vertex pod, model or string of the vertex id.
      * @param  string $label       A string representing one label or an array of labels we want the inbound edges to have.
