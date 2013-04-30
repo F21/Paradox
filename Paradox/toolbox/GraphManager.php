@@ -104,7 +104,7 @@ class GraphManager
         }
 
         $params[$collectionParameter] = $this->_toolbox->getEdgeCollectionName();
-        $params[$vertexParameter] = $model->getPod()->getId();
+        $params[$vertexParameter] = $model->getId();
         $params[$directionParameter] = "inbound";
 
         try {
@@ -150,7 +150,7 @@ class GraphManager
         }
 
         $params[$collectionParameter] = $this->_toolbox->getEdgeCollectionName();
-        $params[$vertexParameter] = $model->getPod()->getId();
+        $params[$vertexParameter] = $model->getId();
         $params[$directionParameter] = "outbound";
 
         try {
@@ -196,7 +196,7 @@ class GraphManager
         }
 
         $params[$collectionParameter] = $this->_toolbox->getEdgeCollectionName();
-        $params[$vertexParameter] = $model->getPod()->getId();
+        $params[$vertexParameter] = $model->getId();
         $params[$directionParameter] = "any";
 
         try {
@@ -246,7 +246,7 @@ class GraphManager
 
         $params[$vertexCollection] = $this->_toolbox->getVertexCollectionName();
         $params[$edgeCollection] = $this->_toolbox->getEdgeCollectionName();
-        $params[$vertexParameter] = $model->getPod()->getId();
+        $params[$vertexParameter] = $model->getId();
         $params[$directionParameter] = $direction;
 
         try {
