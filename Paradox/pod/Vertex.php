@@ -54,7 +54,7 @@ class Vertex extends Document
      */
     public function getInboundEdges($label = null, $aql = "", $params = array(), $placeholder = "doc")
     {
-        return $this->_toolbox->getGraphManager()->getInboundEdgesEdges($this->getId(), $label, $aql, $params, $placeholder);
+        return $this->_toolbox->getGraphManager()->getInboundEdges($this->getId(), $label, $aql, $params, $placeholder);
     }
 
     /**
