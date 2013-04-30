@@ -46,7 +46,7 @@ class Finder
      */
     public function find($type, $aql, $params = array(), $placeholder = "doc")
     {
-        $collectionParameter = $this->generateBindingParameter('@collection', $params);
+        $collectionParameter = $this->_toolbox->generateBindingParameter('@collection', $params);
 
         $query = "FOR $placeholder in @$collectionParameter FILTER " . $aql . " return $placeholder";
 
@@ -77,7 +77,7 @@ class Finder
      */
     public function findAll($type, $aql = "", $params = array(), $placeholder = "doc")
     {
-        $collectionParameter = $this->generateBindingParameter('@collection', $params);
+        $collectionParameter = $this->_toolbox->generateBindingParameter('@collection', $params);
 
         $query = "FOR $placeholder in @$collectionParameter " . $aql . " return $placeholder";
 
@@ -108,7 +108,7 @@ class Finder
      */
     public function findOne($type, $aql, $params = array(), $placeholder = "doc")
     {
-        $collectionParameter = $this->generateBindingParameter('@collection', $params);
+        $collectionParameter = $this->_toolbox->generateBindingParameter('@collection', $params);
 
         $query = "FOR $placeholder in @$collectionParameter FILTER " . $aql . " LIMIT 1 return $placeholder";
 
@@ -172,10 +172,10 @@ class Finder
     {
         $coordinates = $this->generateReferenceData($reference);
 
-        $collectionParameter = $this->generateBindingParameter('@collection', $params);
-        $latitudeParameter = $this->generateBindingParameter('latitude', $params);
-        $longitudeParameter = $this->generateBindingParameter('longitude', $params);
-        $limitParameter = $this->generateBindingParameter('limit', $params);
+        $collectionParameter = $this->_toolbox->generateBindingParameter('@collection', $params);
+        $latitudeParameter = $this->_toolbox->generateBindingParameter('latitude', $params);
+        $longitudeParameter = $this->_toolbox->generateBindingParameter('longitude', $params);
+        $limitParameter = $this->_toolbox->generateBindingParameter('limit', $params);
 
         //If a AModel is passed in, we do not want the pod to be included in the results.
         if ($reference instanceof AModel) {
@@ -183,7 +183,7 @@ class Finder
             $limit = $limit + 1;
 
             //Prevent clashes with the paradox filter id parameter
-            $filterParameter = $this->generateBindingParameter('paradox_filter_id', $params);
+            $filterParameter = $this->_toolbox->generateBindingParameter('paradox_filter_id', $params);
 
             $query = "FOR $placeholder in NEAR(@$collectionParameter, @$latitudeParameter, @$longitudeParameter, @$limitParameter, '_paradox_distance_parameter') FILTER $placeholder._id != @$filterParameter FILTER " . $aql . " return $placeholder";
 
@@ -229,10 +229,10 @@ class Finder
     {
         $coordinates = $this->generateReferenceData($reference);
 
-        $collectionParameter = $this->generateBindingParameter('@collection', $params);
-        $latitudeParameter = $this->generateBindingParameter('latitude', $params);
-        $longitudeParameter = $this->generateBindingParameter('longitude', $params);
-        $limitParameter = $this->generateBindingParameter('limit', $params);
+        $collectionParameter = $this->_toolbox->generateBindingParameter('@collection', $params);
+        $latitudeParameter = $this->_toolbox->generateBindingParameter('latitude', $params);
+        $longitudeParameter = $this->_toolbox->generateBindingParameter('longitude', $params);
+        $limitParameter = $this->_toolbox->generateBindingParameter('limit', $params);
 
         //If a AModel is passed in, we do not want the pod to be included in the results.
         if ($reference instanceof AModel) {
@@ -240,7 +240,7 @@ class Finder
             $limit = $limit + 1;
 
             //Prevent clashes with the paradox filter id parameter
-            $filterParameter = $this->generateBindingParameter('paradox_filter_id', $params);
+            $filterParameter = $this->_toolbox->generateBindingParameter('paradox_filter_id', $params);
 
             $query = "FOR $placeholder in NEAR(@$collectionParameter, @$latitudeParameter, @$longitudeParameter, @$limitParameter, '_paradox_distance_parameter') FILTER $placeholder._id != @$filterParameter " . $aql . " return $placeholder";
 
@@ -285,16 +285,16 @@ class Finder
     {
         $coordinates = $this->generateReferenceData($reference);
 
-        $collectionParameter = $this->generateBindingParameter('@collection', $params);
-        $latitudeParameter = $this->generateBindingParameter('latitude', $params);
-        $longitudeParameter = $this->generateBindingParameter('longitude', $params);
-        $limitParameter = $this->generateBindingParameter('limit', $params);
+        $collectionParameter = $this->_toolbox->generateBindingParameter('@collection', $params);
+        $latitudeParameter = $this->_toolbox->generateBindingParameter('latitude', $params);
+        $longitudeParameter = $this->_toolbox->generateBindingParameter('longitude', $params);
+        $limitParameter = $this->_toolbox->generateBindingParameter('limit', $params);
 
         //If a AModel is passed in, we do not want the pod to be included in the results.
         if ($reference instanceof AModel) {
             //The trick is to find one pod more than requested, and then filter out this pod. This is to work around limitations of NEAR().
             //Prevent clashes with the paradox filter id parameter
-            $filterParameter = $this->generateBindingParameter('paradox_filter_id', $params);
+            $filterParameter = $this->_toolbox->generateBindingParameter('paradox_filter_id', $params);
 
             $query = "FOR $placeholder in NEAR(@$collectionParameter, @$latitudeParameter, @$longitudeParameter, @$limitParameter, '_paradox_distance_parameter') FILTER $placeholder._id != @$filterParameter FILTER " . $aql . " LIMIT 1 return $placeholder";
 
@@ -341,15 +341,15 @@ class Finder
     {
         $coordinates = $this->generateReferenceData($reference);
 
-        $collectionParameter = $this->generateBindingParameter('@collection', $params);
-        $latitudeParameter = $this->generateBindingParameter('latitude', $params);
-        $longitudeParameter = $this->generateBindingParameter('longitude', $params);
-        $radiusParameter = $this->generateBindingParameter('radius', $params);
+        $collectionParameter = $this->_toolbox->generateBindingParameter('@collection', $params);
+        $latitudeParameter = $this->_toolbox->generateBindingParameter('latitude', $params);
+        $longitudeParameter = $this->_toolbox->generateBindingParameter('longitude', $params);
+        $radiusParameter = $this->_toolbox->generateBindingParameter('radius', $params);
 
         //If a AModel is passed in, we do not want the pod to be included in the results.
         if ($reference instanceof AModel) {
             //Prevent clashes with the paradox filter id parameter
-            $filterParameter = $this->generateBindingParameter('paradox_filter_id', $params);
+            $filterParameter = $this->_toolbox->generateBindingParameter('paradox_filter_id', $params);
 
             //Filter out this pod.
             $query = "FOR $placeholder in WITHIN(@$collectionParameter, @$latitudeParameter, @$longitudeParameter, @$radiusParameter, '_paradox_distance_parameter') FILTER $placeholder._id != @$filterParameter FILTER " . $aql . " return $placeholder";
@@ -395,15 +395,15 @@ class Finder
     {
         $coordinates = $this->generateReferenceData($reference);
 
-        $collectionParameter = $this->generateBindingParameter('@collection', $params);
-        $latitudeParameter = $this->generateBindingParameter('latitude', $params);
-        $longitudeParameter = $this->generateBindingParameter('longitude', $params);
-        $radiusParameter = $this->generateBindingParameter('radius', $params);
+        $collectionParameter = $this->_toolbox->generateBindingParameter('@collection', $params);
+        $latitudeParameter = $this->_toolbox->generateBindingParameter('latitude', $params);
+        $longitudeParameter = $this->_toolbox->generateBindingParameter('longitude', $params);
+        $radiusParameter = $this->_toolbox->generateBindingParameter('radius', $params);
 
         //If a AModel is passed in, we do not want the pod to be included in the results.
         if ($reference instanceof AModel) {
             //Prevent clashes with the paradox filter id parameter
-            $filterParameter = $this->generateBindingParameter('paradox_filter_id', $params);
+            $filterParameter = $this->_toolbox->generateBindingParameter('paradox_filter_id', $params);
 
             //Filter out this pod.
             $query = "FOR $placeholder in WITHIN(@$collectionParameter, @$latitudeParameter, @$longitudeParameter, @$radiusParameter, '_paradox_distance_parameter') FILTER $placeholder._id != @$filterParameter " . $aql . " return $placeholder";
@@ -449,15 +449,15 @@ class Finder
     {
         $coordinates = $this->generateReferenceData($reference);
 
-        $collectionParameter = $this->generateBindingParameter('@collection', $params);
-        $latitudeParameter = $this->generateBindingParameter('latitude', $params);
-        $longitudeParameter = $this->generateBindingParameter('longitude', $params);
-        $radiusParameter = $this->generateBindingParameter('radius', $params);
+        $collectionParameter = $this->_toolbox->generateBindingParameter('@collection', $params);
+        $latitudeParameter = $this->_toolbox->generateBindingParameter('latitude', $params);
+        $longitudeParameter = $this->_toolbox->generateBindingParameter('longitude', $params);
+        $radiusParameter = $this->_toolbox->generateBindingParameter('radius', $params);
 
         //If a AModel is passed in, we do not want the pod to be included in the results.
         if ($reference instanceof AModel) {
             //Prevent clashes with the paradox filter id parameter
-            $filterParameter = $this->generateBindingParameter('paradox_filter_id', $params);
+            $filterParameter = $this->_toolbox->generateBindingParameter('paradox_filter_id', $params);
 
             //Filter out this pod.
             $query = "FOR $placeholder in WITHIN(@$collectionParameter, @$latitudeParameter, @$longitudeParameter, @$radiusParameter, '_paradox_distance_parameter') FILTER $placeholder._id != @$filterParameter FILTER " . $aql . " LIMIT 1 return $placeholder";
@@ -502,9 +502,9 @@ class Finder
      */
     public function search($type, $attribute, $query, $aql, $params = array(), $placeholder = "doc")
     {
-        $collectionParameter = $this->generateBindingParameter('@collection', $params);
-        $attributeParameter = $this->generateBindingParameter('attribute', $params);
-        $queryParameter = $this->generateBindingParameter('query', $params);
+        $collectionParameter = $this->_toolbox->generateBindingParameter('@collection', $params);
+        $attributeParameter = $this->_toolbox->generateBindingParameter('attribute', $params);
+        $queryParameter = $this->_toolbox->generateBindingParameter('query', $params);
 
         $aqlStatement = "FOR $placeholder in FULLTEXT(@$collectionParameter, @$attributeParameter, @$queryParameter) FILTER " . $aql . " return $placeholder";
 
@@ -540,9 +540,9 @@ class Finder
      */
     public function searchAll($type, $attribute, $query, $aql = "", $params = array(), $placeholder = "doc")
     {
-        $collectionParameter = $this->generateBindingParameter('@collection', $params);
-        $attributeParameter = $this->generateBindingParameter('attribute', $params);
-        $queryParameter = $this->generateBindingParameter('query', $params);
+        $collectionParameter = $this->_toolbox->generateBindingParameter('@collection', $params);
+        $attributeParameter = $this->_toolbox->generateBindingParameter('attribute', $params);
+        $queryParameter = $this->_toolbox->generateBindingParameter('query', $params);
 
         $aqlStatement = "FOR $placeholder in FULLTEXT(@$collectionParameter, @$attributeParameter, @$queryParameter) " . $aql . " return $placeholder";
 
@@ -577,9 +577,9 @@ class Finder
      */
     public function searchForOne($type, $attribute, $query, $aql, $params = array(), $placeholder = "doc")
     {
-        $collectionParameter = $this->generateBindingParameter('@collection', $params);
-        $attributeParameter = $this->generateBindingParameter('attribute', $params);
-        $queryParameter = $this->generateBindingParameter('query', $params);
+        $collectionParameter = $this->_toolbox->generateBindingParameter('@collection', $params);
+        $attributeParameter = $this->_toolbox->generateBindingParameter('attribute', $params);
+        $queryParameter = $this->_toolbox->generateBindingParameter('query', $params);
 
         $aqlStatement = "FOR $placeholder in FULLTEXT(@$collectionParameter, @$attributeParameter, @$queryParameter) FILTER " . $aql . " LIMIT 1 return $placeholder";
 
@@ -601,16 +601,6 @@ class Finder
 
             return reset($converted);
         }
-    }
-
-    /**
-     * This generates a binding parameter for filtering so that it does not clash with any user defined parameters.
-     * @param  array  $userParameters An array of binding parameters.
-     * @return string
-     */
-    private function generateBindingParameter($parameter, $userParameters)
-    {
-        return $this->_toolbox->generateBindingParameter($parameter, $userParameters);
     }
 
     /**
