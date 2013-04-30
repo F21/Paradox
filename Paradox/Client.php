@@ -355,7 +355,7 @@ class Client
      */
     public function listCollections($excludeSystem = true, $includeInfo = false)
     {
-        return $this->getToolbox($this->_currentConnection)->getCollectionManager()->listCollections($excludeSystem);
+        return $this->getToolbox($this->_currentConnection)->getCollectionManager()->listCollections($excludeSystem, $includeInfo);
     }
 
     /**
@@ -373,7 +373,7 @@ class Client
      */
     public function unloadCollection($collection)
     {
-        return $this->getToolbox($this->_currentConnection)->getCollectionManager()->unloadCollections($collection);
+        return $this->getToolbox($this->_currentConnection)->getCollectionManager()->unloadCollection($collection);
     }
 
     /**
