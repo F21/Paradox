@@ -364,7 +364,7 @@ class Client
      */
     public function loadCollection($collection)
     {
-        return $this->getToolbox($this->_currentConnection)->getCollectionManager()->loadCollections($collection);
+        return $this->getToolbox($this->_currentConnection)->getCollectionManager()->loadCollection($collection);
     }
 
     /**
