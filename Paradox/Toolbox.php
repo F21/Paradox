@@ -12,6 +12,8 @@ use Paradox\exceptions\ToolboxException;
 use Paradox\toolbox\Server;
 use Paradox\toolbox\GraphManager;
 use Paradox\toolbox\CollectionManager;
+use triagens\ArangoDb\UserHandler;
+use triagens\ArangoDb\AdminHandler;
 
 /**
  * Paradox is an elegant Object Document Mananger (ODM) to use with the ArangoDB Document/Graph database server.
@@ -344,6 +346,22 @@ class Toolbox
     public function getCollectionHandler()
     {
         return new CollectionHandler($this->getConnection());
+    }
+    
+    /**
+     * Get the ArangoDB-PHP user handler.
+     * @return \triagens\ArangoDb\UserHandler
+     */
+    public function getUserHandler(){
+    	return new UserHandler($this->getConnection());
+    }
+    
+    /**
+     * Get the ArangoDB-PHP admin handler.
+     * @return \triagens\ArangoDb\AdminHandler
+     */
+    public function getAdminHandler(){
+    	return new AdminHandler($this->getConnection());
     }
 
     /**
