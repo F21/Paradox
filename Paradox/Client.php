@@ -49,7 +49,7 @@ class Client
      * @param string $password The password to use for the connection.
      * @param string $graph    The name of the graph, if you want the connection to work on a graph. For connections working on standard collections/documents, you don't need this.
      */
-    public function __construct($endpoint, $username, $password, $graph = null)
+    public function __construct($endpoint, $username = '', $password = '', $graph = null)
     {
         $this->_debug = new Debug(false);
         $this->_modelFormatter = new DefaultModelFormatter();
@@ -65,7 +65,7 @@ class Client
      * @param string $password The password to use for the connection.
      * @param string $graph    The name of the graph, if you want the connection to work on a graph. For connections working on standard collections/documents, you don't need this.
      */
-    public function addConnection($name, $endpoint, $username, $password, $graph = null)
+    public function addConnection($name, $endpoint, $username = '', $password = '', $graph = null)
     {
         $this->_toolboxes[$name] = new Toolbox($endpoint, $username, $password, $graph, $this->_debug, $this->_modelFormatter);
     }
