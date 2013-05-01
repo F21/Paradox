@@ -67,4 +67,7 @@ When contributing, please take note of the following
 * Code is to be in psr-2 standard + all. For a list see the list on the [php-cs-fixer](https://github.com/fabpot/PHP-CS-Fixer) page.
 * If you want to use php-cs-fixer, run it with `php-cs-fixer fix /path/to/project --level=all`.
 * When submitting a PR, make sure you also include tests to test all code paths of your addition. 
+
+#### License
+Paradox is licensed under [Apache2](http://www.apache.org/licenses/LICENSE-2.0.html).
     
