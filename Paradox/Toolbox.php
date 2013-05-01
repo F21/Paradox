@@ -347,21 +347,23 @@ class Toolbox
     {
         return new CollectionHandler($this->getConnection());
     }
-    
+
     /**
      * Get the ArangoDB-PHP user handler.
      * @return \triagens\ArangoDb\UserHandler
      */
-    public function getUserHandler(){
-    	return new UserHandler($this->getConnection());
+    public function getUserHandler()
+    {
+        return new UserHandler($this->getConnection());
     }
-    
+
     /**
      * Get the ArangoDB-PHP admin handler.
      * @return \triagens\ArangoDb\AdminHandler
      */
-    public function getAdminHandler(){
-    	return new AdminHandler($this->getConnection());
+    public function getAdminHandler()
+    {
+        return new AdminHandler($this->getConnection());
     }
 
     /**
