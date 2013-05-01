@@ -4,4 +4,8 @@ php:
   - "5.5"
   
 before_script:
+  - chmod 777 ./tests/bin/setup-arangodb.sh
+  - ./tests/bin/setup-arangodb.sh
   - composer install
+
+script: phpunit --configuration ./tests/phpunit.xml
