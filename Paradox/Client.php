@@ -645,7 +645,91 @@ class Client
     {
         return $this->getToolbox($this->_currentConnection)->getFinder()->searchForOne($type, $attribute, $query, $aql, $params, $placeholder);
     }
+    
+    /**
+     * Create a user on the server.
+     * @param string $username The username.
+     * @param string $password The password
+     * @param boolean $active Whether this user should be enabled or not
+     * @param array $data An optional associative array containing extra data for the user.
+     * @return boolean
+     */
+    public function createUser($username, $password = null, $active = true, $data = array()){
+    	return $this->getToolbox($this->_currentConnection)->getServer()->createUser($username, $password, $active, $data);
+    }
 
+    /**
+     * Delete a user from the server.
+     * @param string $username The user we want to delete.
+     * @return boolean
+     */
+    public function deleteUser($username){
+    	return $this->getToolbox($this->_currentConnection)->getServer()->deleteUser($username);
+    }
+    
+    /**
+     * Get information about a user.
+     * @param string $username The user we want information about.
+     * @return array
+     */
+    public function getUserInfo($username){
+    	return $this->getToolbox($this->_currentConnection)->getServer()->getUserInfo($username);
+    }
+    
+    /**
+     * Change the password of a user.
+     * @param string $username The user we want to change the password for.
+     * @param string $password The new password.
+     * @return boolean
+     */
+    public function changePassword($username, $password){
+    	return $this->getToolbox($this->_currentConnection)->getServer()->changePassword($username, $password);
+    }
+    
+    /**
+     * Enable or disable the user.
+     * @param string $username The user to enable or disable.
+     * @param boolean $active The new enabled or disabled state.
+     * @return boolean
+     */
+    public function setUserActive($username, $active){
+    	return $this->getToolbox($this->_currentConnection)->getServer()->setUserActive($username, $active);
+    }
+    
+    /**
+     * Update the extra data for a user.
+     * @param string $username The use we wish to update.
+     * @param array $data The associative array containing data we want to update.
+     * @return boolean
+     */
+    public function updateUserData($username, array $data){
+    	return $this->getToolbox($this->_currentConnection)->getServer()->updateUserData($username, $data);
+    }
+    
+    /**
+     * Get the server version.
+     * @return string
+     */
+    public function getVersion(){
+    	return $this->getToolbox($this->_currentConnection)->getServer()->getVersion();
+    }
+    
+    /**
+     * Get detailed information about the server.
+     * @return array
+     */
+    public function getServerInfo(){
+    	return $this->getToolbox($this->_currentConnection)->getServer()->getServerInfo();
+    }
+    
+    /**
+     * Get the unix timestamp of the server in microseconds.
+     * @return integer
+     */
+    public function getTime(){
+    	return $this->getToolbox($this->_currentConnection)->getServer()->getTime();
+    }
+    
     /**
      * Set to true to turn on the debugger. Set it to false to turn it off.
      * @param boolean $value

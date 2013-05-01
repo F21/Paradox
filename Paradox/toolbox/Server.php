@@ -7,7 +7,7 @@ use Paradox\exceptions\ServerException;
  * Paradox is an elegant Object Document Mananger (ODM) to use with the ArangoDB Document/Graph database server.
  * Paradox requires ArangoDB-PHP to communication with the server, so it needs to be installed and avaliable.
  *
- * Server functions
+ * Server manager.
  * Manages server tasks, for example, creating and deleting users and retriving server statistics.
  *
  * @version 1.2.3
@@ -118,7 +118,7 @@ class Server
      * @throws ServerException
      * @return boolean
      */
-    public function setActive($username, $active){
+    public function setUserActive($username, $active){
     	
     	try {
     		$this->_toolbox->getUserHandler()->updateUser($username, null, (bool)$active);
