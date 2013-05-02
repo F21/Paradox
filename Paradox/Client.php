@@ -51,13 +51,13 @@ class Client
      */
     public function __construct($endpoint = null, $username = null, $password = null, $graph = null)
     {
+    	$this->_debug = new Debug(false);
+    	$this->_modelFormatter = new DefaultModelFormatter();
+    	
     	if($endpoint){
     		$this->addConnection('default', $endpoint, $username, $password, $graph);
     		$this->useConnection('default');
     	}
-    	
-    	$this->_debug = new Debug(false);
-    	$this->_modelFormatter = new DefaultModelFormatter();
     }
 
     /**
