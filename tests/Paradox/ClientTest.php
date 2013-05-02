@@ -479,6 +479,26 @@ class ClientTest extends Base
     }
 
     /**
+     * @covers Paradox\Client::getVertexCollectionName()
+     */
+    public function testGetVertexCollectionName()
+    {
+        $client = $this->getClient($this->getDefaultEndpoint(), $this->getDefaultUsername(), $this->getDefaultPassword(), $this->graphName);
+
+        $this->assertEquals($this->graphName . 'VertexCollection', $client->getVertexCollectionName(), "The vertex collection name does not match");
+    }
+
+    /**
+     * @covers Paradox\Client::getEdgeCollectionName()
+     */
+    public function testGetEdgeCollectionName()
+    {
+        $client = $this->getClient($this->getDefaultEndpoint(), $this->getDefaultUsername(), $this->getDefaultPassword(), $this->graphName);
+
+        $this->assertEquals($this->graphName . 'EdgeCollection', $client->getEdgeCollectionName(), "The edge collection name does not match");
+    }
+
+    /**
      * @covers Paradox\Client::createCollection
      * @covers Paradox\Client::deleteCollection
      */

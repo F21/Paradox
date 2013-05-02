@@ -51,13 +51,13 @@ class Client
      */
     public function __construct($endpoint = null, $username = null, $password = null, $graph = null)
     {
-    	$this->_debug = new Debug(false);
-    	$this->_modelFormatter = new DefaultModelFormatter();
-    	
-    	if($endpoint){
-    		$this->addConnection('default', $endpoint, $username, $password, $graph);
-    		$this->useConnection('default');
-    	}
+        $this->_debug = new Debug(false);
+        $this->_modelFormatter = new DefaultModelFormatter();
+
+        if ($endpoint) {
+            $this->addConnection('default', $endpoint, $username, $password, $graph);
+            $this->useConnection('default');
+        }
     }
 
     /**
@@ -281,6 +281,24 @@ class Client
     public function deleteGraph($name)
     {
         return $this->getToolbox($this->_currentConnection)->getGraphManager()->deleteGraph($name);
+    }
+
+    /**
+     * Get the name of the vertex collection.
+     * @return null|string
+     */
+    public function getVertexCollectionName()
+    {
+        return $this->getToolbox($this->_currentConnection)->getVertexCollectionName();
+    }
+
+    /**
+     * Get the name of the edge collection.
+     * @return null|string
+     */
+    public function getEdgeCollectionName()
+    {
+        return $this->getToolbox($this->_currentConnection)->getEdgeCollectionName();
     }
 
     /**
