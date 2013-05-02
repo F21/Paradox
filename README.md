@@ -57,10 +57,10 @@ Simply clone this repository into your project and include the bundled autoloade
     require_once '/path/to/paradox/Paradox/Autoloader.php'
     Paradox\Autoloader::init();
 
-#### Using Paradox
+### Using Paradox
 If you are new to Paradox, we recommend reading our documentation in the [wiki](https://github.com/F21/Paradox/wiki).
 
-#### Contributing
+### Contributing
 Paradox is a very new library, so your contributions (issues and pull request) are appreciated :)
 
 When contributing, please take note of the following
@@ -68,6 +68,6 @@ When contributing, please take note of the following
 * If you want to use php-cs-fixer, run it with `php-cs-fixer fix /path/to/project --level=all`.
 * When submitting a PR, make sure you also include tests to test all code paths of your addition. 
 
-#### License
+### License
 Paradox is licensed under [Apache2](http://www.apache.org/licenses/LICENSE-2.0.html).
     
