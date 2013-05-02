@@ -26,10 +26,6 @@
 		"triagens/arangodb" : "1.2.1",
 		"php" : ">=5.4.0"
 	},
-	"require-dev" : {
-		"triagens/arangodb" : "devel-dev",
-		"php" : ">=5.4.0"
-	},
 	"autoload" : {
 		"psr-0" : {
 			"Paradox" : "Paradox/"
