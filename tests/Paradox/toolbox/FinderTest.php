@@ -348,7 +348,7 @@ class FinderTest extends Base
         $result = reset($results);
         $this->assertInstanceOf('Paradox\AModel', $result, 'Result items should have the type Paradox\AModel');
         $this->assertEquals($result->get('name'), 'Tsegaye Kebede');
-        $this->assertInternalType('float', $result->getDistance());
+        $this->assertEquals(0, $result->getDistance());
         $this->assertInternalType('array', $result->getCoordinates());
     }
 
@@ -425,7 +425,7 @@ class FinderTest extends Base
         $result = reset($results);
         $this->assertInstanceOf('Paradox\AModel', $result, 'Result items should have the type Paradox\AModel');
         $this->assertEquals($result->get('name'), 'Tsegaye Kebede');
-        $this->assertInternalType('float', $result->getDistance());
+        $this->assertEquals(0, $result->getDistance());
         $this->assertInternalType('array', $result->getCoordinates());
     }
 
@@ -494,7 +494,7 @@ class FinderTest extends Base
         $this->assertNotEquals($reference->getId(), $result->getId(), "The found pod should not be the reference pod");
         $this->assertInstanceOf('Paradox\AModel', $result, 'Result items should have the type Paradox\AModel');
         $this->assertEquals($result->get('name'), 'Tsegaye Kebede');
-        $this->assertInternalType('float', $result->getDistance());
+        $this->assertEquals(0, $result->getDistance());
         $this->assertInternalType('array', $result->getCoordinates());
     }
 
@@ -570,7 +570,7 @@ class FinderTest extends Base
         $this->assertNotEquals($reference->getId(), $result->getId(), "The found pod should not be the reference pod");
         $this->assertInstanceOf('Paradox\AModel', $result, 'Result items should have the type Paradox\AModel');
         $this->assertEquals($result->get('name'), 'Tsegaye Kebede');
-        $this->assertInternalType('float', $result->getDistance());
+        $this->assertEquals(0, $result->getDistance());
         $this->assertInternalType('array', $result->getCoordinates());
     }
 
@@ -647,7 +647,7 @@ class FinderTest extends Base
         $this->assertNotEquals($reference->getId(), $result->getId(), "The found pod should not be the reference pod");
         $this->assertInstanceOf('Paradox\AModel', $result, 'Result items should have the type Paradox\AModel');
         $this->assertEquals($result->get('name'), 'Tsegaye Kebede');
-        $this->assertInternalType('float', $result->getDistance());
+        $this->assertEquals(0, $result->getDistance());
         $this->assertInternalType('array', $result->getCoordinates());
     }
 
@@ -715,7 +715,7 @@ class FinderTest extends Base
         $this->assertNotEquals($reference->getId(), $result->getId(), "The found pod should not be the reference pod");
         $this->assertInstanceOf('Paradox\AModel', $result, 'Result items should have the type Paradox\AModel');
         $this->assertEquals($result->get('name'), 'Tsegaye Kebede');
-        $this->assertInternalType('float', $result->getDistance());
+        $this->assertEquals(0, $result->getDistance());
         $this->assertInternalType('array', $result->getCoordinates());
     }
 
