@@ -69,6 +69,10 @@ Hint: Since ArangoDB-PHP and Paradox uses PSR-0 for organising class files, you 
 ### Using Paradox
 If you are new to Paradox, we recommend reading our documentation in the [wiki](https://github.com/F21/Paradox/wiki).
 
+### Versioning
+Paradox tracks the version of ArangoDB. For example, if Pardox is version 1.2.x, then it is expected to work with 1.2.x of ArangoDB.
+Note that we only track the major and minor version of ArangoDB. The patch version (last number) is independent or ARangoDB and specific to Paradox.
+
 ### Contributing
 Paradox is a very new library, so your contributions (issues and pull request) are appreciated :)
 
