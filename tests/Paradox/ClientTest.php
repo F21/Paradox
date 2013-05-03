@@ -1045,16 +1045,6 @@ class ClientTest extends Base
     }
 
     /**
-     * @covers Paradox\Client::getServerInfo
-     */
-    public function testGetServerInfo()
-    {
-        $version = $this->client->getServerInfo();
-
-        $this->assertInternalType('array', $version, "The server info should be an array");
-    }
-
-    /**
      * @covers Paradox\Client::getTime
      */
     public function testGetTime()

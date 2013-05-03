@@ -169,21 +169,6 @@ class Server
     }
 
     /**
-     * Get detailed information about the server.
-     * @throws ServerException
-     * @return array
-     */
-    public function getServerInfo()
-    {
-        try {
-            return $this->_toolbox->getAdminHandler()->getServerVersion(true);
-        } catch (\Exception $e) {
-            $normalised = $this->_toolbox->normaliseDriverExceptions($e);
-            throw new ServerException($normalised['message'], $normalised['code']);
-        }
-    }
-
-    /**
      * Get the unix timestamp of the server with microsecond precision
      * @throws ServerException
      * @return float

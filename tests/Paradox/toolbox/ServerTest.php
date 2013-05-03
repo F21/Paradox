@@ -279,33 +279,6 @@ class ServerTest extends Base
     }
 
     /**
-     * @covers Paradox\toolbox\Server::getServerInfo
-     */
-    public function testGetServerInfo()
-    {
-        $info = $this->server->getServerInfo();
-        $this->assertInternalType('array', $info, "The server info should be an array");
-    }
-
-    /**
-     * @covers Paradox\toolbox\Server::getServerInfo
-     */
-    public function testGetServerInfoOnInvalidServer()
-    {
-        $client = $this->getClient('tcp://nonexistentserver', $this->getDefaultUsername(), $this->getDefaultPassword());
-
-        try {
-            $version = $client->getToolbox()->getServer()->getServerInfo();
-        } catch (\Exception $e) {
-            $this->assertInstanceOf('Paradox\exceptions\ServerException', $e, 'Exception thrown was not of the type Paradox\exceptions\ServerException');
-
-            return;
-        }
-
-        $this->fail('Tried to get info for server that does not exist, but an exception was not thrown');
-    }
-
-    /**
      * @covers Paradox\toolbox\Server::getTime
      */
     public function testGetTime()
