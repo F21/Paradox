@@ -743,6 +743,15 @@ class Client
     }
 
     /**
+     * Get detailed information about the server.
+     * @return array
+     */
+    public function getServerInfo()
+    {
+        return $this->getToolbox($this->_currentConnection)->getServer()->getServerInfo();
+    }
+
+    /**
      * Get the unix timestamp of the server in microseconds.
      * @return integer
      */
