@@ -2,8 +2,10 @@
 
 ### Paradox - A beautiful ODM (Object Document Manager) for ArangoDB
 
-*Master (stable)*: [![Build Status](https://travis-ci.org/F21/Paradox.png?branch=master)](https://travis-ci.org/F21/Paradox)
-*Devel (unstable)*: [![Build Status](https://travis-ci.org/F21/Paradox.png?branch=devel)](https://travis-ci.org/F21/Paradox)
+
+Master (stable): [![Build Status](https://travis-ci.org/F21/Paradox.png?branch=master)](https://travis-ci.org/F21/Paradox)
+&nbsp;&nbsp;&nbsp;&nbsp;Devel (unstable): [![Build Status](https://travis-ci.org/F21/Paradox.png?branch=devel)](https://travis-ci.org/F21/Paradox)
+
 ----------------------------------------------------------------------------
 
 ### Welcome
