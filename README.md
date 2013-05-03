@@ -2,8 +2,7 @@
 
 ### Paradox - A beautiful ODM (Object Document Manager) for ArangoDB
 
-[![Build Status](https://travis-ci.org/triAGENS/ArangoDB-PHP.png?branch=devel)](https://travis-ci.org/triAGENS/ArangoDB-PHP)
-**Version: 1.2.0**
+Master (stable): [![Build Status](https://travis-ci.org/F21/Paradox.png?branch=master)](https://travis-ci.org/F21/Paradox)
 
 ----------------------------------------------------------------------------
 
