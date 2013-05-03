@@ -446,8 +446,8 @@ class CollectionManagerTest extends Base
         //Verify it is unloaded. Note that we list collections, because using getCollectionInfo() loads the collection.
         $collectionInfo = $this->collectionManager->listCollections(true, true);
 
-        //Status 2 = loaded
-        $this->assertEquals(2, $collectionInfo[$this->collectionName]['status'], "The collection was not unloaded");
+        //Status 2 = unloaded or 4 = being unloaded
+        $this->assertContains($collectionInfo[$this->collectionName]['status'], array(2, 4), "The collection was not unloaded");
     }
 
     /**
