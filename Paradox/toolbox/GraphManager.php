@@ -259,6 +259,14 @@ class GraphManager
         if (!$id) {
             return array();
         }
+        
+        if(strtolower($direction) == "in"){
+        	$direction = "inbound";
+        }
+        
+        if(strtolower($direction) == "out"){
+        	$direction = "outbound";
+        }
 
         $vertexCollection = $this->_toolbox->generateBindingParameter('@vertexCollection', $params);
         $edgeCollection = $this->_toolbox->generateBindingParameter('@edgeCollection', $params);
