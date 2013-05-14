@@ -22,7 +22,7 @@ class Query
 {
     /**
      * A reference to the toolbox.
-     * @var Toolbox $toolbox
+     * @var Toolbox
      */
     private $_toolbox;
 
