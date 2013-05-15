@@ -759,82 +759,91 @@ class Client
     {
         return $this->getToolbox($this->_currentConnection)->getServer()->getTime();
     }
-    
+
     /**
      * Begin a transaction.
      * @return boolean
      */
-    public function begin(){
-    	return $this->getToolbox($this->_currentConnection)->getTransactionManager()->begin();
+    public function begin()
+    {
+        return $this->getToolbox($this->_currentConnection)->getTransactionManager()->begin();
     }
-    
+
     /**
      * Commit a transaction and return a results array.
      * @return array
      */
-    public function commit(){
-    	return $this->getToolbox($this->_currentConnection)->getTransactionManager()->commit();
+    public function commit()
+    {
+        return $this->getToolbox($this->_currentConnection)->getTransactionManager()->commit();
     }
-    
+
     /**
      * Cancel a transaction.
      * @return true
      */
-    public function cancel(){
-    	return $this->getToolbox($this->_currentConnection)->getTransactionManager()->cancel();
+    public function cancel()
+    {
+        return $this->getToolbox($this->_currentConnection)->getTransactionManager()->cancel();
     }
-    
+
     /**
      * Add a collection that will be locked for reading.
      * @param string $collection The name of the collection.
      */
-    public function addReadCollection($collection){
-    	return $this->getToolbox($this->_currentConnection)->getTransactionManager()->addReadCollection($collection);
+    public function addReadCollection($collection)
+    {
+        return $this->getToolbox($this->_currentConnection)->getTransactionManager()->addReadCollection($collection);
     }
-    
+
     /**
      * Add a collection that will be locked for writing.
      * @param string $collection The name of the collection.
      */
-    public function addWriteCollection($collection){
-    	return $this->getToolbox($this->_currentConnection)->getTransactionManager()->addWriteCollection($collection);
+    public function addWriteCollection($collection)
+    {
+        return $this->getToolbox($this->_currentConnection)->getTransactionManager()->addWriteCollection($collection);
     }
-    
+
     /**
      * Register the result of a transaction operation under a name, so that the result can be retrieved after the transaction has finished.
-     * @param string $name The name to store the results under.
-     * @param string $command A placebo that does nothing, but allows one to explicitly associate a registration with a transaction operation.
+     * @param  string  $name    The name to store the results under.
+     * @param  string  $command A placebo that does nothing, but allows one to explicitly associate a registration with a transaction operation.
      * @return boolean
      */
-    public function registerResult($name, $command = null){
-    	return $this->getToolbox($this->_currentConnection)->getTransactionManager()->registerResult($name, $command);
+    public function registerResult($name, $command = null)
+    {
+        return $this->getToolbox($this->_currentConnection)->getTransactionManager()->registerResult($name, $command);
     }
-    
+
     /**
      * Pause the transaction, so that operations after this point are not part of the transaction.
      */
-    public function pauseTransaction(){
-    	return $this->getToolbox($this->_currentConnection)->getTransactionManager()->pauseTransaction();
+    public function pauseTransaction()
+    {
+        return $this->getToolbox($this->_currentConnection)->getTransactionManager()->pauseTransaction();
     }
-    
+
     /**
      * Resume the transaction, so that operations after this point are part of the transaction.
      */
-    public function resumeTransaction(){
-    	return $this->getToolbox($this->_currentConnection)->getTransactionManager()->resumeTransaction();
+    public function resumeTransaction()
+    {
+        return $this->getToolbox($this->_currentConnection)->getTransactionManager()->resumeTransaction();
     }
-    
+
     /**
      * Send a raw transaction to the server and return the result.
-     * @param string $action The javascript function for the transaction.
-     * @param array $readCollections An array of collections to be locked for reading.
-     * @param array $writeCollections An array of collections to be locked for writing.
-     * @param array $parameters An array of parameters for executing the transaction multiple times.
+     * @param  string                      $action           The javascript function for the transaction.
+     * @param  array                       $readCollections  An array of collections to be locked for reading.
+     * @param  array                       $writeCollections An array of collections to be locked for writing.
+     * @param  array                       $parameters       An array of parameters for executing the transaction multiple times.
      * @throws TransactionManagerException
      * @return mixed
      */
-    public function executeTransaction($action, $readCollections = array(), $writeCollections = array(), $parameters = array()){
-    	return $this->getToolbox($this->_currentConnection)->getTransactionManager()->executeTransaction($action, $readCollections, $writeCollections, $parameters);
+    public function executeTransaction($action, $readCollections = array(), $writeCollections = array(), $parameters = array())
+    {
+        return $this->getToolbox($this->_currentConnection)->getTransactionManager()->executeTransaction($action, $readCollections, $writeCollections, $parameters);
     }
 
     /**

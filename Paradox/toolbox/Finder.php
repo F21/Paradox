@@ -52,24 +52,24 @@ class Finder
 
         $params[$collectionParameter] = $this->getCollectionName($type);
 
-        if($this->_toolbox->getTransactionManager()->hasTransaction()){
-        	$this->_toolbox->getTransactionManager()->addReadCollection($type);
-        	$statement = json_encode(array('query' => $query, 'bindVars' => $params), JSON_FORCE_OBJECT);
-        	$this->_toolbox->getTransactionManager()->addCommand("db._createStatement($statement).execute().elements();" , "Finder:find", null, false, array('type' => $type));
-        	 
-        }else{
-        	try {
-        		$result = $this->_toolbox->getQuery()->getAll($query, $params);
-        	} catch (\Exception $e) {
-        		$normalised = $this->_toolbox->normaliseDriverExceptions($e);
-        		throw new FinderException($normalised['message'], $normalised['code']);
-        	}
-        	
-        	if (empty($result)) {
-        		return array();
-        	}
-        	
-        	return $this->convertToPods($type, $result);
+        if ($this->_toolbox->getTransactionManager()->hasTransaction()) {
+            $this->_toolbox->getTransactionManager()->addReadCollection($type);
+            $statement = json_encode(array('query' => $query, 'bindVars' => $params), JSON_FORCE_OBJECT);
+            $this->_toolbox->getTransactionManager()->addCommand("db._createStatement($statement).execute().elements();" , "Finder:find", null, false, array('type' => $type));
+
+        } else {
+            try {
+                $result = $this->_toolbox->getQuery()->getAll($query, $params);
+            } catch (\Exception $e) {
+                $normalised = $this->_toolbox->normaliseDriverExceptions($e);
+                throw new FinderException($normalised['message'], $normalised['code']);
+            }
+
+            if (empty($result)) {
+                return array();
+            }
+
+            return $this->convertToPods($type, $result);
         }
     }
 
@@ -90,24 +90,24 @@ class Finder
 
         $params[$collectionParameter] = $this->getCollectionName($type);
 
-        if($this->_toolbox->getTransactionManager()->hasTransaction()){
-        	$this->_toolbox->getTransactionManager()->addReadCollection($type);
-        	$statement = json_encode(array('query' => $query, 'bindVars' => $params), JSON_FORCE_OBJECT);
-        	$this->_toolbox->getTransactionManager()->addCommand("db._createStatement($statement).execute().elements();" , "Finder:findAll", null, false, array('type' => $type));
-        
-        }else{
-	        try {
-	            $result = $this->_toolbox->getQuery()->getAll($query, $params);
-	        } catch (\Exception $e) {
-	            $normalised = $this->_toolbox->normaliseDriverExceptions($e);
-	            throw new FinderException($normalised['message'], $normalised['code']);
-	        }
-	
-	        if (empty($result)) {
-	            return array();
-	        }
-	
-	        return $this->convertToPods($type, $result);
+        if ($this->_toolbox->getTransactionManager()->hasTransaction()) {
+            $this->_toolbox->getTransactionManager()->addReadCollection($type);
+            $statement = json_encode(array('query' => $query, 'bindVars' => $params), JSON_FORCE_OBJECT);
+            $this->_toolbox->getTransactionManager()->addCommand("db._createStatement($statement).execute().elements();" , "Finder:findAll", null, false, array('type' => $type));
+
+        } else {
+            try {
+                $result = $this->_toolbox->getQuery()->getAll($query, $params);
+            } catch (\Exception $e) {
+                $normalised = $this->_toolbox->normaliseDriverExceptions($e);
+                throw new FinderException($normalised['message'], $normalised['code']);
+            }
+
+            if (empty($result)) {
+                return array();
+            }
+
+            return $this->convertToPods($type, $result);
         }
     }
 
@@ -128,26 +128,26 @@ class Finder
 
         $params[$collectionParameter] = $this->getCollectionName($type);
 
-        if($this->_toolbox->getTransactionManager()->hasTransaction()){
-        	$this->_toolbox->getTransactionManager()->addReadCollection($type);
-        	$statement = json_encode(array('query' => $query, 'bindVars' => $params), JSON_FORCE_OBJECT);
-        	$this->_toolbox->getTransactionManager()->addCommand("function(){var elements = db._createStatement($statement).execute().elements(); return elements[0] ? elements[0] : null}();", "Finder:findOne", null, false, array('type' => $type));
-        
-        }else{
-	        try {
-	            $result = $this->_toolbox->getQuery()->getOne($query, $params);
-	        } catch (\Exception $e) {
-	            $normalised = $this->_toolbox->normaliseDriverExceptions($e);
-	            throw new FinderException($normalised['message'], $normalised['code']);
-	        }
-	
-	        if (!$result) {
-	            return null;
-	        } else {
-	            $converted = $this->convertToPods($type, array($result));
-	
-	            return reset($converted);
-	        }
+        if ($this->_toolbox->getTransactionManager()->hasTransaction()) {
+            $this->_toolbox->getTransactionManager()->addReadCollection($type);
+            $statement = json_encode(array('query' => $query, 'bindVars' => $params), JSON_FORCE_OBJECT);
+            $this->_toolbox->getTransactionManager()->addCommand("function(){var elements = db._createStatement($statement).execute().elements(); return elements[0] ? elements[0] : null}();", "Finder:findOne", null, false, array('type' => $type));
+
+        } else {
+            try {
+                $result = $this->_toolbox->getQuery()->getOne($query, $params);
+            } catch (\Exception $e) {
+                $normalised = $this->_toolbox->normaliseDriverExceptions($e);
+                throw new FinderException($normalised['message'], $normalised['code']);
+            }
+
+            if (!$result) {
+                return null;
+            } else {
+                $converted = $this->convertToPods($type, array($result));
+
+                return reset($converted);
+            }
         }
     }
 
@@ -159,26 +159,26 @@ class Finder
      */
     public function any($type)
     {
-    	if($this->_toolbox->getTransactionManager()->hasTransaction()){
-    		$this->_toolbox->getTransactionManager()->addReadCollection($type);
-    		$this->_toolbox->getTransactionManager()->addCommand("db.$type.any();" , "Finder:any", null, false, array('type' => $type));
-    	}else{
-    		try {
-    			$result = $this->_toolbox->getCollectionHandler()->any($type);
-    		
-    			if (!$result) {
-    				return null;
-    			}
-    		
-    			$converted = $this->convertToPods($type, array($result));
-    		
-    			return reset($converted);
-    		
-    		} catch (\Exception $e) {
-    			$normalised = $this->_toolbox->normaliseDriverExceptions($e);
-    			throw new FinderException($normalised['message'], $normalised['code']);
-    		}	
-    	}
+        if ($this->_toolbox->getTransactionManager()->hasTransaction()) {
+            $this->_toolbox->getTransactionManager()->addReadCollection($type);
+            $this->_toolbox->getTransactionManager()->addCommand("db.$type.any();" , "Finder:any", null, false, array('type' => $type));
+        } else {
+            try {
+                $result = $this->_toolbox->getCollectionHandler()->any($type);
+
+                if (!$result) {
+                    return null;
+                }
+
+                $converted = $this->convertToPods($type, array($result));
+
+                return reset($converted);
+
+            } catch (\Exception $e) {
+                $normalised = $this->_toolbox->normaliseDriverExceptions($e);
+                throw new FinderException($normalised['message'], $normalised['code']);
+            }
+        }
     }
 
     /**
@@ -223,24 +223,24 @@ class Finder
         $params[$longitudeParameter] = $coordinates['longitude'];
         $params[$limitParameter] = $limit;
 
-        if($this->_toolbox->getTransactionManager()->hasTransaction()){
-        	$this->_toolbox->getTransactionManager()->addReadCollection($type);
-        	$statement = json_encode(array('query' => $query, 'bindVars' => $params), JSON_FORCE_OBJECT);
-        	$this->_toolbox->getTransactionManager()->addCommand("db._createStatement($statement).execute().elements();", "Finder:findNear", null, false, array('type' => $type, 'coordinates' => $coordinates));
-        
-        }else{
-	        try {
-	            $result = $this->_toolbox->getQuery()->getAll($query, $params);
-	        } catch (\Exception $e) {
-	            $normalised = $this->_toolbox->normaliseDriverExceptions($e);
-	            throw new FinderException($normalised['message'], $normalised['code']);
-	        }
-	
-	        if (empty($result)) {
-	            return array();
-	        }
-	
-	        return $converted = $this->convertToPods($type, $result, $coordinates);
+        if ($this->_toolbox->getTransactionManager()->hasTransaction()) {
+            $this->_toolbox->getTransactionManager()->addReadCollection($type);
+            $statement = json_encode(array('query' => $query, 'bindVars' => $params), JSON_FORCE_OBJECT);
+            $this->_toolbox->getTransactionManager()->addCommand("db._createStatement($statement).execute().elements();", "Finder:findNear", null, false, array('type' => $type, 'coordinates' => $coordinates));
+
+        } else {
+            try {
+                $result = $this->_toolbox->getQuery()->getAll($query, $params);
+            } catch (\Exception $e) {
+                $normalised = $this->_toolbox->normaliseDriverExceptions($e);
+                throw new FinderException($normalised['message'], $normalised['code']);
+            }
+
+            if (empty($result)) {
+                return array();
+            }
+
+            return $converted = $this->convertToPods($type, $result, $coordinates);
         }
     }
 
@@ -286,24 +286,24 @@ class Finder
         $params[$longitudeParameter] = $coordinates['longitude'];
         $params[$limitParameter] = $limit;
 
-        if($this->_toolbox->getTransactionManager()->hasTransaction()){
-        	$this->_toolbox->getTransactionManager()->addReadCollection($type);
-        	$statement = json_encode(array('query' => $query, 'bindVars' => $params), JSON_FORCE_OBJECT);
-        	$this->_toolbox->getTransactionManager()->addCommand("db._createStatement($statement).execute().elements();", "Finder:findAllNear", null, false, array('type' => $type, 'coordinates' => $coordinates));
-        
-        }else{
-	        try {
-	            $result = $this->_toolbox->getQuery()->getAll($query, $params);
-	        } catch (\Exception $e) {
-	            $normalised = $this->_toolbox->normaliseDriverExceptions($e);
-	            throw new FinderException($normalised['message'], $normalised['code']);
-	        }
-	
-	        if (empty($result)) {
-	            return array();
-	        }
-	
-	        return $converted = $this->convertToPods($type, $result, $coordinates);
+        if ($this->_toolbox->getTransactionManager()->hasTransaction()) {
+            $this->_toolbox->getTransactionManager()->addReadCollection($type);
+            $statement = json_encode(array('query' => $query, 'bindVars' => $params), JSON_FORCE_OBJECT);
+            $this->_toolbox->getTransactionManager()->addCommand("db._createStatement($statement).execute().elements();", "Finder:findAllNear", null, false, array('type' => $type, 'coordinates' => $coordinates));
+
+        } else {
+            try {
+                $result = $this->_toolbox->getQuery()->getAll($query, $params);
+            } catch (\Exception $e) {
+                $normalised = $this->_toolbox->normaliseDriverExceptions($e);
+                throw new FinderException($normalised['message'], $normalised['code']);
+            }
+
+            if (empty($result)) {
+                return array();
+            }
+
+            return $converted = $this->convertToPods($type, $result, $coordinates);
         }
     }
 
@@ -346,27 +346,27 @@ class Finder
         $params[$collectionParameter] = $this->getCollectionName($type);
         $params[$latitudeParameter] = $coordinates['latitude'];
         $params[$longitudeParameter] = $coordinates['longitude'];
-        
-        if($this->_toolbox->getTransactionManager()->hasTransaction()){
-        	$this->_toolbox->getTransactionManager()->addReadCollection($type);
-        	$statement = json_encode(array('query' => $query, 'bindVars' => $params), JSON_FORCE_OBJECT);
-        	$this->_toolbox->getTransactionManager()->addCommand("function(){var elements = db._createStatement($statement).execute().elements(); return elements[0] ? elements[0] : null}();" , "Finder:findOneNear", null, false, array('type' => $type, 'coordinates' => $coordinates));
-        
-        }else{
-	        try {
-	            $result = $this->_toolbox->getQuery()->getOne($query, $params);
-	        } catch (\Exception $e) {
-	            $normalised = $this->_toolbox->normaliseDriverExceptions($e);
-	            throw new FinderException($normalised['message'], $normalised['code']);
-	        }
-	
-	        if (!$result) {
-	            return null;
-	        } else {
-	            $converted = $this->convertToPods($type, array($result), $coordinates);
-	
-	            return reset($converted);
-	        }
+
+        if ($this->_toolbox->getTransactionManager()->hasTransaction()) {
+            $this->_toolbox->getTransactionManager()->addReadCollection($type);
+            $statement = json_encode(array('query' => $query, 'bindVars' => $params), JSON_FORCE_OBJECT);
+            $this->_toolbox->getTransactionManager()->addCommand("function(){var elements = db._createStatement($statement).execute().elements(); return elements[0] ? elements[0] : null}();" , "Finder:findOneNear", null, false, array('type' => $type, 'coordinates' => $coordinates));
+
+        } else {
+            try {
+                $result = $this->_toolbox->getQuery()->getOne($query, $params);
+            } catch (\Exception $e) {
+                $normalised = $this->_toolbox->normaliseDriverExceptions($e);
+                throw new FinderException($normalised['message'], $normalised['code']);
+            }
+
+            if (!$result) {
+                return null;
+            } else {
+                $converted = $this->convertToPods($type, array($result), $coordinates);
+
+                return reset($converted);
+            }
         }
     }
 
@@ -409,25 +409,25 @@ class Finder
         $params[$latitudeParameter] = $coordinates['latitude'];
         $params[$longitudeParameter] = $coordinates['longitude'];
         $params[$radiusParameter] = $radius;
-        
-        if($this->_toolbox->getTransactionManager()->hasTransaction()){
-        	$this->_toolbox->getTransactionManager()->addReadCollection($type);
-        	$statement = json_encode(array('query' => $query, 'bindVars' => $params), JSON_FORCE_OBJECT);
-        	$this->_toolbox->getTransactionManager()->addCommand("db._createStatement($statement).execute().elements();", "Finder:findWithin", null, false, array('type' => $type, 'coordinates' => $coordinates));
-        
-        }else{
-	        try {
-	            $result = $this->_toolbox->getQuery()->getAll($query, $params);
-	        } catch (\Exception $e) {
-	            $normalised = $this->_toolbox->normaliseDriverExceptions($e);
-	            throw new FinderException($normalised['message'], $normalised['code']);
-	        }
-	
-	        if (empty($result)) {
-	            return array();
-	        }
-	
-	        return $converted = $this->convertToPods($type, $result, $coordinates);
+
+        if ($this->_toolbox->getTransactionManager()->hasTransaction()) {
+            $this->_toolbox->getTransactionManager()->addReadCollection($type);
+            $statement = json_encode(array('query' => $query, 'bindVars' => $params), JSON_FORCE_OBJECT);
+            $this->_toolbox->getTransactionManager()->addCommand("db._createStatement($statement).execute().elements();", "Finder:findWithin", null, false, array('type' => $type, 'coordinates' => $coordinates));
+
+        } else {
+            try {
+                $result = $this->_toolbox->getQuery()->getAll($query, $params);
+            } catch (\Exception $e) {
+                $normalised = $this->_toolbox->normaliseDriverExceptions($e);
+                throw new FinderException($normalised['message'], $normalised['code']);
+            }
+
+            if (empty($result)) {
+                return array();
+            }
+
+            return $converted = $this->convertToPods($type, $result, $coordinates);
         }
     }
 
@@ -471,24 +471,24 @@ class Finder
         $params[$longitudeParameter] = $coordinates['longitude'];
         $params[$radiusParameter] = $radius;
 
-        if($this->_toolbox->getTransactionManager()->hasTransaction()){
-        	$this->_toolbox->getTransactionManager()->addReadCollection($type);
-        	$statement = json_encode(array('query' => $query, 'bindVars' => $params), JSON_FORCE_OBJECT);
-        	$this->_toolbox->getTransactionManager()->addCommand("db._createStatement($statement).execute().elements();" , "Finder:findAllWithin", null, false, array('type' => $type, 'coordinates' => $coordinates));
-        
-        }else{
-	        try {
-	            $result = $this->_toolbox->getQuery()->getAll($query, $params);
-	        } catch (\Exception $e) {
-	            $normalised = $this->_toolbox->normaliseDriverExceptions($e);
-	            throw new FinderException($normalised['message'], $normalised['code']);
-	        }
-	
-	        if (empty($result)) {
-	            return array();
-	        }
-	
-	        return $converted = $this->convertToPods($type, $result, $coordinates);
+        if ($this->_toolbox->getTransactionManager()->hasTransaction()) {
+            $this->_toolbox->getTransactionManager()->addReadCollection($type);
+            $statement = json_encode(array('query' => $query, 'bindVars' => $params), JSON_FORCE_OBJECT);
+            $this->_toolbox->getTransactionManager()->addCommand("db._createStatement($statement).execute().elements();" , "Finder:findAllWithin", null, false, array('type' => $type, 'coordinates' => $coordinates));
+
+        } else {
+            try {
+                $result = $this->_toolbox->getQuery()->getAll($query, $params);
+            } catch (\Exception $e) {
+                $normalised = $this->_toolbox->normaliseDriverExceptions($e);
+                throw new FinderException($normalised['message'], $normalised['code']);
+            }
+
+            if (empty($result)) {
+                return array();
+            }
+
+            return $converted = $this->convertToPods($type, $result, $coordinates);
         }
     }
 
@@ -532,26 +532,26 @@ class Finder
         $params[$longitudeParameter] = $coordinates['longitude'];
         $params[$radiusParameter] = $radius;
 
-        if($this->_toolbox->getTransactionManager()->hasTransaction()){
-        	$this->_toolbox->getTransactionManager()->addReadCollection($type);
-        	$statement = json_encode(array('query' => $query, 'bindVars' => $params), JSON_FORCE_OBJECT);
-        	$this->_toolbox->getTransactionManager()->addCommand("function(){var elements = db._createStatement($statement).execute().elements(); return elements[0] ? elements[0] : null}();", "Finder:findOneWithin", null, false, array('type' => $type, 'coordinates' => $coordinates));
-        
-        }else{
-	        try {
-	            $result = $this->_toolbox->getQuery()->getOne($query, $params);
-	        } catch (\Exception $e) {
-	            $normalised = $this->_toolbox->normaliseDriverExceptions($e);
-	            throw new FinderException($normalised['message'], $normalised['code']);
-	        }
-	
-	        if (!$result) {
-	            return null;
-	        } else {
-	            $converted = $this->convertToPods($type, array($result), $coordinates);
-	
-	            return reset($converted);
-	        }
+        if ($this->_toolbox->getTransactionManager()->hasTransaction()) {
+            $this->_toolbox->getTransactionManager()->addReadCollection($type);
+            $statement = json_encode(array('query' => $query, 'bindVars' => $params), JSON_FORCE_OBJECT);
+            $this->_toolbox->getTransactionManager()->addCommand("function(){var elements = db._createStatement($statement).execute().elements(); return elements[0] ? elements[0] : null}();", "Finder:findOneWithin", null, false, array('type' => $type, 'coordinates' => $coordinates));
+
+        } else {
+            try {
+                $result = $this->_toolbox->getQuery()->getOne($query, $params);
+            } catch (\Exception $e) {
+                $normalised = $this->_toolbox->normaliseDriverExceptions($e);
+                throw new FinderException($normalised['message'], $normalised['code']);
+            }
+
+            if (!$result) {
+                return null;
+            } else {
+                $converted = $this->convertToPods($type, array($result), $coordinates);
+
+                return reset($converted);
+            }
         }
     }
 
@@ -578,25 +578,25 @@ class Finder
         $params[$attributeParameter] = $attribute;
         $params[$queryParameter] = $query;
 
-        if($this->_toolbox->getTransactionManager()->hasTransaction()){
-        	$this->_toolbox->getTransactionManager()->addReadCollection($type);
-        	$statement = json_encode(array('query' => $query, 'bindVars' => $params), JSON_FORCE_OBJECT);
-        	$this->_toolbox->getTransactionManager()->addCommand("db._createStatement($statement).execute().elements();" , "Finder:search", null, false, array('type' => $type));
-        
-        }else{
-	        try {
-	            $result = $this->_toolbox->getQuery()->getAll($aqlStatement, $params);
-	        } catch (\Exception $e) {
-	            $normalised = $this->_toolbox->normaliseDriverExceptions($e);
-	            throw new FinderException($normalised['message'], $normalised['code']);
-	
-	        }
-	
-	        if (empty($result)) {
-	            return array();
-	        }
-	
-	        return $this->convertToPods($type, $result);
+        if ($this->_toolbox->getTransactionManager()->hasTransaction()) {
+            $this->_toolbox->getTransactionManager()->addReadCollection($type);
+            $statement = json_encode(array('query' => $query, 'bindVars' => $params), JSON_FORCE_OBJECT);
+            $this->_toolbox->getTransactionManager()->addCommand("db._createStatement($statement).execute().elements();" , "Finder:search", null, false, array('type' => $type));
+
+        } else {
+            try {
+                $result = $this->_toolbox->getQuery()->getAll($aqlStatement, $params);
+            } catch (\Exception $e) {
+                $normalised = $this->_toolbox->normaliseDriverExceptions($e);
+                throw new FinderException($normalised['message'], $normalised['code']);
+
+            }
+
+            if (empty($result)) {
+                return array();
+            }
+
+            return $this->convertToPods($type, $result);
         }
     }
 
@@ -623,24 +623,24 @@ class Finder
         $params[$attributeParameter] = $attribute;
         $params[$queryParameter] = $query;
 
-        if($this->_toolbox->getTransactionManager()->hasTransaction()){
-        	$this->_toolbox->getTransactionManager()->addReadCollection($type);
-        	$statement = json_encode(array('query' => $query, 'bindVars' => $params), JSON_FORCE_OBJECT);
-        	$this->_toolbox->getTransactionManager()->addCommand("db._createStatement($statement).execute().elements();" , "Finder:searchAll", null, false, array('type' => $type));
-        
-        }else{
-	        try {
-	            $result = $this->_toolbox->getQuery()->getAll($aqlStatement, $params);
-	        } catch (\Exception $e) {
-	            $normalised = $this->_toolbox->normaliseDriverExceptions($e);
-	            throw new FinderException($normalised['message'], $normalised['code']);
-	        }
-	
-	        if (empty($result)) {
-	            return array();
-	        }
-	
-	        return $this->convertToPods($type, $result);
+        if ($this->_toolbox->getTransactionManager()->hasTransaction()) {
+            $this->_toolbox->getTransactionManager()->addReadCollection($type);
+            $statement = json_encode(array('query' => $query, 'bindVars' => $params), JSON_FORCE_OBJECT);
+            $this->_toolbox->getTransactionManager()->addCommand("db._createStatement($statement).execute().elements();" , "Finder:searchAll", null, false, array('type' => $type));
+
+        } else {
+            try {
+                $result = $this->_toolbox->getQuery()->getAll($aqlStatement, $params);
+            } catch (\Exception $e) {
+                $normalised = $this->_toolbox->normaliseDriverExceptions($e);
+                throw new FinderException($normalised['message'], $normalised['code']);
+            }
+
+            if (empty($result)) {
+                return array();
+            }
+
+            return $this->convertToPods($type, $result);
         }
     }
 
@@ -667,26 +667,26 @@ class Finder
         $params[$attributeParameter] = $attribute;
         $params[$queryParameter] = $query;
 
-        if($this->_toolbox->getTransactionManager()->hasTransaction()){
-        	$this->_toolbox->getTransactionManager()->addReadCollection($type);
-        	$statement = json_encode(array('query' => $query, 'bindVars' => $params), JSON_FORCE_OBJECT);
-        	$this->_toolbox->getTransactionManager()->addCommand("function(){var elements = db._createStatement($statement).execute().elements(); return elements[0] ? elements[0] : null}();" , "Finder:searchForOne", null, false, array('type' => $type));
-        
-        }else{
-	        try {
-	            $result = $this->_toolbox->getQuery()->getOne($aqlStatement, $params);
-	        } catch (\Exception $e) {
-	            $normalised = $this->_toolbox->normaliseDriverExceptions($e);
-	            throw new FinderException($normalised['message'], $normalised['code']);
-	        }
-	
-	        if (!$result) {
-	            return null;
-	        } else {
-	            $converted = $this->convertToPods($type, array($result));
-	
-	            return reset($converted);
-	        }
+        if ($this->_toolbox->getTransactionManager()->hasTransaction()) {
+            $this->_toolbox->getTransactionManager()->addReadCollection($type);
+            $statement = json_encode(array('query' => $query, 'bindVars' => $params), JSON_FORCE_OBJECT);
+            $this->_toolbox->getTransactionManager()->addCommand("function(){var elements = db._createStatement($statement).execute().elements(); return elements[0] ? elements[0] : null}();" , "Finder:searchForOne", null, false, array('type' => $type));
+
+        } else {
+            try {
+                $result = $this->_toolbox->getQuery()->getOne($aqlStatement, $params);
+            } catch (\Exception $e) {
+                $normalised = $this->_toolbox->normaliseDriverExceptions($e);
+                throw new FinderException($normalised['message'], $normalised['code']);
+            }
+
+            if (!$result) {
+                return null;
+            } else {
+                $converted = $this->convertToPods($type, array($result));
+
+                return reset($converted);
+            }
         }
     }
 

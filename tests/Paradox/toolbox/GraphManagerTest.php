@@ -534,47 +534,47 @@ class GraphManagerTest extends Base
             $this->assertNotEquals($barack->getId(), $vertex->getId(), 'The vertex should not be the same vertex as the one querying for neighbours');
         }
     }
-    
+
     /**
      * @covers Paradox\toolbox\GraphManager::getNeighbours
      */
     public function testGetInboundNeighbours()
     {
-    	$client = $this->getClient($this->getDefaultEndpoint(), $this->getDefaultUsername(), $this->getDefaultPassword(), $this->graphName);
-    	$manager = $client->getToolbox()->getGraphManager();
-    
-    	$barack = $client->findOne("vertex", "doc.name == @name", array('name' => 'barack obama'));
-    
-    	$vertices = $manager->getNeighbours($barack, "in", "friends");
-    
-    	$this->assertInternalType('array', $vertices, "Returned list of vertices should be an array");
-    	$this->assertCount(1, $vertices, "The number of vertices should be 1");
-    
-    	foreach ($vertices as $id => $vertex) {
-    		$this->assertInstanceOf('Paradox\AModel', $vertex, 'The edge in the result list is not of type Paradox\AModel');
-    		$this->assertNotEquals($barack->getId(), $vertex->getId(), 'The vertex should not be the same vertex as the one querying for neighbours');
-    	}
+        $client = $this->getClient($this->getDefaultEndpoint(), $this->getDefaultUsername(), $this->getDefaultPassword(), $this->graphName);
+        $manager = $client->getToolbox()->getGraphManager();
+
+        $barack = $client->findOne("vertex", "doc.name == @name", array('name' => 'barack obama'));
+
+        $vertices = $manager->getNeighbours($barack, "in", "friends");
+
+        $this->assertInternalType('array', $vertices, "Returned list of vertices should be an array");
+        $this->assertCount(1, $vertices, "The number of vertices should be 1");
+
+        foreach ($vertices as $id => $vertex) {
+            $this->assertInstanceOf('Paradox\AModel', $vertex, 'The edge in the result list is not of type Paradox\AModel');
+            $this->assertNotEquals($barack->getId(), $vertex->getId(), 'The vertex should not be the same vertex as the one querying for neighbours');
+        }
     }
-    
+
     /**
      * @covers Paradox\toolbox\GraphManager::getNeighbours
      */
     public function testGetOutboundNeighbours()
     {
-    	$client = $this->getClient($this->getDefaultEndpoint(), $this->getDefaultUsername(), $this->getDefaultPassword(), $this->graphName);
-    	$manager = $client->getToolbox()->getGraphManager();
-    
-    	$barack = $client->findOne("vertex", "doc.name == @name", array('name' => 'barack obama'));
-    
-    	$vertices = $manager->getNeighbours($barack, "out", "friends");
-    
-    	$this->assertInternalType('array', $vertices, "Returned list of vertices should be an array");
-    	$this->assertCount(1, $vertices, "The number of vertices should be 1");
-    
-    	foreach ($vertices as $id => $vertex) {
-    		$this->assertInstanceOf('Paradox\AModel', $vertex, 'The edge in the result list is not of type Paradox\AModel');
-    		$this->assertNotEquals($barack->getId(), $vertex->getId(), 'The vertex should not be the same vertex as the one querying for neighbours');
-    	}
+        $client = $this->getClient($this->getDefaultEndpoint(), $this->getDefaultUsername(), $this->getDefaultPassword(), $this->graphName);
+        $manager = $client->getToolbox()->getGraphManager();
+
+        $barack = $client->findOne("vertex", "doc.name == @name", array('name' => 'barack obama'));
+
+        $vertices = $manager->getNeighbours($barack, "out", "friends");
+
+        $this->assertInternalType('array', $vertices, "Returned list of vertices should be an array");
+        $this->assertCount(1, $vertices, "The number of vertices should be 1");
+
+        foreach ($vertices as $id => $vertex) {
+            $this->assertInstanceOf('Paradox\AModel', $vertex, 'The edge in the result list is not of type Paradox\AModel');
+            $this->assertNotEquals($barack->getId(), $vertex->getId(), 'The vertex should not be the same vertex as the one querying for neighbours');
+        }
     }
 
     /**

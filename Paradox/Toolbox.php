@@ -103,7 +103,7 @@ class Toolbox
      * @var Server
      */
     private $_server;
-    
+
     /**
      * An instance of the transaction manager.
      * @var TransactionManager
@@ -283,9 +283,9 @@ class Toolbox
      */
     public function getTransactionManager()
     {
-    	return $this->_transactionManager;
+        return $this->_transactionManager;
     }
-    
+
     /**
      * Returns the name of the model we should instantiate given a type.
      * @param string $type The name of the collection. For toolboxes that manages graphs, only "vertex" and "edge" is valid.
@@ -383,13 +383,14 @@ class Toolbox
     {
         return new AdminHandler($this->getConnection());
     }
-    
+
     /**
      * Get a transaction object.
      * @return \triagens\ArangoDb\Transaction
      */
-    public function getTransactionObject(){
-    	return new Transaction($this->getConnection());
+    public function getTransactionObject()
+    {
+        return new Transaction($this->getConnection());
     }
 
     /**

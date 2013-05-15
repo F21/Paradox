@@ -309,15 +309,16 @@ class Document implements IObserver
         $this->_new = false;
         $this->_changed = false;
     }
-    
+
     /**
      * Returns a JSON representation of this document.
      * @return string
      */
-    public function toJSON(){
-    	$result = array('_id' => $this->getId(), '_key' => $this->getKey(), '_rev' => $this->getRevision());
-    	
-    	return json_encode(array_merge($result, $this->_data), JSON_FORCE_OBJECT);
+    public function toJSON()
+    {
+        $result = array('_id' => $this->getId(), '_key' => $this->getKey(), '_rev' => $this->getRevision());
+
+        return json_encode(array_merge($result, $this->_data), JSON_FORCE_OBJECT);
     }
 
     /**
