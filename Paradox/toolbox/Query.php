@@ -44,25 +44,30 @@ class Query
      */
     public function getAll($query, array $parameters = array())
     {
-        $data = array(
-            'query' => $query,
-            'bindVars' => $parameters,
-             Cursor::ENTRY_FLAT => true
-        );
-
-        $statement = new Statement($this->_toolbox->getConnection(), $data);
-
-        try {
-            $cursor = $statement->execute();
-        } catch (\Exception $e) {
-            $normalised = $this->_toolbox->normaliseDriverExceptions($e);
-            throw new QueryException($normalised['message'], $normalised['code']);
+        if($this->_toolbox->getTransactionManager()->hasTransaction()){
+        	$statement = json_encode(array('query' => $query, 'bindVars' => $parameters), JSON_FORCE_OBJECT);
+        	$this->_toolbox->getTransactionManager()->addCommand("db._createStatement($statement).execute().elements();" , "Query:getAll");
+        	
+        }else{
+        	$data = array(
+        			'query' => $query,
+        			'bindVars' => $parameters,
+        			Cursor::ENTRY_FLAT => true
+        	);
+        	
+        	$statement = new Statement($this->_toolbox->getConnection(), $data);
+        	
+        	try {
+        		$cursor = $statement->execute();
+        	} catch (\Exception $e) {
+        		$normalised = $this->_toolbox->normaliseDriverExceptions($e);
+        		throw new QueryException($normalised['message'], $normalised['code']);
+        	}
+        	
+        	$results = $cursor->getAll();
+        	
+        	return $results;
         }
-
-        $results = $cursor->getAll();
-
-        return $results;
-
     }
 
     /**
@@ -74,28 +79,35 @@ class Query
      */
     public function getOne($query, array $parameters = array())
     {
-        $data = array(
-            'query' => $query,
-            'bindVars' => $parameters,
-             Cursor::ENTRY_FLAT => true
-        );
-
-        $statement = new Statement($this->_toolbox->getConnection(), $data);
-
-        try {
-            $cursor = $statement->execute();
-        } catch (\Exception $e) {
-            $normalised = $this->_toolbox->normaliseDriverExceptions($e);
-            throw new QueryException($normalised['message'], $normalised['code']);
-        }
-
-        if ($cursor->valid()) {
-            $cursor->rewind();
-
-            return $cursor->current();
-        } else {
-            return null;
-        }
+    	if($this->_toolbox->getTransactionManager()->hasTransaction()){
+    		
+    		$statement = json_encode(array('query' => $query, 'bindVars' => $parameters), JSON_FORCE_OBJECT);
+    		$this->_toolbox->getTransactionManager()->addCommand("function(){var elements = db._createStatement($statement).execute().elements(); return elements[0] ? elements[0] : null}();" , "Query:getOne");
+    		 
+    	}else{
+    		$data = array(
+    				'query' => $query,
+    				'bindVars' => $parameters,
+    				Cursor::ENTRY_FLAT => true
+    		);
+    		
+    		$statement = new Statement($this->_toolbox->getConnection(), $data);
+    		
+    		try {
+    			$cursor = $statement->execute();
+    		} catch (\Exception $e) {
+    			$normalised = $this->_toolbox->normaliseDriverExceptions($e);
+    			throw new QueryException($normalised['message'], $normalised['code']);
+    		}
+    		
+    		if ($cursor->valid()) {
+    			$cursor->rewind();
+    		
+    			return $cursor->current();
+    		} else {
+    			return null;
+    		}
+    	}
     }
 
     /**

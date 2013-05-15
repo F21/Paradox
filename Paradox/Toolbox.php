@@ -14,6 +14,8 @@ use Paradox\toolbox\GraphManager;
 use Paradox\toolbox\CollectionManager;
 use triagens\ArangoDb\UserHandler;
 use triagens\ArangoDb\AdminHandler;
+use Paradox\toolbox\TransactionManager;
+use triagens\ArangoDb\Transaction;
 
 /**
  * Paradox is an elegant Object Document Mananger (ODM) to use with the ArangoDB Document/Graph database server.
@@ -101,6 +103,12 @@ class Toolbox
      * @var Server
      */
     private $_server;
+    
+    /**
+     * An instance of the transaction manager.
+     * @var TransactionManager
+     */
+    private $_transactionManager;
 
     /**
      * An reference to the debugger.
@@ -138,6 +146,7 @@ class Toolbox
         $this->_query = new Query($this);
         $this->_server = new Server($this);
         $this->_graphManager = new GraphManager($this);
+        $this->_transactionManager = new TransactionManager($this);
     }
 
     /**
@@ -269,6 +278,15 @@ class Toolbox
     }
 
     /**
+     * Get the transaction manager.
+     * @return \Paradox\toolbox\TransactionManager
+     */
+    public function getTransactionManager()
+    {
+    	return $this->_transactionManager;
+    }
+    
+    /**
      * Returns the name of the model we should instantiate given a type.
      * @param string $type The name of the collection. For toolboxes that manages graphs, only "vertex" and "edge" is valid.
      */
@@ -364,6 +382,14 @@ class Toolbox
     public function getAdminHandler()
     {
         return new AdminHandler($this->getConnection());
+    }
+    
+    /**
+     * Get a transaction object.
+     * @return \triagens\ArangoDb\Transaction
+     */
+    public function getTransactionObject(){
+    	return new Transaction($this->getConnection());
     }
 
     /**

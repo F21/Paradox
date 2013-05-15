@@ -96,100 +96,152 @@ class PodManager extends AObservable
         //Signal here
         $this->notify("before_store", $pod);
 
+        $id = null;
+        
         try {
-            switch ($pod) {
-
-                case $pod instanceof Vertex:
-                    if ($pod->isNew()) {
-                        $doc = $pod->toDriverDocument();
-                        $driver->saveVertex($this->_toolbox->getGraph(), $doc);
-                        $pod->setId($doc->getInternalId());
-                    } else {
-                        $doc = $pod->toDriverDocument();
-                        $driver->replaceVertex($this->_toolbox->getGraph(), $pod->getId(), $doc);
-                    }
-                    break;
-
-                case $pod instanceof Edge:
-
-                    //Check to see if we have existing keys for the _to and _from vertices
-                    $fromKey = $pod->getFromKey();
-                    $toKey = $pod->getToKey();
-
-                    //If we don't have a key for from
-                    if (!$fromKey) {
-
-                        //Get the from vertex
-                        $from = $pod->getFrom();
-
-                        //Save the vertices to get a key for them
-                        if ($from) {
-                            if ($from->hasChanged()) {
-                                $this->store($from);
-                                $fromKey = $from->getPod()->getId();
-                            }
-
-                            //If there are no vertices, throw an error
-                        } else {
-                            throw new PodManagerException("An edge must have a valid 'from' vertex.");
-                        }
-                    }
-
-                    //If we don't have a key for to
-                    if (!$toKey) {
-
-                        //Get the from vertex
-                        $to = $pod->getTo();
-
-                        //Save the vertices to get a key for them
-                        if ($to) {
-                            if ($to->hasChanged()) {
-                                $this->store($to);
-                                $toKey = $to->getPod()->getId();
-                            }
-
-                            //If there are no vertices, throw an error
-                        } else {
-                            throw new PodManagerException("An edge must have a valid 'to' vertex.");
-                        }
-                    }
-
-                    if ($pod->isNew()) {
-                        $doc = $pod->toDriverDocument();
-
-                        $driver->saveEdge($this->_toolbox->getGraph(), $fromKey, $toKey, null, $doc);
-                        $pod->setId($doc->getInternalId());
-                    } else {
-                        //We delete the pod then save it, because ArangoDB does not provide a way to update the To and From vertices.
-                        $this->delete($model);
-                        $doc = $pod->toDriverDocument();
-                        $driver->saveEdge($this->_toolbox->getGraph(), $fromKey, $toKey, null, $doc);
-                    }
-                    break;
-
-                default:
-                    $doc = $pod->toDriverDocument();
-
-                    if ($pod->isNew()) {
-                        $driver->save($pod->getType(), $doc);
-                        $pod->setId($doc->getInternalId());
-                    } else {
-                        $driver->replace($doc);
-                    }
-
-            }
+        	switch ($pod) {
+       	
+       			case $pod instanceof Vertex:
+       				if ($pod->isNew()) {
+       					
+       					if($this->hasTransaction()){
+       						$this->_toolbox->getTransactionManager()->addWriteCollection($this->_toolbox->getVertexCollectionName());
+       						return $this->addTransactionCommand("graph.addVertex(null, {$pod->toJSON()})._properties;", "PodManager:store", $model, true);
+       					}else{
+       						$doc = $pod->toDriverDocument();
+       						$driver->saveVertex($this->_toolbox->getGraph(), $doc);
+       						$id = $doc->getInternalId();
+       					}
+        	
+       				} else {
+       					
+       					if($this->hasTransaction()){
+       						$this->_toolbox->getTransactionManager()->addWriteCollection($this->_toolbox->getVertexCollectionName());
+       						return $this->addTransactionCommand("db.{$this->_toolbox->getVertexCollectionName()}.replace('{$pod->getId()}', {$pod->toJSON()});", "PodManager:store", $model, true);
+       					}else{
+       						$doc = $pod->toDriverDocument();
+       						$driver->replaceVertex($this->_toolbox->getGraph(), $pod->getId(), $doc);
+       					}
+        			}
+        			break;
+        	
+       			case $pod instanceof Edge:
+        	
+       				//Check to see if we have existing keys for the _to and _from vertices
+       				$fromKey = $pod->getFromKey();
+        			$toKey = $pod->getToKey();
+        			$fromKeyIsJSVar = false;
+        			$toKeyIsJSVar = false;
+        			
+       				//If we don't have a key for from
+       				if (!$fromKey) {
+       	
+       					//Get the from vertex
+        				$from = $pod->getFrom();
+        	
+        				//Save the vertices to get a key for them
+       					if ($from) {
+       						if ($from->hasChanged()) {
+       							
+       							if($this->hasTransaction()){
+       								$fromKey = $this->store($from);
+       								$fromKeyIsJSVar = true;
+       							}else{
+       								$this->store($from);
+       								$fromKey = $from->getPod()->getId();
+       							}
+       						}
+       	
+       						//If there are no vertices, throw an error
+        				} else {
+        					throw new PodManagerException("An edge must have a valid 'from' vertex.");
+        				}
+        			}
+        	
+       				//If we don't have a key for to
+       				if (!$toKey) {
+        
+        				//Get the from vertex
+        				$to = $pod->getTo();
+        	
+        				//Save the vertices to get a key for them
+       					if ($to) {
+       						if ($to->hasChanged()) {
+       							
+       							if($this->hasTransaction()){
+       								$toKey = $this->store($to);
+       								$toKeyIsJSVar = true;
+       							}else{
+       								$this->store($to);
+       								$toKey = $to->getPod()->getId();
+       							}
+       						}
+        
+        				//If there are no vertices, throw an error
+        				} else {
+        					throw new PodManagerException("An edge must have a valid 'to' vertex.");
+        				}
+       				}
+       	
+       				if ($pod->isNew()) {
+       					
+       					if($this->hasTransaction()){
+       						$this->_toolbox->getTransactionManager()->addWriteCollection($this->_toolbox->getEdgeCollectionName());
+       						$this->addTransactionCommand($this->generateCreateEdgeCommand($fromKeyIsJSVar, $fromKey, $toKeyIsJSVar, $toKey, $pod->toJSON()), "PodManager:store", $model, true);
+       					}else{
+       						$doc = $pod->toDriverDocument();
+       						
+       						$driver->saveEdge($this->_toolbox->getGraph(), $fromKey, $toKey, null, $doc);
+       						$id = $doc->getInternalId();
+       					}
+       					
+       				} else {
+        				//We delete the pod then save it, because ArangoDB does not provide a way to update the To and From vertices.
+        				if($this->hasTransaction()){
+        					$this->_toolbox->getTransactionManager()->addWriteCollection($this->_toolbox->getEdgeCollectionName());
+        					$this->addTransactionCommand("graph.removeEdge('{$pod->getId()}')", "PodManager:store", $model, true);
+        					$this->addTransactionCommand($this->generateCreateEdgeCommand($fromKeyIsJSVar, $fromKey, $toKeyIsJSVar, $toKey, $pod->toJSON(), $pod->getId()), "PodManager:store", $model, true);
+        				}else{
+        					$this->delete($model);
+        					$doc = $pod->toDriverDocument();
+        					$driver->saveEdge($this->_toolbox->getGraph(), $fromKey, $toKey, null, $doc);
+        				}
+        			}
+        			break;
+        	
+        		default:
+        			$doc = $pod->toDriverDocument();
+        	
+        			if ($pod->isNew()) {
+        				
+        				if($this->hasTransaction()){
+        					$this->_toolbox->getTransactionManager()->addWriteCollection($pod->getType());
+        					$this->addTransactionCommand("db.{$pod->getType()}.save({$pod->toJSON()})", "PodManager:store", $model);
+        				}else{
+        					$driver->save($pod->getType(), $doc);
+        					$id = $doc->getInternalId();
+        				}
+        				
+        			} else {
+        				
+        				if($this->hasTransaction()){
+        					$this->_toolbox->getTransactionManager()->addWriteCollection($pod->getType());
+        					$this->addTransactionCommand("db.{$pod->getType()}.replace('{$pod->getId()}', {$pod->toJSON()}, true)", "PodManager:store", $model);
+        				}else{
+        					$driver->replace($doc);
+        				}
+        			}
+        	
+        	}
         } catch (\Exception $e) {
-            $normalised = $this->_toolbox->normaliseDriverExceptions($e);
-            throw new PodManagerException($normalised['message'], $normalised['code']);
+        	$normalised = $this->_toolbox->normaliseDriverExceptions($e);
+        	throw new PodManagerException($normalised['message'], $normalised['code']);
         }
-
-        $pod->setSaved();
-        $pod->setRevision($doc->getRevision());
-
-        //Signal here
-        $this->notify("after_store", $pod);
-
-        return $pod->getKey();
+        
+        if(!$this->hasTransaction()){
+        	
+        	return $this->processStoreResult($pod, $doc->getRevision(), $id);
+        }
     }
 
     /**
@@ -206,22 +258,46 @@ class PodManager extends AObservable
         $this->notify("before_delete", $pod);
 
         try {
-            if ($pod instanceof Vertex) {
-                $driver->removeVertex($this->_toolbox->getGraph(), $pod->getId());
-            } elseif ($pod instanceof Edge) {
-                $driver->removeEdge($this->_toolbox->getGraph(), $pod->getId());
-            } else {
-                $driver->delete($pod->toDriverDocument());
-            }
+        	if ($pod instanceof Vertex) {
+        		
+        		if($this->hasTransaction()){
+        			$this->_toolbox->getTransactionManager()->addWriteCollection($this->_toolbox->getVertexCollectionName());
+        			$this->addTransactionCommand("graph.removeVertex('{$pod->getId()}')", "PodManager:delete", $model, true);
+        		}else{
+        			$driver->removeVertex($this->_toolbox->getGraph(), $pod->getId());
+        		}
+        		
+        	} elseif ($pod instanceof Edge) {
+        		
+        		if($this->hasTransaction()){
+        			$this->_toolbox->getTransactionManager()->addWriteCollection($this->_toolbox->getEdgeCollectionName());
+        			$this->addTransactionCommand("graph.removeEdge('{$pod->getId()}')", "PodManager:delete", $model, true);
+        		}else{
+        			$driver->removeEdge($this->_toolbox->getGraph(), $pod->getId());
+        		}
+        		
+        	} else {
+        		
+        		if($this->hasTransaction()){
+        			$this->_toolbox->getTransactionManager()->addWriteCollection($pod->getType());
+        			$this->addTransactionCommand("db.{$pod->getType()}.remove('{$pod->getId()}', true)", "PodManager:delete", $model);
+        		}else{
+        			$driver->delete($pod->toDriverDocument());
+        		}
+        		
+        	}
         } catch (\Exception $e) {
-            $normalised = $this->_toolbox->normaliseDriverExceptions($e);
-            throw new PodManagerException($normalised['message'], $normalised['code']);
+        	$normalised = $this->_toolbox->normaliseDriverExceptions($e);
+        	throw new PodManagerException($normalised['message'], $normalised['code']);
+        }
+        
+        if(!$this->hasTransaction()){
+        	//Signal here
+        	$this->notify("after_delete", $pod);
+        	 
+        	return true;
         }
 
-        //Signal here
-        $this->notify("after_delete", $pod);
-
-        return true;
     }
 
     /**
@@ -240,21 +316,44 @@ class PodManager extends AObservable
                 switch (strtolower($type)) {
 
                     case "vertex":
-                        $vertex = $driver->getVertex($this->_toolbox->getGraph(), $id);
-
-                        return $this->convertDriverDocumentToPod($vertex);
+                    	
+                    	if($this->hasTransaction()){
+                    		$this->_toolbox->getTransactionManager()->addReadCollection($this->_toolbox->getVertexCollectionName());
+                    		$this->addTransactionCommand("function(){var temp = graph.getVertex('$id'); return temp ? temp._properties : null}();", "PodManager:load", null, true, array('type' => $type));
+                    	}else{
+                    		$vertex = $driver->getVertex($this->_toolbox->getGraph(), $id);
+                    		
+                    		return $this->convertDriverDocumentToPod($vertex);
+                    	}
+                        break;
+                        
                     case "edge":
-                        $edge = $driver->getEdge($this->_toolbox->getGraph(), $id);
-
-                        return $this->convertDriverDocumentToPod($edge);
+                    	
+                    	if($this->hasTransaction()){
+                    		$this->_toolbox->getTransactionManager()->addReadCollection($this->_toolbox->getEdgeCollectionName());
+                    		$this->addTransactionCommand("graph.getEdge('$id')._properties;", "PodManager:load", null, true, array('type' => $type));
+                    	}else{
+                    		$edge = $driver->getEdge($this->_toolbox->getGraph(), $id);
+                    		
+                    		return $this->convertDriverDocumentToPod($edge);
+                    	}
+                        break;
+                        
                     default:
                         throw new PodManagerException("For graphs, only the types 'vertex' and 'edge' can be loaded.");
                 }
 
             } else {
-                $document = $driver->getById($type, $id);
-
-                return $this->convertDriverDocumentToPod($document);
+            	
+            	if($this->hasTransaction()){
+            		$this->_toolbox->getTransactionManager()->addReadCollection($type);
+            		$this->addTransactionCommand("db.$type.document('$id');", "PodManager:load", null, false, array('type' => $type));
+            	}else{
+            		$document = $driver->getById($type, $id);
+            		
+            		return $this->convertDriverDocumentToPod($document);
+            	}
+                
             }
         } catch (\Exception $e) {
 
@@ -268,6 +367,20 @@ class PodManager extends AObservable
             }
         }
 
+    }
+    
+    public function processStoreResult($pod, $revision, $id = null){
+    	$pod->setSaved();
+    	$pod->setRevision($revision);
+    	
+    	if($id && $pod->getId() === null){
+    		$pod->setId($id);
+    	}
+    	
+    	//Signal here
+    	$this->notify("after_store", $pod);
+    	
+    	return $pod->getKey();
     }
 
     /**
@@ -349,6 +462,43 @@ class PodManager extends AObservable
 
         return $model;
     }
+    
+    /**
+     * Generates the javascript command to create an edge (for use with transactions).
+     * @param boolean $fromKeyIsJSVar Whether the from key is a javascript variable name or not.
+     * @param string $fromKey The id of the from vertex.
+     * @param boolean $toKeyIsJSVar Whether the to key is a javascript variable name or not.
+     * @param string $toKey The id of the to vertex.
+     * @param string $data JSON representation of the edge data.
+     * @param string $id An optional id for the edge.
+     * @return string
+     */
+    private function generateCreateEdgeCommand($fromKeyIsJSVar, $fromKey, $toKeyIsJSVar, $toKey, $data, $id = null){
+    	
+    	if($id){
+    		$command = "graph.addEdge('$id', ";
+    	}else{
+    		$command = "graph.addEdge(null, ";
+    	}
+
+    	if($fromKeyIsJSVar){
+    		$command .= $fromKey;
+    	}else{
+    		$command .= "'$fromKey'";
+    	}
+    	 
+    	$command .= ", ";
+    	 
+    	if($toKeyIsJSVar){
+    		$command .= $toKey;
+    	}else{
+    		$command .= "'$toKey'";
+    	}
+    	 
+    	$command .= ", $data)._properties;";
+    	
+    	return $command;
+    }
 
     /**
      * Convinence function to instantiate a vertex, hook up its events and set up its model.
@@ -420,6 +570,25 @@ class PodManager extends AObservable
         $pod->loadModel($model);
 
         return $model;
+    }
+    
+    /**
+     * Whether the connection current has an active transaction.
+     * @return boolean
+     */
+    private function hasTransaction(){
+    	return $this->_toolbox->getTransactionManager()->hasTransaction();
+    }
+    
+    /**
+     * Convinence function to add commands to the transaction.
+     * @param unknown $command
+     * @param unknown $action
+     * @param string $object
+     * @param string $isGraph
+     */
+    private function addTransactionCommand($command, $action, $object = null, $isGraph = false, $data = array()){
+    	return $this->_toolbox->getTransactionManager()->addCommand($command, $action, $object, $isGraph, $data);
     }
 
     /**
