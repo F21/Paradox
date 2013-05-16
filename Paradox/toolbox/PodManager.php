@@ -110,7 +110,7 @@ class PodManager extends AObservable
 	                           	
 	                           //In a transaction, since all commands are executed in a block on commit, the pod will not have a saved state if it has a previous
 	                           //store command. This determines if that is the case and rewrites the command as a replace.
-	                           if($id){
+	                           if($id !== false){
 	                           		return $this->addTransactionCommand("db.{$this->_toolbox->getVertexCollectionName()}.replace(result.$id._id, {$pod->toTransactionJSON()});", "PodManager:store", $model, true);
 	                           }else{
 	                           		return $this->addTransactionCommand("graph.addVertex(null, {$pod->toTransactionJSON()})._properties;", "PodManager:store", $model, true);
@@ -202,7 +202,7 @@ class PodManager extends AObservable
                                 
                                //In a transaction, since all commands are executed in a block on commit, the pod will not have a saved state if it has a previous
                                //store command. This determines if that is the case and rewrites the command as a replace.
-                               if($id){
+                               if($id !== false){
                                		$this->addTransactionCommand("graph.removeEdge(result.$id._id);", "PodManager:store", $model, true);
                                		$this->addTransactionCommand($this->generateCreateEdgeCommand($fromKeyIsJSVar, $fromKey, $toKeyIsJSVar, $toKey, $pod->toTransactionJSON(), "result.$id._id", true), "PodManager:store", $model, true);
                                }else{
@@ -222,7 +222,14 @@ class PodManager extends AObservable
                             $this->addTransactionCommand("graph.removeEdge('{$pod->getId()}');", "PodManager:store", $model, true);
                             $this->addTransactionCommand($this->generateCreateEdgeCommand($fromKeyIsJSVar, $fromKey, $toKeyIsJSVar, $toKey, $pod->toTransactionJSON(), $pod->getId()), "PodManager:store", $model, true);
                         } else {
+                        	$id = $pod->getId();
+                        	$revision = $pod->getRevision() + mt_rand(0, 1000);
                             $this->delete($model);
+                            
+                            //Add the id and revision back, because deleting removes it
+                            $pod->setId($id);
+                            $pod->setRevision($revision);
+                            
                             $doc = $pod->toDriverDocument();
                             $driver->saveEdge($this->_toolbox->getGraph(), $fromKey, $toKey, null, $doc);
                         }
@@ -240,8 +247,8 @@ class PodManager extends AObservable
                             
                             //In a transaction, since all commands are executed in a block on commit, the pod will not have a saved state if it has a previous
                             //store command. This determines if that is the case and rewrites the command as a replace.
-                            if($id){
-                            	$this->addTransactionCommand("db.{$pod->getType()}.replace(result.$id._id, {$pod->toTransactionJSON()}, true)", "PodManager:store", $model);
+                            if($id !== false){
+                            	$this->addTransactionCommand("db.{$pod->getType()}.replace(result.$id._id, {$pod->toTransactionJSON()}, true);", "PodManager:store", $model);
                             }else{
                             	$this->addTransactionCommand("db.{$pod->getType()}.save({$pod->toTransactionJSON()});", "PodManager:store", $model);
                             }
@@ -255,7 +262,7 @@ class PodManager extends AObservable
 
                         if ($this->hasTransaction()) {
                             $this->_toolbox->getTransactionManager()->addWriteCollection($pod->getType());
-                            $this->addTransactionCommand("db.{$pod->getType()}.replace('{$pod->getId()}', {$pod->toTransactionJSON()}, true)", "PodManager:store", $model);
+                            $this->addTransactionCommand("db.{$pod->getType()}.replace('{$pod->getId()}', {$pod->toTransactionJSON()}, true);", "PodManager:store", $model);
                         } else {
                             $driver->replace($doc);
                         }
@@ -292,7 +299,7 @@ class PodManager extends AObservable
                 	$id = $this->determinePreviouslyStored($model);
                     $this->_toolbox->getTransactionManager()->addWriteCollection($this->_toolbox->getVertexCollectionName());
 
-                    if($id){
+                    if($id !== false){
                     	$this->addTransactionCommand("graph.removeVertex(result.$id._id)", "PodManager:delete", $model, true);
                     }else{
                     	$this->addTransactionCommand("graph.removeVertex('{$pod->getId()}')", "PodManager:delete", $model, true);
@@ -308,7 +315,7 @@ class PodManager extends AObservable
                 	$id = $this->determinePreviouslyStored($model);
                     $this->_toolbox->getTransactionManager()->addWriteCollection($this->_toolbox->getEdgeCollectionName());
                     
-                    if($id){
+                    if($id !== false){
                     	$this->addTransactionCommand("graph.removeEdge(result.$id._id)", "PodManager:delete", $model, true);
                     }else{
                     	$this->addTransactionCommand("graph.removeEdge('{$pod->getId()}')", "PodManager:delete", $model, true);
@@ -325,7 +332,7 @@ class PodManager extends AObservable
                 	$id = $this->determinePreviouslyStored($model);
                 	$this->_toolbox->getTransactionManager()->addWriteCollection($pod->getType());
                 	
-                	if($id){
+                	if($id !== false){
                 		$this->addTransactionCommand("db.{$pod->getType()}.remove(result.$id._id, true)", "PodManager:delete", $model);
                 	}else{
                 		$this->addTransactionCommand("db.{$pod->getType()}.remove('{$pod->getId()}', true)", "PodManager:delete", $model);
@@ -652,13 +659,13 @@ class PodManager extends AObservable
     	$store = $this->_toolbox->getTransactionManager()->searchCommandsByActionAndObject('PodManager:store', $model);
     	$delete = $this->_toolbox->getTransactionManager()->searchCommandsByActionAndObject('PodManager:delete', $model);
     	
-    	$storePosition = $store['position'] ? $store['position'] : -1;
-    	$deletePosition = $delete['position'] ? $delete['position'] : -1;
+    	$storePosition = $store ? $store['position'] : -1;
+    	$deletePosition = $delete ? $delete['position'] : -1;
     	
-    	if($deletePosition > $storePosition){
+    	if($deletePosition >= $storePosition){
     		return false;
     	}else{
-    		return $storePosition['id'];
+    		return $store['id'];
     	}
     }
 
