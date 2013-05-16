@@ -112,11 +112,7 @@ class TransactionManager
         $commandText .= "return result; }";
 
         //Send the transaction
-        try {
-            $result = $this->executeTransaction($commandText, $this->_collections['write'], $this->_collections['read']);
-        } catch (\Exception $e) {
-            throw new TransactionManagerException($e->getMessage(), $e->getCode());
-        }
+        $result = $this->executeTransaction($commandText, $this->_collections['read'], $this->_collections['write']);
 
         //Process the result
         $processed = $this->processResult($result);
@@ -214,7 +210,8 @@ class TransactionManager
 
             return $result;
         } catch (\Exception $e) {
-            throw new TransactionManagerException($e->getMessage(), $e->getCode());
+            $normalised = $this->_toolbox->normaliseDriverExceptions($e);
+            throw new TransactionManagerException($normalised['message'], $normalised['code']);
         }
     }
 
@@ -349,6 +346,29 @@ class TransactionManager
         }
 
         return $processedResults;
+    }
+    
+    /**
+     * Search the commands for an action and its object. If a match is found, the position and id is returned.
+     * The search starts in reverse direction.
+     * @param string $action The action to search on
+     * @param mixed $object The object to match.
+     * @return array
+     */
+    public function searchCommandsByActionAndObject($action, $object){
+    	
+    	$position = 0;
+    	$length = count($this->_commands);
+    	foreach (array_reverse($this->_commands) as $id => $command) {
+    		
+    		if($command['action'] == $action && $command['object'] === $object){
+    			return array('position' => $length - 1 - $position, 'id' => $id);
+    		}
+    		
+    		$position++;
+    	}
+    	
+    	return null;
     }
 
     /**
