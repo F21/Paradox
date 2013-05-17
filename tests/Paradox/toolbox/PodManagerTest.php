@@ -249,11 +249,63 @@ class PodManagerTest extends Base
     /**
      * @covers Paradox\toolbox\PodManager::store
      */
+    public function testStoreAndUpdateDocumentInTransaction()
+    {
+        $client = $this->getClient();
+        $manager = new PodManager($client->getToolbox());
+
+        $client->begin();
+        $document = $manager->dispense($this->collectionName);
+        $document->set('name', 'john smith');
+        $manager->store($document);
+        $client->registerResult('save');
+
+        //Update the document
+        $document->set('name', 'david smith');
+        $manager->store($document);
+        $client->registerResult('update');
+        $result = $client->commit();
+
+        $this->assertNotNull($result['save'], "Id of saved document should not be null.");
+        $this->assertNotNull($result['update'], "Id of stored document should not be null.");
+        $this->assertEquals($result['save'], $result['update'], "Id of store and update operations should match.");
+        $this->assertEquals($document->getKey(), $result['save'], "The id of the saved document does not match.");
+        $this->assertEquals($document->getKey(), $result['update'], "The id of the updated document does not match.");
+    }
+
+    /**
+     * @covers Paradox\toolbox\PodManager::store
+     */
+    public function testUpdateDocumentInTransaction()
+    {
+        $client = $this->getClient();
+        $manager = new PodManager($client->getToolbox());
+
+        $document = $manager->dispense($this->collectionName);
+        $document->set('name', 'john smith');
+        $id = $client->store($document);
+
+        $client->begin();
+
+        //Update the document
+        $document->set('name', 'david smith');
+        $manager->store($document);
+        $client->registerResult('update');
+
+        $result = $client->commit();
+
+        $this->assertNotNull($result['update'], "Id of stored document should not be null.");
+        $this->assertEquals($id, $result['update'], "Id of store and update operations should match.");
+    }
+
+    /**
+     * @covers Paradox\toolbox\PodManager::store
+     */
     public function testStoreAndUpdateEdge()
     {
         $manager = $this->getPodManager($this->graphName);
         $vertex1 = $manager->dispense('vertex');
-        $vertex2= $manager->dispense('vertex');
+        $vertex2 = $manager->dispense('vertex');
 
         $edge = $manager->dispense('edge');
         $edge->set('name', 'john smith');
@@ -262,11 +314,88 @@ class PodManagerTest extends Base
         $id = $manager->store($edge);
         $this->assertNotNull($id, "Stored edge id should not be null");
 
-        $vertex3= $manager->dispense('vertex');
+        $vertex3 = $manager->dispense('vertex');
         $edge->set('name', 'david smith');
         $edge->setFrom($vertex3);
         $id = $manager->store($edge);
         $this->assertNotNull($id, "Stored edge id should not be null");
+    }
+
+    /**
+     * @covers Paradox\toolbox\PodManager::store
+     */
+    public function testStoreAndUpdateEdgeInTransaction()
+    {
+        $client = $this->getClient($this->getDefaultEndpoint(), $this->getDefaultUsername(), $this->getDefaultPassword(), $this->graphName);
+        $manager = new PodManager($client->getToolbox());
+
+        $vertex1 = $manager->dispense('vertex');
+        $vertex2 = $manager->dispense('vertex');
+        $vertex3 = $manager->dispense('vertex');
+        $vertex4 = $manager->dispense('vertex');
+        
+        $client->begin();
+
+        //Store the edge
+        $edge = $manager->dispense('edge');
+        $edge->set('name', 'john smith');
+        $edge->setFrom($vertex1);
+        $edge->setTo($vertex2);
+        $client->store($edge);
+        $client->registerResult('save');
+
+        //Update the edge
+        $edge->set('name', 'david smith');
+        $edge->setFrom($vertex3);
+        $edge->setTo($vertex4);
+        $manager->store($edge);
+        $client->registerResult('update');
+
+        $result = $client->commit();
+
+        $this->assertNotNull($result['save'], "Id of saved edge should not be null.");
+        $this->assertNotNull($result['update'], "Id of stored edge should not be null.");
+        $this->assertEquals($result['save'], $result['update'], "Id of store and update operations should match.");
+        $this->assertEquals($edge->getKey(), $result['save'], "The id of the saved edge does not match.");
+        $this->assertEquals($edge->getKey(), $result['update'], "The id of the updated edge does not match.");
+        
+        //Load the edge
+        $loadedEdge = $client->load('edge', $edge->getId());
+        $this->assertEquals($loadedEdge->getFrom()->getId(), $vertex3->getId(), "Vertex 3 should now be the from vertex of the edge.");
+        $this->assertEquals($loadedEdge->getTo()->getId(), $vertex4->getId(), "Vertex 4 should now be the from vertex of the edge.");
+    }
+    
+    /**
+     * @covers Paradox\toolbox\PodManager::store
+     */
+    public function testUpdateEdgeInTransaction()
+    {
+    	$client = $this->getClient($this->getDefaultEndpoint(), $this->getDefaultUsername(), $this->getDefaultPassword(), $this->graphName);
+    	$manager = new PodManager($client->getToolbox());
+    
+    	$vertex1 = $manager->dispense('vertex');
+    	$vertex2 = $manager->dispense('vertex');
+    
+    	$edge = $manager->dispense('edge');
+    	$edge->set('name', 'john smith');
+    	$edge->setFrom($vertex1);
+    	$edge->setTo($vertex2);
+    	$id = $client->store($edge);
+    	
+    	$client->begin();
+    
+    	//Update the edge
+    	$edge->set('name', 'david smith');
+    	$manager->store($edge);
+    	$client->registerResult('update');
+    
+    	$result = $client->commit();
+    
+    	$this->assertNotNull($id, "Id of saved edge should not be null.");
+    	$this->assertNotNull($result['update'], "Id of stored edge should not be null.");
+    	$this->assertEquals($id, $result['update'], "Id of store and update operations should match.");
+    	$this->assertEquals($edge->getKey(), $id, "The id of the saved edge does not match.");
+    	$this->assertEquals($edge->getKey(), $result['update'], "The id of the updated edge does not match.");
     }
 
     /**
@@ -329,6 +458,57 @@ class PodManagerTest extends Base
     }
 
     /**
+     * @covers Paradox\toolbox\PodManager::store
+     */
+    public function testStoreAndUpdateVertexInTransaction()
+    {
+        $client = $this->getClient($this->getDefaultEndpoint(), $this->getDefaultUsername(), $this->getDefaultPassword(), $this->graphName);
+        $manager = new PodManager($client->getToolbox());
+
+        $client->begin();
+        $vertex = $manager->dispense('vertex');
+        $vertex->set('name', 'john smith');
+        $manager->store($vertex);
+        $client->registerResult('save');
+
+        //Update the document
+        $vertex->set('name', 'david smith');
+        $manager->store($vertex);
+        $client->registerResult('update');
+        $result = $client->commit();
+
+        $this->assertNotNull($result['save'], "Id of saved vertex should not be null.");
+        $this->assertNotNull($result['update'], "Id of stored vertex should not be null.");
+        $this->assertEquals($result['save'], $result['update'], "Id of store and update operations should match.");
+        $this->assertEquals($vertex->getKey(), $result['save'], "The id of the saved vertex does not match.");
+        $this->assertEquals($vertex->getKey(), $result['update'], "The id of the updated vertex does not match.");
+    }
+
+    /**
+     * @covers Paradox\toolbox\PodManager::store
+     */
+    public function testUpdateVertexInTransaction()
+    {
+        $client = $this->getClient($this->getDefaultEndpoint(), $this->getDefaultUsername(), $this->getDefaultPassword(), $this->graphName);
+        $manager = new PodManager($client->getToolbox());
+
+        $vertex = $manager->dispense('vertex');
+        $vertex->set('name', 'john smith');
+        $id = $manager->store($vertex);
+
+        $client->begin();
+
+        //Update the document
+        $vertex->set('name', 'david smith');
+        $manager->store($vertex);
+        $client->registerResult('update');
+        $result = $client->commit();
+
+        $this->assertNotNull($result['update'], "Id of stored document should not be null.");
+        $this->assertEquals($id, $result['update'], "Id of store and update operations should match.");
+    }
+
+    /**
      * @covers Paradox\toolbox\PodManager::delete
      */
     public function testDeleteDocument()
@@ -341,6 +521,66 @@ class PodManagerTest extends Base
 
         $retrievedDocument = $this->podManager->load($this->collectionName, $id);
         $this->assertNull($retrievedDocument, "We deleted the document, but was still able to retrieve it?");
+    }
+    
+    /**
+     * @covers Paradox\toolbox\PodManager::delete
+     */
+    public function testStoreAndDeleteDocumentInTransaction()
+    {    
+    	$client = $this->getClient();
+    	$manager = new PodManager($client->getToolbox());
+    	
+    	$client->begin();
+    	
+    	//Store the document
+    	$document = $manager->dispense($this->collectionName);
+    	$document->set('name', 'john smith');
+    	$client->store($document);
+    	$client->registerResult('save');
+    
+    	//Delete the document
+    	$manager->delete($document);
+    	$client->registerResult('delete');
+    
+    	$result = $client->commit();
+    
+    	$this->assertNotNull($result['delete'], "Deleting a document should return true.");
+    	$this->assertNotNull($result['save'], "Id of stored edge should not be null.");
+    	$this->assertTrue($document->isNew(), "The document should be marked as new.");
+    	
+    	//Confirm the document was deleted in the document
+    	$this->assertNull($client->load($this->collectionName, $result['save']), "The document should not exist.");
+    }
+    
+    /**
+     * @covers Paradox\toolbox\PodManager::delete
+     */
+    public function testDeleteDocumentInTransaction()
+    {
+    	$client = $this->getClient();
+    	$manager = new PodManager($client->getToolbox());
+    	 
+    	//Store the document
+    	$document = $manager->dispense($this->collectionName);
+    	$document->set('name', 'john smith');
+    	$id = $client->store($document);
+    	
+    	$client->begin();
+
+    	//Update the edge
+    	$document->set('name', 'david smith');
+    	$manager->delete($document);
+    	$client->registerResult('delete');
+    
+    	$result = $client->commit();
+    
+    	$this->assertNotNull($result['delete'], "Deleting a document should return true.");
+    	$this->assertNotNull($id, "Id of stored edge should not be null.");
+    	$this->assertTrue($document->isNew(), "The document should be marked as new.");
+    	 
+    	//Confirm the document was deleted in the document
+    	$this->assertNull($client->load($this->collectionName, $id), "The document should not exist.");
     }
 
     /**
@@ -376,6 +616,64 @@ class PodManagerTest extends Base
         $retrievedDocument = $manager->load('vertex', $id);
         $this->assertNull($retrievedDocument, "We deleted the document, but was still able to retrieve it?");
     }
+    
+    /**
+     * @covers Paradox\toolbox\PodManager::delete
+     */
+    public function testStoreAndDeleteVertexInTransaction()
+    {
+    	$client = $this->getClient($this->getDefaultEndpoint(), $this->getDefaultUsername(), $this->getDefaultPassword(), $this->graphName);
+    	$manager = new PodManager($client->getToolbox());
+    
+    	$client->begin();
+    
+    	//Store the vertex
+    	$vertex = $manager->dispense('vertex');
+    	$vertex->set('name', 'john smith');
+    	$client->store($vertex);
+    	$client->registerResult('save');
+    
+    	//Delete the edge
+    	$manager->delete($vertex);
+    	$client->registerResult('delete');
+    
+    	$result = $client->commit();
+    
+    	$this->assertNotNull($result['save'], "Id of saved edge should not be null.");
+    	$this->assertTrue($result['delete'], "Deleting the edge should return true");
+    	$this->assertTrue($vertex->isNew(), "The edge should be marked as new.");
+    	 
+    	//Confirm the document was deleted in the document
+    	$this->assertNull($client->load('edge', $result['save']), "The document should not exist.");
+    }
+    
+    /**
+     * @covers Paradox\toolbox\PodManager::delete
+     */
+    public function testDeleteVertexInTransaction()
+    {
+    	$client = $this->getClient($this->getDefaultEndpoint(), $this->getDefaultUsername(), $this->getDefaultPassword(), $this->graphName);
+    	$manager = new PodManager($client->getToolbox());
+
+    	//Store the edge
+    	$vertex = $manager->dispense('vertex');
+    	$vertex->set('name', 'john smith');
+    	$id = $client->store($vertex);
+    
+    	//Delete the edge
+    	$client->begin();
+    	 
+    	$manager->delete($vertex);
+    	$client->registerResult('delete');
+    
+    	$result = $client->commit();
+    
+    	$this->assertTrue($result['delete'], "Deleting the edge should return true");
+    	$this->assertTrue($vertex->isNew(), "The edge should be marked as new.");
+    
+    	//Confirm the document was deleted in the document
+    	$this->assertNull($client->load('vertex', $id), "The document should not exist.");
+    }
 
     /**
      * @covers Paradox\toolbox\PodManager::delete
@@ -398,6 +696,74 @@ class PodManagerTest extends Base
         $retrievedDocument = $manager->load('edge', $id);
         $this->assertNull($retrievedDocument, "We deleted the document, but was still able to retrieve it?");
     }
+    
+    /**
+     * @covers Paradox\toolbox\PodManager::delete
+     */
+    public function testStoreAndDeleteEdgeInTransaction()
+    {
+    	$client = $this->getClient($this->getDefaultEndpoint(), $this->getDefaultUsername(), $this->getDefaultPassword(), $this->graphName);
+    	$manager = new PodManager($client->getToolbox());
+    
+    	$client->begin();
+    	
+    	$vertex1 = $manager->dispense('vertex');
+    	$vertex2 = $manager->dispense('vertex');
+    
+    	//Store the edge
+    	$edge = $manager->dispense('edge');
+    	$edge->set('name', 'john smith');
+    	$edge->setFrom($vertex1);
+    	$edge->setTo($vertex2);
+    	$client->store($edge);
+    	$client->registerResult('save');
+    
+    	//Delete the edge
+    	$manager->delete($edge);
+    	$client->registerResult('delete');
+    
+    	$result = $client->commit();
+    
+    	$this->assertNotNull($result['save'], "Id of saved edge should not be null.");
+    	$this->assertTrue($result['delete'], "Deleting the edge should return true");
+    	$this->assertTrue($edge->isNew(), "The edge should be marked as new.");
+    	
+    	//Confirm the document was deleted in the document
+    	$this->assertNull($client->load('edge', $result['save']), "The document should not exist.");
+    }
+    
+    /**
+     * @covers Paradox\toolbox\PodManager::delete
+     */
+    public function testDeleteEdgeInTransaction()
+    {
+    	$client = $this->getClient($this->getDefaultEndpoint(), $this->getDefaultUsername(), $this->getDefaultPassword(), $this->graphName);
+    	$manager = new PodManager($client->getToolbox());
+
+    	$vertex1 = $manager->dispense('vertex');
+    	$vertex2 = $manager->dispense('vertex');
+    
+    	//Store the edge
+    	$edge = $manager->dispense('edge');
+    	$edge->set('name', 'john smith');
+    	$edge->setFrom($vertex1);
+    	$edge->setTo($vertex2);
+    	$id = $client->store($edge);
+
+    	//Delete the edge
+    	$client->begin();
+    	
+    	$manager->delete($edge);
+    	$client->registerResult('delete');
+    
+    	$result = $client->commit();
+
+    	$this->assertTrue($result['delete'], "Deleting the edge should return true");
+    	$this->assertTrue($edge->isNew(), "The edge should be marked as new.");
+    	 
+    	//Confirm the document was deleted in the document
+    	$this->assertNull($client->load('edge', $id), "The document should not exist.");
+    }
 
     /**
      * @covers Paradox\toolbox\PodManager::load
@@ -417,6 +783,36 @@ class PodManagerTest extends Base
 
         $pod = $loadedDocument->getPod();
         $this->assertInstanceOf('Paradox\pod\Document', $pod, 'The pod in the loaded document is not a Paradox\pod\Document');
+    }
+    
+    /**
+     * @covers Paradox\toolbox\PodManager::load
+     */
+    public function testLoadDocumentInTransaction()
+    {
+    	$client = $this->getClient();
+    	$manager = new PodManager($client->getToolbox());
+    	
+    	$document = $manager->dispense($this->collectionName);
+    	$document->set('name', 'john smith');
+    	$id = $manager->store($document);
+    	
+    	$this->assertNotNull($id, "Id of stored document should not be null");
+    	
+    	//Run the transaction
+    	$client->begin();
+
+    	$manager->load($this->collectionName, $id);
+    	$client->registerResult('loaded');
+
+    	$result = $client->commit();
+    	
+    	$this->assertInstanceOf('Paradox\AModel', $result['loaded'], 'The loaded document is not a Paradox\AModel');
+    
+    	$this->assertEquals('john smith', $result['loaded']->get('name'), 'The data inside the loaded document does not match');
+    
+    	$pod = $result['loaded']->getPod();
+    	$this->assertInstanceOf('Paradox\pod\Document', $pod, 'The pod in the loaded document is not a Paradox\pod\Document');
     }
 
     /**
@@ -438,6 +834,36 @@ class PodManagerTest extends Base
 
         $pod = $loadedDocument->getPod();
         $this->assertInstanceOf('Paradox\pod\Vertex', $pod, 'The pod in the loaded vertex is not a Paradox\pod\Vertex');
+    }
+    
+    /**
+     * @covers Paradox\toolbox\PodManager::load
+     */
+    public function testLoadVertexInTransaction()
+    {
+    	$client = $this->getClient($this->getDefaultEndpoint(), $this->getDefaultUsername(), $this->getDefaultPassword(), $this->graphName);
+    	$manager = new PodManager($client->getToolbox());
+    	 
+    	$vertex = $manager->dispense('vertex');
+    	$vertex->set('name', 'john smith');
+    	$id = $manager->store($vertex);
+    	 
+    	$this->assertNotNull($id, "Id of stored vertex should not be null");
+    	 
+    	//Run the transaction
+    	$client->begin();
+    
+    	$manager->load('vertex', $id);
+    	$client->registerResult('loaded');
+    
+    	$result = $client->commit();
+    	 
+    	$this->assertInstanceOf('Paradox\AModel', $result['loaded'], 'The loaded vertex is not a Paradox\AModel');
+    
+    	$this->assertEquals('john smith', $result['loaded']->get('name'), 'The data inside the loaded vertex does not match');
+    
+    	$pod = $result['loaded']->getPod();
+    	$this->assertInstanceOf('Paradox\pod\Vertex', $pod, 'The pod in the loaded vertex is not a Paradox\pod\Vertex');
     }
 
     /**
@@ -466,6 +892,41 @@ class PodManagerTest extends Base
         $pod = $loadedDocument->getPod();
         $this->assertInstanceOf('Paradox\pod\Edge', $pod, 'The pod in the loaded edge is not a Paradox\pod\Edge');
     }
+    
+    /**
+     * @covers Paradox\toolbox\PodManager::load
+     */
+    public function testLoadEdgeInTransaction()
+    {
+    	$client = $this->getClient($this->getDefaultEndpoint(), $this->getDefaultUsername(), $this->getDefaultPassword(), $this->graphName);
+    	$manager = new PodManager($client->getToolbox());
+    
+    	$vertex1 = $manager->dispense('vertex');
+    	$vertex2 = $manager->dispense('vertex');
+    	
+    	$edge = $manager->dispense('edge');
+    	$edge->setFrom($vertex1);
+    	$edge->setTo($vertex2);
+    	$edge->set('name', 'john smith');
+    	$id = $manager->store($edge);
+    
+    	$this->assertNotNull($id, "Id of stored edge should not be null");
+    
+    	//Run the transaction
+    	$client->begin();
+    
+    	$manager->load('edge', $id);
+    	$client->registerResult('loaded');
+    
+    	$result = $client->commit();
+    
+    	$this->assertInstanceOf('Paradox\AModel', $result['loaded'], 'The loaded edge is not a Paradox\AModel');
+    
+    	$this->assertEquals('john smith', $result['loaded']->get('name'), 'The data inside the loaded edge does not match');
+    
+    	$pod = $result['loaded']->getPod();
+    	$this->assertInstanceOf('Paradox\pod\Edge', $pod, 'The pod in the loaded edge is not a Paradox\pod\Edge');
+    }
 
     /**
      * @covers Paradox\toolbox\PodManager::load
@@ -491,6 +952,55 @@ class PodManagerTest extends Base
     {
         $document = $this->podManager->load($this->collectionName, '123456');
         $this->assertNull($document, 'A non-existing document resulting in something being loaded.');
+    }
+    
+    /**
+     * @covers Paradox\toolbox\PodManager::processDeleteResult
+     */
+    public function testProcessDeleteResult()
+    {
+    	$document = $this->podManager->dispense($this->collectionName);
+    	$document->set('name', 'john smith');
+    	
+    	//Store the document
+    	$this->podManager->store($document);
+    	
+    	//Confirm that the document is stored properly
+    	$pod = $document->getPod();
+    	$this->assertNotNull($pod->getId(), 'The id of the stored document should not be null.');
+    	$this->assertNotNull($pod->getKey(), 'The key of the stored document should not be null.');
+    	$this->assertNotNull($pod->getRevision(), 'The revision of the stored document should not be null.');
+    	
+    	$this->podManager->processDeleteResult($pod);
+    	$this->assertNull($pod->getId(), 'The id of the document should be null.');
+    	$this->assertNull($pod->getKey(), 'The key of the document should be null.');
+    	$this->assertNull($pod->getRevision(), 'The revision of the document should be null.');
+    	$this->assertEquals('john smith', $pod->get('name'), 'The data of the document does not match.');
+    }
+    
+    /**
+     * @covers Paradox\toolbox\PodManager::processStoreResult
+     */
+    public function testProcessStoreResult()
+    {
+    	$document = $this->podManager->dispense($this->collectionName);
+    	$document->set('name', 'john smith');
+    	 
+    	//Verify the pod is clean/unsaved
+    	$pod = $document->getPod();
+    	$this->assertNull($pod->getId(), 'The id of the document should be null.');
+    	$this->assertNull($pod->getKey(), 'The key of the document should be null.');
+    	$this->assertNull($pod->getRevision(), 'The revision of the document should be null.');
+    	$this->assertEquals('john smith', $pod->get('name'), 'The data of the document does not match.');
+    	
+    	//Store the document
+    	$id = $this->podManager->processStoreResult($pod, 'rev1', 'somecollection/123456');
+    	 
+    	//Confirm that the document is stored properly
+    	$this->assertEquals('somecollection/123456', $pod->getId(), 'The id of the stored document does not match.');
+    	$this->assertEquals('rev1', $pod->getRevision(), 'The revision of the stored document does not match.');
+    	$this->assertEquals('john smith', $pod->get('name'), 'The data of the document does not match.');
+    	$this->assertNotNull($id, "The id should not be null");
     }
 
     /**
@@ -600,6 +1110,34 @@ class PodManagerTest extends Base
         $convertedPod = reset($converted);
 
         $this->assertEquals($data['name'], $convertedPod->get('name'), "Converted document pod's name does not match the original.");
+    }
+    
+    /**
+     * @covers Paradox\toolbox\PodManager::GenerateCreateEdgeCommand
+     */
+    public function testGenerateCreateEdgeCommand()
+    {
+    	$reflectionClass = new \ReflectionClass('Paradox\toolbox\PodManager');
+    
+    	$method = $reflectionClass->getMethod('generateCreateEdgeCommand');
+    	$method->setAccessible(true);
+    
+    	$manager = new PodManager($this->getClient()->getToolbox());
+    
+    	//With the ids being javascript properties
+    	$result = $method->invoke($manager, false, 'mygraph/123456', false, 'mygraph/456789', '{"name": "john smith"}', 'abcd', false);
+    	$this->assertEquals("graph.addEdge(graph.getVertex('mygraph/123456'), graph.getVertex('mygraph/456789'), 'abcd', {\"name\": \"john smith\"})._properties;", $result,
+    			"The generated edge command does not match.");
+    	
+    	//With the ids not being javascript properties
+    	$result = $method->invoke($manager, true, 'someproperty.id', true, 'anotherproperty.id', '{"name": "john smith"}', 'yetanotherproperty.id', true);
+    	$this->assertEquals("graph.addEdge(graph.getVertex(result.someproperty.id._id), graph.getVertex(result.anotherproperty.id._id), yetanotherproperty.id, {\"name\": \"john smith\"})._properties;", $result,
+    			"The generated edge command does not match.");
+    	
+    	//Without an id for the edge
+    	$result = $method->invoke($manager, true, 'someproperty.id', true, 'anotherproperty.id', '{"name": "john smith"}');
+    	$this->assertEquals("graph.addEdge(graph.getVertex(result.someproperty.id._id), graph.getVertex(result.anotherproperty.id._id), null, {\"name\": \"john smith\"})._properties;", $result,
+    			"The generated edge command does not match.");
     }
 
     /**
@@ -731,7 +1269,82 @@ class PodManagerTest extends Base
         $this->assertInstanceOf('Paradox\pod\Document', $model->getPod(), 'The inner pod was not of the type Paradox\pod\Document');
         $this->assertInstanceOf('Paradox\AModel', $model->getPod()->getModel(), 'The model referenced by the pod was not of the type Paradox\pod\Document');
     }
+    
+    /**
+     * @covers Paradox\toolbox\PodManager::determinePreviouslyStored
+     */
+    public function testDeterminePreviouslyStored()
+    {
+    	$reflectionClass = new \ReflectionClass('Paradox\toolbox\PodManager');
+    
+    	$method = $reflectionClass->getMethod('determinePreviouslyStored');
+    	$method->setAccessible(true);
+    
+    	$client = $this->getClient();
+    	$manager = new PodManager($client->getToolbox());
+    
+    	//Start the transaction
+    	$client->begin();
+    	$document = $client->dispense($this->collectionName);
+    		
+    	//Assert that there are no previous command to store this document
+    	$result = $method->invoke($manager, $document);
+    	$this->assertFalse($result, "There should be no previous commands to store this document.");
+    	
+    	//Assert that there is a previous command to store this document
+    	$client->store($document);
+    	$result = $method->invoke($manager, $document);
+    	$this->assertNotNull($result, "There should be a previous command to store this document.");
+    	
+    	//Assert that there is no previous command to store this document due to a deletion
+    	$client->delete($document);
+    	$result = $method->invoke($manager, $document);
+    	$this->assertFalse($result, "There should be no previous commands to store this document due to a deletion.");
+    }
 
+    /**
+     * @covers Paradox\toolbox\PodManager::hasTransaction
+     */
+    public function testHasTransaction()
+    {
+    	$reflectionClass = new \ReflectionClass('Paradox\toolbox\PodManager');
+    
+    	$method = $reflectionClass->getMethod('hasTransaction');
+    	$method->setAccessible(true);
+    
+    	$client = $this->getClient();
+    	$manager = new PodManager($client->getToolbox());
+    
+    	$this->assertFalse($method->invoke($manager), "There should be no active transaction.");
+    	
+    	$client->begin();
+    	
+    	$this->assertTrue($method->invoke($manager), "There should be an active transaction.");
+    }
+    
+    /**
+     * @covers Paradox\toolbox\PodManager::addTransactionCommand
+     */
+    public function testAddTransactionCommand()
+    {
+    	$reflectionClass = new \ReflectionClass('Paradox\toolbox\PodManager');
+    
+    	$method = $reflectionClass->getMethod('addTransactionCommand');
+    	$method->setAccessible(true);
+    
+    	$client = $this->getClient();
+    	$manager = new PodManager($client->getToolbox());
+    	
+    	$document = $manager->dispense($this->collectionName);
+    	
+    	$client->begin();
+    	
+    	$result = $method->invoke($manager, "some.command()", "someManager:action", $document, true, array('somedata' => 'data'));
+    	
+    	$this->assertNotNull($result, "addTransactionCommand() should return an id for the command.");
+    	$this->assertInternalType('string', $result, "The returned id should be a string.");
+    }
+    
     /**
      * @covers Paradox\toolbox\PodManager::setupModel
      */

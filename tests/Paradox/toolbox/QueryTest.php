@@ -2,6 +2,7 @@
 namespace tests\Paradox\toolbox;
 use tests\Base;
 use Paradox\toolbox\Query;
+use Paradox\AModel;
 
 /**
  * Tests for the query helper.
@@ -152,6 +153,39 @@ class QueryTest extends Base
             $this->assertInternalType('array', $result, "Each result in the result set should be an array");
         }
     }
+    
+    /**
+     * @covers Paradox\toolbox\Query::getAll
+     */
+    public function testGetAllInTransaction()
+    {
+    	$client = $this->getClient();
+    	$query = $client->getToolbox()->getQuery();
+
+    	$client->begin();
+    	
+    	$aql = "FOR doc in @@collection return doc";
+    	$query->getAll($aql, array('@collection' => $this->collectionName));
+    	$client->registerResult('found');
+    	
+    	$aql = 'FOR doc in @@collection FILTER doc.name == "InvalidName" return doc';
+    	$query->getAll($aql, array('@collection' => $this->collectionName));
+    	$client->registerResult('none');
+    	
+    	$result = $client->commit();
+
+    	//Assert the found
+    	$this->assertInternalType('array', $result['found'], "The result set should be an array");
+    	$this->assertCount(4, $result['found'], "The result set should contain 4 results");
+    
+    	foreach ($result['found'] as $document) {
+    		$this->assertInternalType('array', $document, "Each result in the result set should be an array");
+    	}
+    	
+    	//Assert none
+    	$this->assertInternalType('array', $result['none'], "The result set should be an array");
+    	$this->assertEmpty($result['none'], "The result set should be empty");
+    }
 
     /**
      * @covers Paradox\toolbox\Query::getAll
@@ -181,6 +215,33 @@ class QueryTest extends Base
         $result = $this->query->getOne($query, array('@collection' => $this->collectionName));
 
         $this->assertInternalType('array', $result, "The result should be an array");
+    }
+    
+    /**
+     * @covers Paradox\toolbox\Query::getOne
+     */
+    public function testGetOneInTransaction()
+    {
+    	$client = $this->getClient();
+    	$query = $client->getToolbox()->getQuery();
+    
+    	$client->begin();
+    	 
+    	$aql = "FOR doc in @@collection return doc";
+    	$query->getOne($aql, array('@collection' => $this->collectionName));
+    	$client->registerResult('found');
+    	 
+    	$aql = 'FOR doc in @@collection FILTER doc.name == "InvalidName" return doc';
+    	$query->getOne($aql, array('@collection' => $this->collectionName));
+    	$client->registerResult('none');
+    	 
+    	$result = $client->commit();
+    
+    	//Assert the found
+    	$this->assertInternalType('array', $result['found'], 'The found result should be an array');
+    	 
+    	//Assert none
+    	$this->assertNull($result['none'], "The result set should be null");
     }
 
     /**

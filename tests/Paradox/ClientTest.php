@@ -1000,7 +1000,7 @@ class ClientTest extends Base
     /**
      * @covers Paradox\Client::changePassword
      */
-    public function testChancePassword()
+    public function testChangePassword()
     {
         $result = $this->client->createUser('testuser', 'password', true, array('name' => 'david'));
 
@@ -1033,6 +1033,24 @@ class ClientTest extends Base
         //Delete the user
         $this->client->deleteUser('testuser');
     }
+    
+    /**
+     * @covers Paradox\Client::updateUserData
+     */
+    public function testUpdateUserData()
+    {
+    	$result = $this->client->createUser('testuser', 'password', true, array('name' => 'david'));
+    
+    	//Update
+    	$user = $this->client->updateUserData('testuser', array('age' => 20));
+    
+    	//Verify
+    	$user = $this->client->getUserInfo('testuser');
+    	$this->assertEquals(20, $user['data']['age'], 'The age does not match');
+    
+    	//Delete the user
+    	$this->client->deleteUser('testuser');
+    }
 
     /**
      * @covers Paradox\Client::getVersion
@@ -1063,23 +1081,160 @@ class ClientTest extends Base
 
         $this->assertInternalType('float', $time, "The time should be a float");
     }
+    
 
     /**
-     * @covers Paradox\Client::updateUserData
+     * @covers Paradox\Client::begin
      */
-    public function testUpdateUserData()
+    public function testBegin()
     {
-        $result = $this->client->createUser('testuser', 'password', true, array('name' => 'david'));
+    	$this->client->begin();
+    	
+    	$this->assertTrue($this->client->getToolbox()->getTransactionManager()->hasTransaction(), "The transaction was not started");
+    }
+    
+    /**
+     * @covers Paradox\Client::commit
+     */
+    public function testCommit()
+    {
+		$this->client->begin();
+		
+		$document = $this->client->dispense($this->collectionName);
+		$document->set('name', 'john smith');
+		$this->client->store($document);
+		$this->client->registerResult('store1');
+		
+		$document2 = $this->client->dispense($this->collectionName);
+		$document2->set('name', 'david smith');
+		$this->client->store($document2);
+		$this->client->registerResult('store2');
+		
+		$document2->set('age', 20);
+		$this->client->store($document2);
+		$this->client->registerResult('store3');
+		
+		$this->client->delete($document2);
+		$this->client->registerResult('delete');
+		
+		$result = $this->client->commit();
+		
+		$this->assertNotNull($result['store1'], "The id after storing a document should not be null");
+		$this->assertNotNull($result['store2'], "The id after storing a document should not be null");
+		$this->assertNotNull($result['store3'], "The id after storing a document should not be null");
+    	$this->assertEquals($result['store2'], $result['store3'], "The 2 ids after storing the same document does not match");
+    	$this->assertTrue($result['delete'], "Deleting a document should return true");
+    }
+    
+    /**
+     * @covers Paradox\Client::cancel
+     */
+    public function testCancel()
+    {
+    	$this->client->begin();
+    	
+    	$document = $this->client->dispense($this->collectionName);
+    	$document->set('name', 'john smith');
+    	$this->client->store($document);
 
-        //Update
-        $user = $this->client->updateUserData('testuser', array('age' => 20));
-
-        //Verify
-        $user = $this->client->getUserInfo('testuser');
-        $this->assertEquals(20, $user['data']['age'], 'The age does not match');
-
-        //Delete the user
-        $this->client->deleteUser('testuser');
+    	$this->client->cancel();
+    	
+    	$this->assertFalse($this->client->getToolbox()->getTransactionManager()->hasTransaction(), "The transaction was not cancelled");
+    }
+    
+    /**
+     * @covers Paradox\Client::addReadCollection
+     */
+    public function testAddReadCollection()
+    {
+    	$this->client->begin();
+    	$this->client->addReadCollection($this->collectionName);
+    }
+    
+    /**
+     * @covers Paradox\Client::addWriteCollection
+     */
+    public function testAddWriteCollection()
+    {
+    	$this->client->begin();
+    	$this->client->addWriteCollection($this->collectionName);
+    }
+    
+    /**
+     * @covers Paradox\Client::registerResult
+     */
+    public function testRegisterResult()
+    {
+    	$this->client->begin();
+    	$document = $this->client->dispense($this->collectionName);
+    	$document->set('name', 'john smith');
+    	$this->client->store($document);
+    	$this->client->registerResult('store');
+    	$result = $this->client->commit();
+    	
+    	$this->assertNotNull($result['store'], "Store should return a valid id");
+    }
+    
+    /**
+     * @covers Paradox\Client::pause
+     */
+    public function testPause()
+    {
+    	$this->client->begin();
+    	$document = $this->client->dispense($this->collectionName);
+    	$document->set('name', 'john smith');
+    	$id1 = $this->client->store($document);
+    	
+    	$this->assertNull($id1, "Id should be null, since methods can't return things in a transaction");
+    	
+    	$this->client->pause();
+    	
+    	$document2 = $this->client->dispense($this->collectionName);
+    	$document2->set('name', 'john smith');
+    	$id2 = $this->client->store($document2);
+    	
+    	$this->assertNotNull($id2, "Id should not be null, since it is outside a transaction");
+    }
+    
+    /**
+     * @covers Paradox\Client::resume
+     */
+    public function testResume()
+    {
+    	$this->client->begin();
+    	$document = $this->client->dispense($this->collectionName);
+    	$document->set('name', 'john smith');
+    	$id1 = $this->client->store($document);
+    	
+    	$this->assertNull($id1, "Id should be null, since methods can't return things in a transaction");
+    	
+    	$this->client->pause();
+    	
+    	$document2 = $this->client->dispense($this->collectionName);
+    	$document2->set('name', 'john smith');
+    	$id2 = $this->client->store($document2);
+    	
+    	$this->assertNotNull($id2, "Id should not be null, since it is outside a transaction");
+    	
+    	$this->client->resume();
+    	
+    	$document3 = $this->client->dispense($this->collectionName);
+    	$document3->set('name', 'john smith');
+    	$id3 = $this->client->store($document3);
+    	
+    	$this->assertNull($id3, "Id should be null, since methods can't return things in a transaction");
+    }
+    
+    /**
+     * @covers Paradox\Client::executeTransaction
+     */
+    public function testExecuteTransaction()
+    {
+    	$action = "function(){ return 'hello'; }";
+    	
+    	$result = $this->client->executeTransaction($action);
+    	
+    	$this->assertEquals('hello', $result, "The result does not match");
     }
 
     /**

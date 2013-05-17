@@ -515,6 +515,56 @@ class DocumentTest extends Base
     }
 
     /**
+     * @covers Paradox\pod\Document::resetMeta
+     */
+    public function testResetMeta()
+    {
+        $this->document->setId('mycollection/123456');
+        $this->document->setRevision('myrevision');
+        $this->document->set('mykey', 'myvalue');
+
+        $this->document->resetMeta(); //Reset the data
+
+        $this->assertNull($this->document->getId(), "The converted document's id should be null");
+        $this->assertNull($this->document->getKey(), "The converted document's key should be null");
+        $this->assertNull($this->document->getRevision(), "The converted document's revision should be null");
+        $this->assertEquals('myvalue', $this->document->get('mykey'), "The converted document's data does not match");
+    }
+
+    /**
+     * @covers Paradox\pod\Document::toJSON
+     */
+    public function testToJSON()
+    {
+        $this->document->setId('mycollection/123456');
+        $this->document->setRevision('myrevision');
+        $this->document->set('mykey', 'myvalue');
+
+        $converted = $this->document->toJSON();
+        $decoded = json_decode($converted);
+        $this->assertEquals('mycollection/123456', $decoded->_id, "The converted document's id does not match");
+        $this->assertEquals('myrevision', $decoded->_rev, "The converted document's revision does not match");
+        $this->assertEquals('myvalue', $decoded->mykey, "The converted document's data does not match");
+    }
+
+    /**
+     * @covers Paradox\pod\Document::toTransactionJSON
+     */
+    public function testToTransactionJSON()
+    {
+        $this->document->setId('mycollection/123456');
+        $this->document->setRevision('myrevision');
+        $this->document->set('mykey', 'myvalue');
+
+        $converted = $this->document->toTransactionJSON();
+        $decoded = json_decode($converted);
+        $this->assertFalse(isset($decoded->_id), "The converted document should not have an id");
+        $this->assertFalse(isset($decoded->_key), "The converted document should not have a key");
+        $this->assertEquals('myrevision', $decoded->_rev, "The converted document's revision does not match");
+        $this->assertEquals('myvalue', $decoded->mykey, "The converted document's data does not match");
+    }
+
+    /**
      * @covers Paradox\pod\Document::toDriverDocument
      */
     public function testToDriverDocument()
