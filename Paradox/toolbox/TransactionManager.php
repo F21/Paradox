@@ -318,9 +318,9 @@ class TransactionManager
                     }
 
                     if (isset($command['data']['coordinates'])) {
-                        $processed = $this->_toolbox->getFinder()->convertToPods($command['data']['type'], $result, $command['data']['coordinates']);
+                        $processed = $this->_toolbox->getFinder()->convertToPods($command['data']['type'], array($result), $command['data']['coordinates']);
                     } else {
-                        $processed = $this->_toolbox->getFinder()->convertToPods($command['data']['type'], $result);
+                        $processed = $this->_toolbox->getFinder()->convertToPods($command['data']['type'], array($result));
                     }
 
                     $processed = reset($processed);

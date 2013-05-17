@@ -729,7 +729,7 @@ class Finder
      * @param  array  $geoInfo An associative array of geo distance information we wish to load into the document.
      * @return array
      */
-    public function convertToPods($type, $result, array $geoInfo = null)
+    public function convertToPods($type, array $result, array $geoInfo = null)
     {
         $converted = $this->_toolbox->getPodManager()->convertToPods($type, $result);
 
