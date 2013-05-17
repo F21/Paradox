@@ -580,7 +580,7 @@ class Finder
 
         if ($this->_toolbox->getTransactionManager()->hasTransaction()) {
             $this->_toolbox->getTransactionManager()->addReadCollection($type);
-            $statement = json_encode(array('query' => $query, 'bindVars' => $params), JSON_FORCE_OBJECT);
+            $statement = json_encode(array('query' => $aqlStatement, 'bindVars' => $params), JSON_FORCE_OBJECT);
             $this->_toolbox->getTransactionManager()->addCommand("db._createStatement($statement).execute().elements();" , "Finder:search", null, false, array('type' => $type));
 
         } else {
@@ -625,7 +625,7 @@ class Finder
 
         if ($this->_toolbox->getTransactionManager()->hasTransaction()) {
             $this->_toolbox->getTransactionManager()->addReadCollection($type);
-            $statement = json_encode(array('query' => $query, 'bindVars' => $params), JSON_FORCE_OBJECT);
+            $statement = json_encode(array('query' => $aqlStatement, 'bindVars' => $params), JSON_FORCE_OBJECT);
             $this->_toolbox->getTransactionManager()->addCommand("db._createStatement($statement).execute().elements();" , "Finder:searchAll", null, false, array('type' => $type));
 
         } else {
@@ -669,7 +669,7 @@ class Finder
 
         if ($this->_toolbox->getTransactionManager()->hasTransaction()) {
             $this->_toolbox->getTransactionManager()->addReadCollection($type);
-            $statement = json_encode(array('query' => $query, 'bindVars' => $params), JSON_FORCE_OBJECT);
+            $statement = json_encode(array('query' => $aqlStatement, 'bindVars' => $params), JSON_FORCE_OBJECT);
             $this->_toolbox->getTransactionManager()->addCommand("function(){var elements = db._createStatement($statement).execute().elements(); return elements[0] ? elements[0] : null}();" , "Finder:searchForOne", null, false, array('type' => $type));
 
         } else {
