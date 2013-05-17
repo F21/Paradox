@@ -174,6 +174,10 @@ class TransactionManager
      */
     public function registerResult($name, $command = null)
     {
+    	if (!$this->_activeTransaction) {
+    		throw new TransactionManagerException("There is no active transaction to commit.");
+    	}
+    	
         //Get the last command's id (current array element)
         end($this->_commands);
         $id = key($this->_commands);
