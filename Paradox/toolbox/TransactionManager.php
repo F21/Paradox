@@ -269,6 +269,7 @@ class TransactionManager
                     break;
 
                 case "PodManager:delete":
+                	$this->_toolbox->getPodManager()->processDeleteResult($command['object']->getPod());
                     $processed = true;
                     break;
 
@@ -339,7 +340,7 @@ class TransactionManager
                 default:
                     throw new TransactionManagerException("Invalid or unimplemented action ({$command['action']}) while processing the transaction results.");
             }
-
+            
             if (array_key_exists($id, $this->_registeredResults)) {
                 $processedResults[$this->_registeredResults[$id]] = $processed;
             }
@@ -347,28 +348,28 @@ class TransactionManager
 
         return $processedResults;
     }
-    
+
     /**
      * Search the commands for an action and its object. If a match is found, the position and id is returned.
      * The search starts in reverse direction.
-     * @param string $action The action to search on
-     * @param mixed $object The object to match.
+     * @param  string $action The action to search on
+     * @param  mixed  $object The object to match.
      * @return array
      */
-    public function searchCommandsByActionAndObject($action, $object){
-    	
-    	$position = 0;
-    	$length = count($this->_commands);
-    	foreach (array_reverse($this->_commands) as $id => $command) {
-    		
-    		if($command['action'] == $action && $command['object'] === $object){
-    			return array('position' => $length - 1 - $position, 'id' => $id);
-    		}
-    		
-    		$position++;
-    	}
-    	
-    	return null;
+    public function searchCommandsByActionAndObject($action, $object)
+    {
+        $position = 0;
+        $length = count($this->_commands);
+        foreach (array_reverse($this->_commands) as $id => $command) {
+
+            if ($command['action'] == $action && $command['object'] === $object) {
+                return array('position' => $length - 1 - $position, 'id' => $id);
+            }
+
+            $position++;
+        }
+
+        return null;
     }
 
     /**
