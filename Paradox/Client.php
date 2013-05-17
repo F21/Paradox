@@ -819,17 +819,17 @@ class Client
     /**
      * Pause the transaction, so that operations after this point are not part of the transaction.
      */
-    public function pauseTransaction()
+    public function pause()
     {
-        return $this->getToolbox($this->_currentConnection)->getTransactionManager()->pauseTransaction();
+        return $this->getToolbox($this->_currentConnection)->getTransactionManager()->pause();
     }
 
     /**
      * Resume the transaction, so that operations after this point are part of the transaction.
      */
-    public function resumeTransaction()
+    public function resume()
     {
-        return $this->getToolbox($this->_currentConnection)->getTransactionManager()->resumeTransaction();
+        return $this->getToolbox($this->_currentConnection)->getTransactionManager()->resume();
     }
 
     /**

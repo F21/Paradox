@@ -3,6 +3,7 @@ namespace Paradox\toolbox;
 use Paradox\Toolbox;
 use Paradox\pod\Vertex;
 use Paradox\exceptions\TransactionManagerException;
+use Paradox\exceptions\ToolboxException;
 
 /**
  * Paradox is an elegant Object Document Mananger (ODM) to use with the ArangoDB Document/Graph database server.
@@ -89,6 +90,10 @@ class TransactionManager
         if (!$this->_activeTransaction) {
             throw new TransactionManagerException("There is no active transaction to commit.");
         }
+        
+        if (empty($this->_commands)) {
+        	throw new TransactionManagerException("There is no transaction operations to commit.");
+        }
 
         $commandText = 'function () { var db = require("internal").db; ';
 
@@ -128,6 +133,10 @@ class TransactionManager
      */
     public function cancel()
     {
+    	if (!$this->_activeTransaction) {
+    		throw new TransactionManagerException("There is no active transaction to cancel.");
+    	}
+    	
         $this->clearTransactionInfo();
 
         return true;
@@ -142,6 +151,7 @@ class TransactionManager
         $this->_transactionPaused = true;
         $this->_collections = array('write' => array(), 'read' => array());
         $this->_commands = array();
+        $this->_registeredResults = array();
     }
 
     /**
@@ -150,6 +160,10 @@ class TransactionManager
      */
     public function addReadCollection($collection)
     {
+    	if (!$this->_activeTransaction) {
+    		throw new TransactionManagerException("There is no active transaction.");
+    	}
+    	
         if (!in_array($collection, $this->_collections['read'])) {
             $this->_collections['read'][] = $collection;
         }
@@ -161,6 +175,10 @@ class TransactionManager
      */
     public function addWriteCollection($collection)
     {
+    	if (!$this->_activeTransaction) {
+    		throw new TransactionManagerException("There is no active transaction.");
+    	}
+    	
         if (!in_array($collection, $this->_collections['write'])) {
             $this->_collections['write'][] = $collection;
         }
@@ -175,7 +193,11 @@ class TransactionManager
     public function registerResult($name, $command = null)
     {
     	if (!$this->_activeTransaction) {
-    		throw new TransactionManagerException("There is no active transaction to commit.");
+    		throw new TransactionManagerException("There is no active transaction.");
+    	}
+    	
+    	if(empty($this->_commands)){
+    		throw new TransactionManagerException("There are no commands for this transaction.");
     	}
     	
         //Get the last command's id (current array element)
@@ -222,16 +244,32 @@ class TransactionManager
     /**
      * Pause the transaction, so that operations after this point are not part of the transaction.
      */
-    public function pauseTransaction()
+    public function pause()
     {
+    	if (!$this->_activeTransaction) {
+    		throw new TransactionManagerException("There is no active transaction.");
+    	}
+    	
+    	if($this->_transactionPaused){
+    		throw new TransactionManagerException("The transaction is already paused.");
+    	}
+    	
         $this->_transactionPaused = true;
     }
 
     /**
      * Resume the transaction, so that operations after this point are part of the transaction.
      */
-    public function resumeTransaction()
+    public function resume()
     {
+    	if (!$this->_activeTransaction) {
+    		throw new TransactionManagerException("There is no active transaction.");
+    	}
+    	 
+    	if(!$this->_transactionPaused){
+    		throw new TransactionManagerException("The transaction is not paused.");
+    	}
+    	
         $this->_transactionPaused = false;
     }
 
@@ -246,6 +284,10 @@ class TransactionManager
      */
     public function addCommand($command, $action, $object = null, $isGraph = false, $data = array())
     {
+    	if (!$this->_activeTransaction) {
+    		throw new TransactionManagerException("There is no active transaction.");
+    	}
+    	
         $id = $this->random();
         $this->_commands[$id] = array('command' => $command, 'action' => $action, 'object' => $object, 'isGraph' => $isGraph, 'data' => $data);
 
