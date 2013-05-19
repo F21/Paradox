@@ -23,7 +23,7 @@
 		"Apache-2.0"
 	],
 	"require" : {
-		"triagens/arangodb" : "dev-devel",
+		"triagens/arangodb" : "dev-devel#2e76e415dc035e3c4efbde1da579033dc33bf45d",
 		"php" : ">=5.4.0"
 	},
 	"autoload" : {
