@@ -5,8 +5,8 @@ namespace Paradox\exceptions;
  * Paradox is an elegant Object Document Mananger (ODM) to use with the ArangoDB Document/Graph database server.
  * Paradox requires ArangoDB-PHP to communication with the server, so it needs to be installed and avaliable.
  *
- * Finder exception
- * Thrown when the finder encounters an error.
+ * Transaction manager exception
+ * Thrown when an error occurs in the transaction manager.
  *
  * @version 1.3.0
  *
@@ -14,4 +14,4 @@ namespace Paradox\exceptions;
  * @link https://github.com/F21/Paradox
  * @license http://www.apache.org/licenses/LICENSE-2.0.html Apache 2 License
  */
-class FinderException extends \Exception {}
+class TransactionManagerException extends \Exception {}

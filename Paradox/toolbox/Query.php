@@ -12,7 +12,7 @@ use Paradox\exceptions\QueryException;
  * Query helper
  * Provides a simple way to send AQL queries to the server and receive the response.
  *
- * @version 1.2.3
+ * @version 1.3.0
  *
  * @author Francis Chuang <francis.chuang@gmail.com>
  * @link https://github.com/F21/Paradox
@@ -22,7 +22,7 @@ class Query
 {
     /**
      * A reference to the toolbox.
-     * @var unknown
+     * @var Toolbox
      */
     private $_toolbox;
 
@@ -44,25 +44,30 @@ class Query
      */
     public function getAll($query, array $parameters = array())
     {
-        $data = array(
-            'query' => $query,
-            'bindVars' => $parameters,
-             Cursor::ENTRY_FLAT => true
-        );
+        if ($this->_toolbox->getTransactionManager()->hasTransaction()) {
+            $statement = json_encode(array('query' => $query, 'bindVars' => $parameters), JSON_FORCE_OBJECT);
+            $this->_toolbox->getTransactionManager()->addCommand("db._createStatement($statement).execute().elements();" , "Query:getAll");
 
-        $statement = new Statement($this->_toolbox->getConnection(), $data);
+        } else {
+            $data = array(
+                    'query' => $query,
+                    'bindVars' => $parameters,
+                    Cursor::ENTRY_FLAT => true
+            );
 
-        try {
-            $cursor = $statement->execute();
-        } catch (\Exception $e) {
-            $normalised = $this->_toolbox->normaliseDriverExceptions($e);
-            throw new QueryException($normalised['message'], $normalised['code']);
+            $statement = new Statement($this->_toolbox->getConnection(), $data);
+
+            try {
+                $cursor = $statement->execute();
+            } catch (\Exception $e) {
+                $normalised = $this->_toolbox->normaliseDriverExceptions($e);
+                throw new QueryException($normalised['message'], $normalised['code']);
+            }
+
+            $results = $cursor->getAll();
+
+            return $results;
         }
-
-        $results = $cursor->getAll();
-
-        return $results;
-
     }
 
     /**
@@ -74,27 +79,34 @@ class Query
      */
     public function getOne($query, array $parameters = array())
     {
-        $data = array(
-            'query' => $query,
-            'bindVars' => $parameters,
-             Cursor::ENTRY_FLAT => true
-        );
+        if ($this->_toolbox->getTransactionManager()->hasTransaction()) {
 
-        $statement = new Statement($this->_toolbox->getConnection(), $data);
+            $statement = json_encode(array('query' => $query, 'bindVars' => $parameters), JSON_FORCE_OBJECT);
+            $this->_toolbox->getTransactionManager()->addCommand("function(){var elements = db._createStatement($statement).execute().elements(); return elements[0] ? elements[0] : null}();" , "Query:getOne");
 
-        try {
-            $cursor = $statement->execute();
-        } catch (\Exception $e) {
-            $normalised = $this->_toolbox->normaliseDriverExceptions($e);
-            throw new QueryException($normalised['message'], $normalised['code']);
-        }
-
-        if ($cursor->valid()) {
-            $cursor->rewind();
-
-            return $cursor->current();
         } else {
-            return null;
+            $data = array(
+                    'query' => $query,
+                    'bindVars' => $parameters,
+                    Cursor::ENTRY_FLAT => true
+            );
+
+            $statement = new Statement($this->_toolbox->getConnection(), $data);
+
+            try {
+                $cursor = $statement->execute();
+            } catch (\Exception $e) {
+                $normalised = $this->_toolbox->normaliseDriverExceptions($e);
+                throw new QueryException($normalised['message'], $normalised['code']);
+            }
+
+            if ($cursor->valid()) {
+                $cursor->rewind();
+
+                return $cursor->current();
+            } else {
+                return null;
+            }
         }
     }
 

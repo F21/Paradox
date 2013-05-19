@@ -150,12 +150,16 @@ class ToolboxTest extends Base
         $graphManagerProperty = $reflectionClass->getProperty('_graphManager');
         $graphManagerProperty->setAccessible(true);
 
+        $transactionManagerProperty = $reflectionClass->getProperty('_transactionManager');
+        $transactionManagerProperty->setAccessible(true);
+
         $this->assertInstanceOf('Paradox\toolbox\Finder', $finderProperty->getValue($toolbox), "The finder was not instantiated properly");
         $this->assertInstanceOf('Paradox\toolbox\PodManager', $podManagerProperty->getValue($toolbox), "The pod manager was not instantiated properly");
         $this->assertInstanceOf('Paradox\toolbox\CollectionManager', $collectionManagerProperty->getValue($toolbox), "The collection manager was not instantiated properly");
         $this->assertInstanceOf('Paradox\toolbox\Query', $queryProperty->getValue($toolbox), "The query helper was not instantiated properly");
         $this->assertInstanceOf('Paradox\toolbox\Server', $serverProperty->getValue($toolbox), "The server manager was not instantiated properly");
         $this->assertInstanceOf('Paradox\toolbox\GraphManager', $graphManagerProperty->getValue($toolbox), "The graph manager was not instantiated properly");
+        $this->assertInstanceOf('Paradox\toolbox\TransactionManager', $transactionManagerProperty->getValue($toolbox), "The transaction manager was not instantiated properly");
     }
 
     /**
@@ -315,6 +319,14 @@ class ToolboxTest extends Base
     }
 
     /**
+     * @covers Paradox\Toolbox::getTransactionManager
+     */
+    public function testGetTransactionManager()
+    {
+        $this->assertInstanceOf('Paradox\toolbox\TransactionManager', $this->toolbox->getTransactionManager(), 'Getting the transaction manager did not return a Paradox\toolbox\TransactionManager');
+    }
+
+    /**
      * @covers Paradox\Toolbox::formatModel
      */
     public function testFormatModel()
@@ -416,6 +428,15 @@ class ToolboxTest extends Base
     {
         $adminHandler = $this->toolbox->getAdminHandler();
         $this->assertInstanceOf('triagens\ArangoDb\AdminHandler', $adminHandler, 'getAdminHandler() did not return a triagens\ArangoDb\AdminHandler');
+    }
+
+    /**
+     * @covers Paradox\Toolbox::getTransactionObject
+     */
+    public function testGetTransactionObject()
+    {
+        $transaction = $this->toolbox->getTransactionObject();
+        $this->assertInstanceOf('triagens\ArangoDb\Transaction', $transaction, 'getTransactionObject() did not return a triagens\ArangoDb\Transaction');
     }
 
     /**

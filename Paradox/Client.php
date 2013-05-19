@@ -10,7 +10,7 @@ use triagens\ArangoDb\Graph;
  * Paradox client
  * Provides an entry point to the library. For most users, the client should provide almost everything they need.
  *
- * @version 1.2.3
+ * @version 1.3.0
  *
  * @author Francis Chuang <francis.chuang@gmail.com>
  * @link https://github.com/F21/Paradox
@@ -743,12 +743,158 @@ class Client
     }
 
     /**
+     * Get detailed information about the server.
+     * @return array
+     */
+    public function getServerInfo()
+    {
+        return $this->getToolbox($this->_currentConnection)->getServer()->getServerInfo();
+    }
+
+    /**
      * Get the unix timestamp of the server in microseconds.
      * @return integer
      */
     public function getTime()
     {
         return $this->getToolbox($this->_currentConnection)->getServer()->getTime();
+    }
+    
+    
+
+    /**
+     * Begin a transaction.
+     * @return boolean
+     */
+    public function begin()
+    {
+        return $this->getToolbox($this->_currentConnection)->getTransactionManager()->begin();
+    }
+
+    /**
+     * Commit a transaction and return a results array.
+     * @return array
+     */
+    public function commit()
+    {
+        return $this->getToolbox($this->_currentConnection)->getTransactionManager()->commit();
+    }
+
+    /**
+     * Cancel a transaction.
+     * @return true
+     */
+    public function cancel()
+    {
+        return $this->getToolbox($this->_currentConnection)->getTransactionManager()->cancel();
+    }
+
+    /**
+     * Add a collection that will be locked for reading.
+     * @param string $collection The name of the collection.
+     */
+    public function addReadCollection($collection)
+    {
+        return $this->getToolbox($this->_currentConnection)->getTransactionManager()->addReadCollection($collection);
+    }
+
+    /**
+     * Add a collection that will be locked for writing.
+     * @param string $collection The name of the collection.
+     */
+    public function addWriteCollection($collection)
+    {
+        return $this->getToolbox($this->_currentConnection)->getTransactionManager()->addWriteCollection($collection);
+    }
+
+    /**
+     * Register the result of a transaction operation under a name, so that the result can be retrieved after the transaction has finished.
+     * @param  string  $name    The name to store the results under.
+     * @param  string  $command A placebo that does nothing, but allows one to explicitly associate a registration with a transaction operation.
+     * @return boolean
+     */
+    public function registerResult($name, $command = null)
+    {
+        return $this->getToolbox($this->_currentConnection)->getTransactionManager()->registerResult($name, $command);
+    }
+
+    /**
+     * Pause the transaction, so that operations after this point are not part of the transaction.
+     */
+    public function pause()
+    {
+        return $this->getToolbox($this->_currentConnection)->getTransactionManager()->pause();
+    }
+
+    /**
+     * Resume the transaction, so that operations after this point are part of the transaction.
+     */
+    public function resume()
+    {
+        return $this->getToolbox($this->_currentConnection)->getTransactionManager()->resume();
+    }
+
+    /**
+     * Send a raw transaction to the server and return the result.
+     * @param  string                      $action           The javascript function for the transaction.
+     * @param  array                       $readCollections  An array of collections to be locked for reading.
+     * @param  array                       $writeCollections An array of collections to be locked for writing.
+     * @param  array                       $parameters       An array of parameters for executing the transaction multiple times.
+     * @throws TransactionManagerException
+     * @return mixed
+     */
+    public function executeTransaction($action, $readCollections = array(), $writeCollections = array(), $parameters = array())
+    {
+        return $this->getToolbox($this->_currentConnection)->getTransactionManager()->executeTransaction($action, $readCollections, $writeCollections, $parameters);
+    }
+    
+    /**
+     * Whether a transaction has been started or not.
+     * @return boolean
+     */
+    public function transactionStarted(){
+    	return $this->getToolbox($this->_currentConnection)->getTransactionManager()->transactionStarted();
+    }
+
+    /**
+     * Register an AQL function with the server.
+     * @param  string          $name The name of the server
+     * @param  string          $code The javascript code of the function.
+     * @throws ServerException
+     */
+    public function createAQLFunction($name, $code)
+    {
+        return $this->getToolbox($this->_currentConnection)->getServer()->createAQLFunction($name, $code);
+    }
+
+    /**
+     * Delete an AQL function by its name.
+     * @param  string          $name The name of the function to delete.
+     * @throws ServerException
+     */
+    public function deleteAQLFunction($name)
+    {
+        return $this->getToolbox($this->_currentConnection)->getServer()->deleteAQLFunction($name);
+    }
+
+    /**
+     * Delete all the AQL functions within a namespace.
+     * @param  string          $namespace The name of the namespace to delete.
+     * @throws ServerException
+     */
+    public function deleteAQLFunctionsByNamespace($namespace)
+    {
+        return $this->getToolbox($this->_currentConnection)->getServer()->deleteAQLFunctionsByNamespace($namespace);
+    }
+
+    /**
+     * List the AQL functions registered on the server and optionally, filter by namespace.
+     * @param  string          $namespace The optional namespace to filter the list of AQL functions on.
+     * @throws ServerException
+     */
+    public function listAQLFunctions($namespace = null)
+    {
+        return $this->getToolbox($this->_currentConnection)->getServer()->listAQLFunctions($namespace);
     }
 
     /**

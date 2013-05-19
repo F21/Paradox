@@ -6,6 +6,6 @@ php:
 before_script:
   - chmod 777 ./tests/bin/setup.sh
   - ./tests/bin/setup.sh
-  - composer install -n --prefer-source
+  - composer install --prefer-source --no-interaction 
 
 script: phpunit --configuration ./tests/phpunit.xml

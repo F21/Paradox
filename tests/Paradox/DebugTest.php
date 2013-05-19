@@ -73,7 +73,7 @@ class DebugTest extends Base
      */
     public function test__invokeWithResponse()
     {
-        $request = new \triagens\ArangoDb\TraceResponse(array("Some-Header" => "somevalue"), 200, '{"key": "value"}');
+        $request = new \triagens\ArangoDb\TraceResponse(array("Some-Header" => "somevalue"), 200, '{"key": "value"}', 100);
 
         $this->setOutputCallback(function($output){
             $this->assertInternalType('string', $output);
@@ -90,7 +90,7 @@ class DebugTest extends Base
      */
     public function test__invokeWithResponseWithError()
     {
-        $request = new \triagens\ArangoDb\TraceResponse(array("Some-Header" => "somevalue"), 400, '{"key": "value"}');
+        $request = new \triagens\ArangoDb\TraceResponse(array("Some-Header" => "somevalue"), 400, '{"key": "value"}', 100);
 
         $this->setOutputCallback(function($output){
             $this->assertInternalType('string', $output);

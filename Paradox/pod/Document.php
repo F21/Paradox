@@ -13,7 +13,7 @@ use Paradox\AModel;
  * Document pod
  * Represents an ArangoDB document. Implements IObserver to listen to events from the Pod Manager.
  *
- * @version 1.2.3
+ * @version 1.3.0
  *
  * @author Francis Chuang <francis.chuang@gmail.com>
  * @link https://github.com/F21/Paradox
@@ -308,6 +308,41 @@ class Document implements IObserver
     {
         $this->_new = false;
         $this->_changed = false;
+    }
+
+    /**
+     * Reset the meta data of the pod so that it appears as a new one.
+     * The existing user added data is not reset.
+     */
+    public function resetMeta()
+    {
+        $this->_new = true;
+        $this->_changed = true;
+        $this->_id = null;
+        $this->_key = null;
+        $this->_rev = null;
+    }
+
+    /**
+     * Returns a JSON representation of this document.
+     * @return string
+     */
+    public function toJSON()
+    {
+        $result = array('_id' => $this->getId(), '_key' => $this->getKey(), '_rev' => $this->getRevision());
+
+        return json_encode(array_merge($result, $this->_data), JSON_FORCE_OBJECT);
+    }
+
+    /**
+     * Returns a JSON representation of this document for transactions.
+     * @return string
+     */
+    public function toTransactionJSON()
+    {
+        $result = array('_rev' => $this->getRevision());
+
+        return json_encode(array_merge($result, $this->_data), JSON_FORCE_OBJECT);
     }
 
     /**

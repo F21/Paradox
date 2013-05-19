@@ -8,7 +8,7 @@ namespace Paradox\exceptions;
  * Toolbox exception
  * Thrown when the toolbox encounters an error.
  *
- * @version 1.2.3
+ * @version 1.3.0
  *
  * @author Francis Chuang <francis.chuang@gmail.com>
  * @link https://github.com/F21/Paradox

@@ -12,7 +12,7 @@ use Paradox\pod\Document;
  * Graph manager
  * Manages graphs, for example, creating and deleting graphs.
  *
- * @version 1.2.3
+ * @version 1.3.0
  *
  * @author Francis Chuang <francis.chuang@gmail.com>
  * @link https://github.com/F21/Paradox
@@ -136,17 +136,24 @@ class GraphManager
         $params[$vertexParameter] = $id;
         $params[$directionParameter] = "inbound";
 
-        try {
-            $result = $this->_toolbox->getQuery()->getAll($query, $params);
-        } catch (\Exception $e) {
-            throw new GraphManagerException($e->getMessage(), $e->getCode());
-        }
+        if ($this->_toolbox->getTransactionManager()->hasTransaction()) {
+            $this->_toolbox->getTransactionManager()->addReadCollection($this->_toolbox->getEdgeCollectionName());
+            $statement = json_encode(array('query' => $query, 'bindVars' => $params), JSON_FORCE_OBJECT);
+            $this->_toolbox->getTransactionManager()->addCommand("db._createStatement($statement).execute().elements();", "GraphManager:getInboundEdges", null, true);
 
-        if (empty($result)) {
-            return array();
-        }
+        } else {
+            try {
+                $result = $this->_toolbox->getQuery()->getAll($query, $params);
+            } catch (\Exception $e) {
+                throw new GraphManagerException($e->getMessage(), $e->getCode());
+            }
 
-        return $this->convertToPods("edge", $result);
+            if (empty($result)) {
+                return array();
+            }
+
+            return $this->convertToPods("edge", $result);
+        }
     }
 
     /**
@@ -182,17 +189,24 @@ class GraphManager
         $params[$vertexParameter] = $id;
         $params[$directionParameter] = "outbound";
 
-        try {
-            $result = $this->_toolbox->getQuery()->getAll($query, $params);
-        } catch (\Exception $e) {
-            throw new GraphManagerException($e->getMessage(), $e->getCode());
-        }
+        if ($this->_toolbox->getTransactionManager()->hasTransaction()) {
+            $this->_toolbox->getTransactionManager()->addReadCollection($this->_toolbox->getEdgeCollectionName());
+            $statement = json_encode(array('query' => $query, 'bindVars' => $params), JSON_FORCE_OBJECT);
+            $this->_toolbox->getTransactionManager()->addCommand("db._createStatement($statement).execute().elements();", "GraphManager:getOutboundEdges", null, true);
 
-        if (empty($result)) {
-            return array();
-        }
+        } else {
+            try {
+                $result = $this->_toolbox->getQuery()->getAll($query, $params);
+            } catch (\Exception $e) {
+                throw new GraphManagerException($e->getMessage(), $e->getCode());
+            }
 
-        return $this->convertToPods("edge", $result);
+            if (empty($result)) {
+                return array();
+            }
+
+            return $this->convertToPods("edge", $result);
+        }
     }
 
     /**
@@ -228,17 +242,24 @@ class GraphManager
         $params[$vertexParameter] = $id;
         $params[$directionParameter] = "any";
 
-        try {
-            $result = $this->_toolbox->getQuery()->getAll($query, $params);
-        } catch (\Exception $e) {
-            throw new GraphManagerException($e->getMessage(), $e->getCode());
-        }
+        if ($this->_toolbox->getTransactionManager()->hasTransaction()) {
+            $this->_toolbox->getTransactionManager()->addReadCollection($this->_toolbox->getEdgeCollectionName());
+            $statement = json_encode(array('query' => $query, 'bindVars' => $params), JSON_FORCE_OBJECT);
+            $this->_toolbox->getTransactionManager()->addCommand("db._createStatement($statement).execute().elements();", "GraphManager:getEdges", null, true);
 
-        if (empty($result)) {
-            return array();
-        }
+        } else {
+            try {
+                $result = $this->_toolbox->getQuery()->getAll($query, $params);
+            } catch (\Exception $e) {
+                throw new GraphManagerException($e->getMessage(), $e->getCode());
+            }
 
-        return $this->convertToPods("edge", $result);
+            if (empty($result)) {
+                return array();
+            }
+
+            return $this->convertToPods("edge", $result);
+        }
     }
 
     /**
@@ -260,6 +281,14 @@ class GraphManager
             return array();
         }
 
+        if (strtolower($direction) == "in") {
+            $direction = "inbound";
+        }
+
+        if (strtolower($direction) == "out") {
+            $direction = "outbound";
+        }
+
         $vertexCollection = $this->_toolbox->generateBindingParameter('@vertexCollection', $params);
         $edgeCollection = $this->_toolbox->generateBindingParameter('@edgeCollection', $params);
         $vertexParameter = $this->_toolbox->generateBindingParameter('vertexid', $params);
@@ -278,17 +307,25 @@ class GraphManager
         $params[$vertexParameter] = $id;
         $params[$directionParameter] = $direction;
 
-        try {
-            $result = $this->_toolbox->getQuery()->getAll($query, $params);
-        } catch (\Exception $e) {
-            throw new GraphManagerException($e->getMessage(), $e->getCode());
-        }
+        if ($this->_toolbox->getTransactionManager()->hasTransaction()) {
+            $this->_toolbox->getTransactionManager()->addReadCollection($this->_toolbox->getEdgeCollectionName());
+            $this->_toolbox->getTransactionManager()->addReadCollection($this->_toolbox->getVertexCollectionName());
+            $statement = json_encode(array('query' => $query, 'bindVars' => $params), JSON_FORCE_OBJECT);
+            $this->_toolbox->getTransactionManager()->addCommand("db._createStatement($statement).execute().elements();", "GraphManager:getNeighbours", null, true);
 
-        if (empty($result)) {
-            return array();
-        }
+        } else {
+            try {
+                $result = $this->_toolbox->getQuery()->getAll($query, $params);
+            } catch (\Exception $e) {
+                throw new GraphManagerException($e->getMessage(), $e->getCode());
+            }
 
-        return $this->convertToPods("vertex", $result);
+            if (empty($result)) {
+                return array();
+            }
+
+            return $this->convertToPods("vertex", $result);
+        }
     }
 
     /**

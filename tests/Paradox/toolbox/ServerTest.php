@@ -27,6 +27,24 @@ class ServerTest extends Base
     {
         $this->server = $this->getServer();
         $this->server->createUser('testuser');
+
+        try {
+            $this->server->deleteAQLFunction("paradoxtest:helloworld");
+        } catch (\Exception $e) {
+            //Ignore the error
+        }
+
+        try {
+            $this->server->deleteAQLFunction("paradoxtest:helloworld2");
+        } catch (\Exception $e) {
+            //Ignore the error
+        }
+
+        try {
+            $this->server->deleteAQLFunction("paradoxtest2:helloworld");
+        } catch (\Exception $e) {
+            //Ignore the error
+        }
     }
 
     /**
@@ -43,6 +61,24 @@ class ServerTest extends Base
 
         try {
             $this->getClient()->deleteUser('testuser1');
+        } catch (\Exception $e) {
+            //Ignore the error
+        }
+
+        try {
+            $this->server->deleteAQLFunction("paradoxtest:helloworld");
+        } catch (\Exception $e) {
+            //Ignore the error
+        }
+
+        try {
+            $this->server->deleteAQLFunction("paradoxtest:helloworld2");
+        } catch (\Exception $e) {
+            //Ignore the error
+        }
+
+        try {
+            $this->server->deleteAQLFunction("paradoxtest2:helloworld");
         } catch (\Exception $e) {
             //Ignore the error
         }
@@ -252,6 +288,182 @@ class ServerTest extends Base
     }
 
     /**
+     * @covers Paradox\toolbox\Server::createAQLFunction
+     */
+    public function testCreateAQLFunction()
+    {
+        $function = "function(){return 'hello';}";
+
+        $this->server->createAQLFunction("paradoxtest:helloworld", $function);
+
+        $registered = $this->server->listAQLFunctions("paradoxtest");
+
+        $this->assertCount(1, $registered, "There should only be one paradoxtest function");
+        $this->assertArrayHasKey("paradoxtest:helloworld", $registered, "The AQL function was not registered");
+        $this->assertEquals($function, $registered['paradoxtest:helloworld'], "The AQL function's code does not match");
+
+        $this->server->deleteAQLFunction("paradoxtest:helloworld");
+    }
+
+    /**
+     * @covers Paradox\toolbox\Server::createAQLFunction
+     */
+    public function testCreateAQLFunctionWithInvalidNameAndCode()
+    {
+        $function = "brokencode";
+
+        try {
+            $this->server->createAQLFunction("!!!!", $function);
+        } catch (\Exception $e) {
+            $this->assertInstanceOf('Paradox\exceptions\ServerException', $e, 'Exception thrown was not of the type Paradox\exceptions\ServerException');
+
+            return;
+        }
+
+        $this->fail('Tried to register a function with invalid name and code, but an exception was not thrown');
+    }
+
+    /**
+     * @covers Paradox\toolbox\Server::deleteAQLFunction
+     */
+    public function testDeleteAQLFunction()
+    {
+        $function = "function(){return 'hello';}";
+
+        $this->server->createAQLFunction("paradoxtest:helloworld", $function);
+
+        $registered = $this->server->listAQLFunctions("paradoxtest");
+
+        $this->assertCount(1, $registered, "There should only be one paradoxtest function");
+        $this->assertArrayHasKey("paradoxtest:helloworld", $registered, "The AQL function was not registered");
+        $this->assertEquals($function, $registered['paradoxtest:helloworld'], "The AQL function's code does not match");
+
+        $this->server->deleteAQLFunction("paradoxtest:helloworld");
+
+        $registered = $this->server->listAQLFunctions("paradoxtest");
+
+        $this->assertEmpty($registered, "There should be no paradoxtest functions registered");
+    }
+
+    /**
+     * @covers Paradox\toolbox\Server::deleteAQLFunction
+     */
+    public function testDeleteAQLFunctionThatDoesNotExist()
+    {
+
+        try {
+            $this->server->deleteAQLFunction('NameThatDefinitelyDoesNotExist');
+        } catch (\Exception $e) {
+            $this->assertInstanceOf('Paradox\exceptions\ServerException', $e, 'Exception thrown was not of the type Paradox\exceptions\ServerException');
+
+            return;
+        }
+
+        $this->fail('Tried to delete a non-existing AQL function, but an exception was not thrown');
+    }
+
+    /**
+     * @covers Paradox\toolbox\Server::deleteAQLFunctionsByNamespace
+     */
+    public function testDeleteAQLFunctionsByNamespace()
+    {
+        $function = "function(){return 'hello';}";
+
+        $this->server->createAQLFunction("paradoxtest:helloworld", $function);
+        $this->server->createAQLFunction("paradoxtest:helloworld2", $function);
+
+        $registered = $this->server->listAQLFunctions("paradoxtest");
+
+        $this->assertCount(2, $registered, "There should be 2 paradoxtest functions");
+        $this->assertArrayHasKey("paradoxtest:helloworld", $registered, "The AQL function was not registered");
+        $this->assertArrayHasKey("paradoxtest:helloworld2", $registered, "The AQL function was not registered");
+
+        $this->server->deleteAQLFunctionsByNamespace("paradoxtest");
+
+        $registered = $this->server->listAQLFunctions("paradoxtest");
+
+        $this->assertEmpty($registered, "There should be no paradoxtest functions registered");
+    }
+
+    /**
+     * @covers Paradox\toolbox\Server::deleteAQLFunctionsByNamespace
+     */
+    public function testDeleteAQLFunctionsByNamespaceOnInvalidServer()
+    {
+
+    	$client = $this->getClient('tcp://nonexistentserver', $this->getDefaultUsername(), $this->getDefaultPassword());
+    	
+    	try {
+    		$functions = $client->getToolbox()->getServer()->deleteAQLFunctionsByNamespace('paradoxtest');
+    	} catch (\Exception $e) {
+    		$this->assertInstanceOf('Paradox\exceptions\ServerException', $e, 'Exception thrown was not of the type Paradox\exceptions\ServerException');
+    	
+    		return;
+    	}
+    	
+    	$this->fail('Tried to delete aql functions in a namespace on a server that does not exist, but an exception was not thrown');
+    }
+
+    /**
+     * @covers Paradox\toolbox\Server::listAQLFunctions
+     */
+    public function testListAQLFunctions()
+    {
+        $function = "function(){return 'hello';}";
+
+        $this->server->createAQLFunction("paradoxtest:helloworld", $function);
+        $this->server->createAQLFunction("paradoxtest2:helloworld", $function);
+
+        $registeredParadoxtest = $this->server->listAQLFunctions("paradoxtest");
+
+        $this->assertCount(1, $registeredParadoxtest, "There should only be one paradoxtest function");
+        $this->assertArrayHasKey("paradoxtest:helloworld", $registeredParadoxtest, "The AQL function was not registered");
+        $this->assertEquals($function, $registeredParadoxtest['paradoxtest:helloworld'], "The AQL function's code does not match");
+
+        $registeredParadoxtest2 = $this->server->listAQLFunctions("paradoxtest2");
+
+        $this->assertCount(1, $registeredParadoxtest2, "There should only be one paradoxtest2 function");
+        $this->assertArrayHasKey("paradoxtest2:helloworld", $registeredParadoxtest2, "The AQL function was not registered");
+        $this->assertEquals($function, $registeredParadoxtest2['paradoxtest2:helloworld'], "The AQL function's code does not match");
+
+        $registeredAll = $this->server->listAQLFunctions();
+        $this->assertGreaterThanOrEqual(2, count($registeredAll), "There should be at least 2 registered functions");
+        $this->assertArrayHasKey("paradoxtest:helloworld", $registeredAll, "The paradoxtest:helloworld AQL function should be in the list");
+        $this->assertArrayHasKey("paradoxtest2:helloworld", $registeredAll, "The paradoxtest2:helloworld AQL function should be in the list");
+        $this->assertEquals($function, $registeredAll['paradoxtest:helloworld'], "The AQL function's code does not match");
+        $this->assertEquals($function, $registeredAll['paradoxtest2:helloworld'], "The AQL function's code does not match");
+
+        $this->server->deleteAQLFunction("paradoxtest:helloworld");
+        $this->server->deleteAQLFunction("paradoxtest2:helloworld");
+
+        $registered = $this->server->listAQLFunctions("paradoxtest");
+
+        $this->assertEmpty($registered, "There should be no paradoxtest functions registered");
+
+        $registered = $this->server->listAQLFunctions("paradoxtest2");
+
+        $this->assertEmpty($registered, "There should be no paradoxtest2 functions registered");
+    }
+
+    /**
+     * @covers Paradox\toolbox\Server::listAQLFunctions
+     */
+    public function testListAQLFunctionsOnInvalidServer()
+    {
+        $client = $this->getClient('tcp://nonexistentserver', $this->getDefaultUsername(), $this->getDefaultPassword());
+
+        try {
+            $functions = $client->getToolbox()->getServer()->listAQLFunctions();
+        } catch (\Exception $e) {
+            $this->assertInstanceOf('Paradox\exceptions\ServerException', $e, 'Exception thrown was not of the type Paradox\exceptions\ServerException');
+
+            return;
+        }
+
+        $this->fail('Tried to list registered AQL functions on server that does not exist, but an exception was not thrown');
+    }
+
+    /**
      * @covers Paradox\toolbox\Server::getVersion
      */
     public function testGetVersion()
@@ -276,6 +488,33 @@ class ServerTest extends Base
         }
 
         $this->fail('Tried to get version for server that does not exist, but an exception was not thrown');
+    }
+
+    /**
+     * @covers Paradox\toolbox\Server::getServerInfo
+     */
+    public function testGetServerInfo()
+    {
+        $info = $this->server->getServerInfo();
+        $this->assertInternalType('array', $info, "The server info should be an array");
+    }
+
+    /**
+     * @covers Paradox\toolbox\Server::getServerInfo
+     */
+    public function testGetServerInfoOnInvalidServer()
+    {
+        $client = $this->getClient('tcp://nonexistentserver', $this->getDefaultUsername(), $this->getDefaultPassword());
+
+        try {
+            $version = $client->getToolbox()->getServer()->getServerInfo();
+        } catch (\Exception $e) {
+            $this->assertInstanceOf('Paradox\exceptions\ServerException', $e, 'Exception thrown was not of the type Paradox\exceptions\ServerException');
+
+            return;
+        }
+
+        $this->fail('Tried to get info for server that does not exist, but an exception was not thrown');
     }
 
     /**

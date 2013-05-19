@@ -8,7 +8,7 @@ namespace Paradox;
  * Debug
  * The debugger provides debugging on the global basis. It prints the raw HTTP request that is sent to the server, and the raw HTTP response received.
  *
- * @version 1.2.3
+ * @version 1.3.0
  *
  * @author Francis Chuang <francis.chuang@gmail.com>
  * @link https://github.com/F21/Paradox
@@ -96,6 +96,7 @@ class Debug
             }
 
             if ($data->getType() == "response") {
+                print '<p>Time taken: ' . $data->getTimeTaken() * 1000 . ' ms</pre>';
                 print "</td></tr></table>";
             }
         }
