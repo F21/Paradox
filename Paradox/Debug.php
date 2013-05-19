@@ -96,7 +96,7 @@ class Debug
             }
 
             if ($data->getType() == "response") {
-            	print '<p>Time taken: ' . $data->getTimeTaken() * 1000 . ' ms</pre>';
+                print '<p>Time taken: ' . $data->getTimeTaken() * 1000 . ' ms</pre>';
                 print "</td></tr></table>";
             }
         }

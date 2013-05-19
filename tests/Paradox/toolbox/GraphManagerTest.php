@@ -117,15 +117,15 @@ class GraphManagerTest extends Base
             //Ignore any errors
         }
     }
-    
+
     /**
      * Convinence function to get the finder
      */
     protected function getGraphManager($graph = null)
     {
-    	$client = $this->getClient($this->getDefaultEndpoint(), $this->getDefaultUsername(), $this->getDefaultPassword(), $graph);
-    
-    	return $client->getToolbox()->getGraphManager();
+        $client = $this->getClient($this->getDefaultEndpoint(), $this->getDefaultUsername(), $this->getDefaultPassword(), $graph);
+
+        return $client->getToolbox()->getGraphManager();
     }
 
     /**
@@ -239,33 +239,33 @@ class GraphManagerTest extends Base
         $this->assertEquals($barack->getId(), $edge->getTo()->getId(), 'The "to" property does not point to the vertex');
         $this->assertNotEquals($barack->getId(), $edge->getFrom()->getId(), 'The "from" property should not point to the vertex');
     }
-    
+
     /**
      * @covers Paradox\toolbox\GraphManager::getInboundEdges
      */
     public function testGetInboundEdgesInTransaction()
     {
-    	$client = $this->getClient($this->getDefaultEndpoint(), $this->getDefaultUsername(), $this->getDefaultPassword(), $this->graphName);
-    	$manager = $client->getToolbox()->getGraphManager();
-    
-    	$barack = $client->findOne("vertex", "doc.name == @name", array('name' => 'barack obama'));
-    	
-    	//Run the transaction
-    	$client->begin();
-    	$manager->getInboundEdges($barack, "friends");
-    	$client->registerResult('edges');
-    	$result = $client->commit();
-    
-    	$edges = $result['edges'];
-    	
-    	$this->assertInternalType('array', $edges, "Returned list of inbound edges should be an array");
-    	$this->assertCount(1, $edges, "The number of inbound edges should be 1");
-    
-    	$edge = reset($edges);
-    
-    	$this->assertInstanceOf('Paradox\AModel', $edge, 'The edge in the result list is not of type Paradox\AModel');
-    	$this->assertEquals($barack->getId(), $edge->getTo()->getId(), 'The "to" property does not point to the vertex');
-    	$this->assertNotEquals($barack->getId(), $edge->getFrom()->getId(), 'The "from" property should not point to the vertex');
+        $client = $this->getClient($this->getDefaultEndpoint(), $this->getDefaultUsername(), $this->getDefaultPassword(), $this->graphName);
+        $manager = $client->getToolbox()->getGraphManager();
+
+        $barack = $client->findOne("vertex", "doc.name == @name", array('name' => 'barack obama'));
+
+        //Run the transaction
+        $client->begin();
+        $manager->getInboundEdges($barack, "friends");
+        $client->registerResult('edges');
+        $result = $client->commit();
+
+        $edges = $result['edges'];
+
+        $this->assertInternalType('array', $edges, "Returned list of inbound edges should be an array");
+        $this->assertCount(1, $edges, "The number of inbound edges should be 1");
+
+        $edge = reset($edges);
+
+        $this->assertInstanceOf('Paradox\AModel', $edge, 'The edge in the result list is not of type Paradox\AModel');
+        $this->assertEquals($barack->getId(), $edge->getTo()->getId(), 'The "to" property does not point to the vertex');
+        $this->assertNotEquals($barack->getId(), $edge->getFrom()->getId(), 'The "from" property should not point to the vertex');
     }
 
     /**
@@ -366,32 +366,32 @@ class GraphManagerTest extends Base
             $this->assertNotEquals($john->getId(), $edge->getTo()->getId(), 'The "to" property should not point to the vertex');
            }
     }
-    
+
     /**
      * @covers Paradox\toolbox\GraphManager::getOutboundEdges
      */
     public function testGetOutboundEdgesInTransaction()
     {
-    	$client = $this->getClient($this->getDefaultEndpoint(), $this->getDefaultUsername(), $this->getDefaultPassword(), $this->graphName);
-    	$manager = $client->getToolbox()->getGraphManager();
-    
-    	$john = $client->findOne("vertex", "doc.name == @name", array('name' => 'john smith'));
-    
-    	$client->begin();
-    	$manager->getOutboundEdges($john, "friends");
-    	$client->registerResult('edges');
-    	$result = $client->commit();
-    	
-    	$edges = $result['edges'];
-    
-    	$this->assertInternalType('array', $edges, "Returned list of outbound edges should be an array");
-    	$this->assertCount(2, $edges, "The number of outbound edges should be 2");
-    
-    	foreach ($edges as $id => $edge) {
-    		$this->assertInstanceOf('Paradox\AModel', $edge, 'The edge in the result list is not of type Paradox\AModel');
-    		$this->assertEquals($john->getId(), $edge->getFrom()->getId(), 'The "from" property does not point to the vertex');
-    		$this->assertNotEquals($john->getId(), $edge->getTo()->getId(), 'The "to" property should not point to the vertex');
-    	}
+        $client = $this->getClient($this->getDefaultEndpoint(), $this->getDefaultUsername(), $this->getDefaultPassword(), $this->graphName);
+        $manager = $client->getToolbox()->getGraphManager();
+
+        $john = $client->findOne("vertex", "doc.name == @name", array('name' => 'john smith'));
+
+        $client->begin();
+        $manager->getOutboundEdges($john, "friends");
+        $client->registerResult('edges');
+        $result = $client->commit();
+
+        $edges = $result['edges'];
+
+        $this->assertInternalType('array', $edges, "Returned list of outbound edges should be an array");
+        $this->assertCount(2, $edges, "The number of outbound edges should be 2");
+
+        foreach ($edges as $id => $edge) {
+            $this->assertInstanceOf('Paradox\AModel', $edge, 'The edge in the result list is not of type Paradox\AModel');
+            $this->assertEquals($john->getId(), $edge->getFrom()->getId(), 'The "from" property does not point to the vertex');
+            $this->assertNotEquals($john->getId(), $edge->getTo()->getId(), 'The "to" property should not point to the vertex');
+        }
     }
 
     /**
@@ -491,32 +491,32 @@ class GraphManagerTest extends Base
             $this->assertContains($barack->getId(), array($edge->getFrom()->getId(), $edge->getTo()->getId()), 'One end of the edge should be connected to the vertex');
            }
     }
-    
+
     /**
      * @covers Paradox\toolbox\GraphManager::getEdges
      */
     public function testGetEdgesInTransaction()
     {
-    	$client = $this->getClient($this->getDefaultEndpoint(), $this->getDefaultUsername(), $this->getDefaultPassword(), $this->graphName);
-    	$manager = $client->getToolbox()->getGraphManager();
-    
-    	$barack = $client->findOne("vertex", "doc.name == @name", array('name' => 'barack obama'));
-    
-    	//Run the transaction
-    	$client->begin();
-    	$manager->getEdges($barack, "friends");
-    	$client->registerResult('edges');
-    	$result = $client->commit();
-    	
-    	$edges = $result['edges'];
-    
-    	$this->assertInternalType('array', $edges, "Returned list of edges should be an array");
-    	$this->assertCount(2, $edges, "The number of outbound edges should be 2");
-    
-    	foreach ($edges as $id => $edge) {
-    		$this->assertInstanceOf('Paradox\AModel', $edge, 'The edge in the result list is not of type Paradox\AModel');
-    		$this->assertContains($barack->getId(), array($edge->getFrom()->getId(), $edge->getTo()->getId()), 'One end of the edge should be connected to the vertex');
-    	}
+        $client = $this->getClient($this->getDefaultEndpoint(), $this->getDefaultUsername(), $this->getDefaultPassword(), $this->graphName);
+        $manager = $client->getToolbox()->getGraphManager();
+
+        $barack = $client->findOne("vertex", "doc.name == @name", array('name' => 'barack obama'));
+
+        //Run the transaction
+        $client->begin();
+        $manager->getEdges($barack, "friends");
+        $client->registerResult('edges');
+        $result = $client->commit();
+
+        $edges = $result['edges'];
+
+        $this->assertInternalType('array', $edges, "Returned list of edges should be an array");
+        $this->assertCount(2, $edges, "The number of outbound edges should be 2");
+
+        foreach ($edges as $id => $edge) {
+            $this->assertInstanceOf('Paradox\AModel', $edge, 'The edge in the result list is not of type Paradox\AModel');
+            $this->assertContains($barack->getId(), array($edge->getFrom()->getId(), $edge->getTo()->getId()), 'One end of the edge should be connected to the vertex');
+        }
     }
 
     /**
@@ -616,31 +616,31 @@ class GraphManagerTest extends Base
             $this->assertNotEquals($barack->getId(), $vertex->getId(), 'The vertex should not be the same vertex as the one querying for neighbours');
         }
     }
-    
+
     /**
      * @covers Paradox\toolbox\GraphManager::getNeighbours
      */
     public function testGetNeighboursInTransaction()
     {
-    	$client = $this->getClient($this->getDefaultEndpoint(), $this->getDefaultUsername(), $this->getDefaultPassword(), $this->graphName);
-    	$manager = $client->getToolbox()->getGraphManager();
-    
-    	$barack = $client->findOne("vertex", "doc.name == @name", array('name' => 'barack obama'));
-    
-    	$client->begin();
-    	$manager->getNeighbours($barack, "any", "friends");
-    	$client->registerResult('vertices');
-    	$result = $client->commit();
-    
-    	$vertices = $result['vertices'];
-    	
-    	$this->assertInternalType('array', $vertices, "Returned list of vertices should be an array");
-    	$this->assertCount(1, $vertices, "The number of vertices should be 1");
-    
-    	foreach ($vertices as $id => $vertex) {
-    		$this->assertInstanceOf('Paradox\AModel', $vertex, 'The edge in the result list is not of type Paradox\AModel');
-    		$this->assertNotEquals($barack->getId(), $vertex->getId(), 'The vertex should not be the same vertex as the one querying for neighbours');
-    	}
+        $client = $this->getClient($this->getDefaultEndpoint(), $this->getDefaultUsername(), $this->getDefaultPassword(), $this->graphName);
+        $manager = $client->getToolbox()->getGraphManager();
+
+        $barack = $client->findOne("vertex", "doc.name == @name", array('name' => 'barack obama'));
+
+        $client->begin();
+        $manager->getNeighbours($barack, "any", "friends");
+        $client->registerResult('vertices');
+        $result = $client->commit();
+
+        $vertices = $result['vertices'];
+
+        $this->assertInternalType('array', $vertices, "Returned list of vertices should be an array");
+        $this->assertCount(1, $vertices, "The number of vertices should be 1");
+
+        foreach ($vertices as $id => $vertex) {
+            $this->assertInstanceOf('Paradox\AModel', $vertex, 'The edge in the result list is not of type Paradox\AModel');
+            $this->assertNotEquals($barack->getId(), $vertex->getId(), 'The vertex should not be the same vertex as the one querying for neighbours');
+        }
     }
 
     /**

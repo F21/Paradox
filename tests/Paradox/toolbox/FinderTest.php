@@ -164,34 +164,34 @@ class FinderTest extends Base
         $this->assertInstanceOf('Paradox\AModel', $foundDocument, 'The found document does not have the type Paradox\AModel');
         $this->assertEquals('Horacio Manuel Cartes Jara', $foundDocument->get('name'), "The document returned does not have the same name as the queried name");
     }
-    
+
     /**
      * @covers Paradox\toolbox\Finder::find
      */
     public function testFindInTransaction()
     {
-    	$client = $this->getClient();
-    	$finder = $client->getToolbox()->getFinder();
-    	
-    	$client->begin();
-    	$finder->find($this->collectionName, "myplaceholder.name == @name", array('name' => 'ANameThatDoesNotExist'), 'myplaceholder');
-    	$client->registerResult('noResult');
-    	
-    	$finder->find($this->collectionName, "myplaceholder.name IN ['Giorgio Napolitano', 'Tsegaye Kebede']", array(), 'myplaceholder');
-    	$client->registerResult('found');
-    	
-    	$result = $client->commit();
-    	
-    	$this->assertEmpty($result['noResult'], "There should be no results for the first query");
-    	
-    	$found = $result['found'];
-    	$this->assertCount(2, $found, "There should be 2 results for the second query");
-    	
-    	foreach ($found as $key => $document) {
-    		$this->assertInternalType('string', $key, "The id of the found document should be a string");
-    		$this->assertInstanceOf('Paradox\AModel', $document, 'The found document does not have the type Paradox\AModel');
-    		$this->assertContains($document->get('name'), array('Giorgio Napolitano', 'Tsegaye Kebede'), "The found document has an unexpected name.");
-    	}
+        $client = $this->getClient();
+        $finder = $client->getToolbox()->getFinder();
+
+        $client->begin();
+        $finder->find($this->collectionName, "myplaceholder.name == @name", array('name' => 'ANameThatDoesNotExist'), 'myplaceholder');
+        $client->registerResult('noResult');
+
+        $finder->find($this->collectionName, "myplaceholder.name IN ['Giorgio Napolitano', 'Tsegaye Kebede']", array(), 'myplaceholder');
+        $client->registerResult('found');
+
+        $result = $client->commit();
+
+        $this->assertEmpty($result['noResult'], "There should be no results for the first query");
+
+        $found = $result['found'];
+        $this->assertCount(2, $found, "There should be 2 results for the second query");
+
+        foreach ($found as $key => $document) {
+            $this->assertInternalType('string', $key, "The id of the found document should be a string");
+            $this->assertInstanceOf('Paradox\AModel', $document, 'The found document does not have the type Paradox\AModel');
+            $this->assertContains($document->get('name'), array('Giorgio Napolitano', 'Tsegaye Kebede'), "The found document has an unexpected name.");
+        }
     }
 
     /**
@@ -235,34 +235,34 @@ class FinderTest extends Base
         $this->assertInstanceOf('Paradox\AModel', $foundDocument, 'The found document does not have the type Paradox\AModel');
         $this->assertEquals('Horacio Manuel Cartes Jara', $foundDocument->get('name'), "The document returned does not have the same name as the queried name");
     }
-    
+
     /**
      * @covers Paradox\toolbox\Finder::findAll
      */
     public function testFindAllInTransaction()
     {
-    	$client = $this->getClient();
-    	$finder = $client->getToolbox()->getFinder();
-    	 
-    	$client->begin();
-    	$finder->findAll($this->collectionName, "FILTER myplaceholder.name == @name", array('name' => 'ANameThatDoesNotExist'), 'myplaceholder');
-    	$client->registerResult('noResult');
-    	 
-    	$finder->findAll($this->collectionName, "FILTER myplaceholder.name IN ['Giorgio Napolitano', 'Tsegaye Kebede']", array(), 'myplaceholder');
-    	$client->registerResult('found');
-    	 
-    	$result = $client->commit();
-    	 
-    	$this->assertEmpty($result['noResult'], "There should be no results for the first query");
-    	 
-    	$found = $result['found'];
-    	$this->assertCount(2, $found, "There should be 2 results for the second query");
-    	 
-    	foreach ($found as $key => $document) {
-    		$this->assertInternalType('string', $key, "The id of the found document should be a string");
-    		$this->assertInstanceOf('Paradox\AModel', $document, 'The found document does not have the type Paradox\AModel');
-    		$this->assertContains($document->get('name'), array('Giorgio Napolitano', 'Tsegaye Kebede'), "The found document has an unexpected name.");
-    	}
+        $client = $this->getClient();
+        $finder = $client->getToolbox()->getFinder();
+
+        $client->begin();
+        $finder->findAll($this->collectionName, "FILTER myplaceholder.name == @name", array('name' => 'ANameThatDoesNotExist'), 'myplaceholder');
+        $client->registerResult('noResult');
+
+        $finder->findAll($this->collectionName, "FILTER myplaceholder.name IN ['Giorgio Napolitano', 'Tsegaye Kebede']", array(), 'myplaceholder');
+        $client->registerResult('found');
+
+        $result = $client->commit();
+
+        $this->assertEmpty($result['noResult'], "There should be no results for the first query");
+
+        $found = $result['found'];
+        $this->assertCount(2, $found, "There should be 2 results for the second query");
+
+        foreach ($found as $key => $document) {
+            $this->assertInternalType('string', $key, "The id of the found document should be a string");
+            $this->assertInstanceOf('Paradox\AModel', $document, 'The found document does not have the type Paradox\AModel');
+            $this->assertContains($document->get('name'), array('Giorgio Napolitano', 'Tsegaye Kebede'), "The found document has an unexpected name.");
+        }
     }
 
     /**
@@ -302,30 +302,30 @@ class FinderTest extends Base
         $this->assertInstanceOf('Paradox\AModel', $found, 'The found document does not have the type Paradox\AModel');
         $this->assertEquals('Horacio Manuel Cartes Jara', $found->get('name'), "The document returned does not have the same name as the queried name");
     }
-    
+
     /**
      * @covers Paradox\toolbox\Finder::findOne
      */
     public function testFindOneInTransaction()
     {
-    	$client = $this->getClient();
-    	$finder = $client->getToolbox()->getFinder();
-    
-    	$client->begin();
-    	$finder->findOne($this->collectionName, "myplaceholder.name == @name", array('name' => 'ANameThatDoesNotExist'), 'myplaceholder');
-    	$client->registerResult('noResult');
-    
-    	$finder->findOne($this->collectionName, "myplaceholder.name IN ['Giorgio Napolitano']", array(), 'myplaceholder');
-    	$client->registerResult('found');
-    
-    	$result = $client->commit();
-    
-    	$this->assertNull($result['noResult'], "There should be no results for the first query");
-    
-    	$found = $result['found'];
-    	
-    	$this->assertInstanceOf('Paradox\AModel', $found, 'The found document does not have the type Paradox\AModel');
-    	$this->assertEquals('Giorgio Napolitano', $found->get('name'), "The found document's name does not match.");
+        $client = $this->getClient();
+        $finder = $client->getToolbox()->getFinder();
+
+        $client->begin();
+        $finder->findOne($this->collectionName, "myplaceholder.name == @name", array('name' => 'ANameThatDoesNotExist'), 'myplaceholder');
+        $client->registerResult('noResult');
+
+        $finder->findOne($this->collectionName, "myplaceholder.name IN ['Giorgio Napolitano']", array(), 'myplaceholder');
+        $client->registerResult('found');
+
+        $result = $client->commit();
+
+        $this->assertNull($result['noResult'], "There should be no results for the first query");
+
+        $found = $result['found'];
+
+        $this->assertInstanceOf('Paradox\AModel', $found, 'The found document does not have the type Paradox\AModel');
+        $this->assertEquals('Giorgio Napolitano', $found->get('name'), "The found document's name does not match.");
     }
 
     /**
@@ -371,24 +371,24 @@ class FinderTest extends Base
      */
     public function testAnyInTransaction()
     {
-    	$client = $this->getClient();
-    	$finder = $client->getToolbox()->getFinder();
-    	
-    	$id = $client->createCollection($this->collectionName . 'Empty');
-    
-    	$client->begin();
-    	$finder->any($this->collectionName);
-    	$client->registerResult('any');
-    	
-    	$finder->any($this->collectionName . 'Empty');
-    	$client->registerResult('none');
-    	$result = $client->commit();
-    
-    	$this->assertInstanceOf('Paradox\AModel', $result['any'], 'The found document should be of the type Paradox\AModel');
-    
-    	$this->assertNull($result['none'], "The second query should be null");
+        $client = $this->getClient();
+        $finder = $client->getToolbox()->getFinder();
+
+        $id = $client->createCollection($this->collectionName . 'Empty');
+
+        $client->begin();
+        $finder->any($this->collectionName);
+        $client->registerResult('any');
+
+        $finder->any($this->collectionName . 'Empty');
+        $client->registerResult('none');
+        $result = $client->commit();
+
+        $this->assertInstanceOf('Paradox\AModel', $result['any'], 'The found document should be of the type Paradox\AModel');
+
+        $this->assertNull($result['none'], "The second query should be null");
     }
-    
+
     /**
      * @covers Paradox\toolbox\Finder::any
      */
@@ -433,57 +433,57 @@ class FinderTest extends Base
         $this->assertInternalType('float', $result->getDistance());
         $this->assertInternalType('array', $result->getCoordinates());
     }
-    
+
     /**
      * @covers Paradox\toolbox\Finder::findNear
      */
     public function testFindNearInTransaction()
     {
-    	$client = $this->getClient();
-    	$finder = $client->getToolbox()->getFinder();
-    
-    	//Get the reference pod
-    	$reference = $this->finder->findOne($this->collectionName, 'doc.name == @name', array('name' => 'Horacio Manuel Cartes Jara'));
-    	
-    	$client->begin();
-    	$finder->findNear($this->collectionName, array('latitude' => 48, 'longitude' => 48),
+        $client = $this->getClient();
+        $finder = $client->getToolbox()->getFinder();
+
+        //Get the reference pod
+        $reference = $this->finder->findOne($this->collectionName, 'doc.name == @name', array('name' => 'Horacio Manuel Cartes Jara'));
+
+        $client->begin();
+        $finder->findNear($this->collectionName, array('latitude' => 48, 'longitude' => 48),
                                 "myplaceholder.name IN [@name, 'Priscah Jeptoo']", array('name' => 'Tsegaye Kebede'), 2, "myplaceholder");
-    	$client->registerResult('withCoordinates');
-    	 
-    	$finder->findNear($this->collectionName, $reference,
+        $client->registerResult('withCoordinates');
+
+        $finder->findNear($this->collectionName, $reference,
                 "myplaceholder.name IN [@name, 'Priscah Jeptoo']", array('name' => 'Tsegaye Kebede'), 2, "myplaceholder");
-    	$client->registerResult('withReference');
-    	
-    	$finder->findNear($this->collectionName, $reference,
-    			'myplaceholder.name == "Nonexistent Name"', array(), 2, "myplaceholder");
-    	$client->registerResult('none');
-    	
-    	$result = $client->commit();
-    	
-    	//Assert the with coordinates results
-    	$this->assertInternalType('array', $result['withCoordinates'], "Returned result set should be an array");
-    	$this->assertCount(1, $result['withCoordinates'], "Number of returned results should be 1");
-    	
-    	$withCoordinatesResult = reset($result['withCoordinates']);
-    	$this->assertInstanceOf('Paradox\AModel', $withCoordinatesResult, 'Result items should have the type Paradox\AModel');
-    	$this->assertEquals('Tsegaye Kebede', $withCoordinatesResult->get('name'), "The name of the found document does not match");
-    	$this->assertInternalType('float', $withCoordinatesResult->getDistance(), "The distance to the coordinates should be a float");
-    	$this->assertInternalType('array', $withCoordinatesResult->getCoordinates(), "The coordinates should be an array");
-    
-    	//Assert the with reference results
-    	$this->assertArrayNotHasKey($reference->getId(), $result['withReference'], "The reference was in the results list");
-    	$this->assertInternalType('array', $result['withReference'], "Returned result set should be an array");
-    	$this->assertCount(1, $result['withReference'], "Number of returned results should be 1");
-    	
-    	$withReferenceResult = reset($result['withReference']);
-    	$this->assertInstanceOf('Paradox\AModel', $withReferenceResult, 'Result items should have the type Paradox\AModel');
-    	$this->assertEquals('Tsegaye Kebede', $withReferenceResult->get('name'), "The name of the found document does not match");
-    	$this->assertEquals(0, $withReferenceResult->getDistance(), "The distance to the reference should be 0");
-    	$this->assertInternalType('array', $withReferenceResult->getCoordinates(), "Returned result set should be an array");
-    	
-    	//Assert the none results
-    	$this->assertInternalType('array', $result['none'], "The result should be an array");
-    	$this->assertEmpty($result['none'], "The result should be empty");
+        $client->registerResult('withReference');
+
+        $finder->findNear($this->collectionName, $reference,
+                'myplaceholder.name == "Nonexistent Name"', array(), 2, "myplaceholder");
+        $client->registerResult('none');
+
+        $result = $client->commit();
+
+        //Assert the with coordinates results
+        $this->assertInternalType('array', $result['withCoordinates'], "Returned result set should be an array");
+        $this->assertCount(1, $result['withCoordinates'], "Number of returned results should be 1");
+
+        $withCoordinatesResult = reset($result['withCoordinates']);
+        $this->assertInstanceOf('Paradox\AModel', $withCoordinatesResult, 'Result items should have the type Paradox\AModel');
+        $this->assertEquals('Tsegaye Kebede', $withCoordinatesResult->get('name'), "The name of the found document does not match");
+        $this->assertInternalType('float', $withCoordinatesResult->getDistance(), "The distance to the coordinates should be a float");
+        $this->assertInternalType('array', $withCoordinatesResult->getCoordinates(), "The coordinates should be an array");
+
+        //Assert the with reference results
+        $this->assertArrayNotHasKey($reference->getId(), $result['withReference'], "The reference was in the results list");
+        $this->assertInternalType('array', $result['withReference'], "Returned result set should be an array");
+        $this->assertCount(1, $result['withReference'], "Number of returned results should be 1");
+
+        $withReferenceResult = reset($result['withReference']);
+        $this->assertInstanceOf('Paradox\AModel', $withReferenceResult, 'Result items should have the type Paradox\AModel');
+        $this->assertEquals('Tsegaye Kebede', $withReferenceResult->get('name'), "The name of the found document does not match");
+        $this->assertEquals(0, $withReferenceResult->getDistance(), "The distance to the reference should be 0");
+        $this->assertInternalType('array', $withReferenceResult->getCoordinates(), "Returned result set should be an array");
+
+        //Assert the none results
+        $this->assertInternalType('array', $result['none'], "The result should be an array");
+        $this->assertEmpty($result['none'], "The result should be empty");
     }
 
     /**
@@ -562,57 +562,57 @@ class FinderTest extends Base
         $this->assertInternalType('float', $result->getDistance());
         $this->assertInternalType('array', $result->getCoordinates());
     }
-    
+
     /**
      * @covers Paradox\toolbox\Finder::findAllNear
      */
     public function testFindAllNearInTransaction()
     {
-    	$client = $this->getClient();
-    	$finder = $client->getToolbox()->getFinder();
-    
-    	//Get the reference pod
-    	$reference = $this->finder->findOne($this->collectionName, 'doc.name == @name', array('name' => 'Horacio Manuel Cartes Jara'));
-    	 
-    	$client->begin();
-    	$finder->findAllNear($this->collectionName, array('latitude' => 48, 'longitude' => 48),
-    			"FILTER myplaceholder.name IN [@name, 'Priscah Jeptoo']", array('name' => 'Tsegaye Kebede'), 2, "myplaceholder");
-    	$client->registerResult('withCoordinates');
-    
-    	$finder->findAllNear($this->collectionName, $reference,
-    			"FILTER myplaceholder.name IN [@name, 'Priscah Jeptoo']", array('name' => 'Tsegaye Kebede'), 2, "myplaceholder");
-    	$client->registerResult('withReference');
-    	 
-    	$finder->findAllNear($this->collectionName, $reference,
-    			'FILTER myplaceholder.name == "Nonexistent Name"', array(), 2, "myplaceholder");
-    	$client->registerResult('none');
-    	 
-    	$result = $client->commit();
-    	 
-    	//Assert the with coordinates results
-    	$this->assertInternalType('array', $result['withCoordinates'], "Returned result set should be an array");
-    	$this->assertCount(1, $result['withCoordinates'], "Number of returned results should be 1");
-    	 
-    	$withCoordinatesResult = reset($result['withCoordinates']);
-    	$this->assertInstanceOf('Paradox\AModel', $withCoordinatesResult, 'Result items should have the type Paradox\AModel');
-    	$this->assertEquals('Tsegaye Kebede', $withCoordinatesResult->get('name'), "The name of the found document does not match");
-    	$this->assertInternalType('float', $withCoordinatesResult->getDistance(), "The distance from the coordinates should be a float");
-    	$this->assertInternalType('array', $withCoordinatesResult->getCoordinates(), "The coordinates should be an array");
-    
-    	//Assert the with reference results
-    	$this->assertArrayNotHasKey($reference->getId(), $result['withReference'], "The reference was in the results list");
-    	$this->assertInternalType('array', $result['withReference'], "Returned result set should be an array");
-    	$this->assertCount(1, $result['withReference'], "Number of returned results should be 1");
-    	 
-    	$withReferenceResult = reset($result['withReference']);
-    	$this->assertInstanceOf('Paradox\AModel', $withReferenceResult, 'Result items should have the type Paradox\AModel');
-    	$this->assertEquals('Tsegaye Kebede', $withReferenceResult->get('name'), "The name of the found document does not match");
-    	$this->assertEquals(0, $withReferenceResult->getDistance(), "The distance from the reference should be 0");
-    	$this->assertInternalType('array', $withReferenceResult->getCoordinates(), "The coordinates should be an array");
-    	 
-    	//Assert the none results
-    	$this->assertInternalType('array', $result['none'], "The result should be an array");
-    	$this->assertEmpty($result['none'], "The result should be empty");
+        $client = $this->getClient();
+        $finder = $client->getToolbox()->getFinder();
+
+        //Get the reference pod
+        $reference = $this->finder->findOne($this->collectionName, 'doc.name == @name', array('name' => 'Horacio Manuel Cartes Jara'));
+
+        $client->begin();
+        $finder->findAllNear($this->collectionName, array('latitude' => 48, 'longitude' => 48),
+                "FILTER myplaceholder.name IN [@name, 'Priscah Jeptoo']", array('name' => 'Tsegaye Kebede'), 2, "myplaceholder");
+        $client->registerResult('withCoordinates');
+
+        $finder->findAllNear($this->collectionName, $reference,
+                "FILTER myplaceholder.name IN [@name, 'Priscah Jeptoo']", array('name' => 'Tsegaye Kebede'), 2, "myplaceholder");
+        $client->registerResult('withReference');
+
+        $finder->findAllNear($this->collectionName, $reference,
+                'FILTER myplaceholder.name == "Nonexistent Name"', array(), 2, "myplaceholder");
+        $client->registerResult('none');
+
+        $result = $client->commit();
+
+        //Assert the with coordinates results
+        $this->assertInternalType('array', $result['withCoordinates'], "Returned result set should be an array");
+        $this->assertCount(1, $result['withCoordinates'], "Number of returned results should be 1");
+
+        $withCoordinatesResult = reset($result['withCoordinates']);
+        $this->assertInstanceOf('Paradox\AModel', $withCoordinatesResult, 'Result items should have the type Paradox\AModel');
+        $this->assertEquals('Tsegaye Kebede', $withCoordinatesResult->get('name'), "The name of the found document does not match");
+        $this->assertInternalType('float', $withCoordinatesResult->getDistance(), "The distance from the coordinates should be a float");
+        $this->assertInternalType('array', $withCoordinatesResult->getCoordinates(), "The coordinates should be an array");
+
+        //Assert the with reference results
+        $this->assertArrayNotHasKey($reference->getId(), $result['withReference'], "The reference was in the results list");
+        $this->assertInternalType('array', $result['withReference'], "Returned result set should be an array");
+        $this->assertCount(1, $result['withReference'], "Number of returned results should be 1");
+
+        $withReferenceResult = reset($result['withReference']);
+        $this->assertInstanceOf('Paradox\AModel', $withReferenceResult, 'Result items should have the type Paradox\AModel');
+        $this->assertEquals('Tsegaye Kebede', $withReferenceResult->get('name'), "The name of the found document does not match");
+        $this->assertEquals(0, $withReferenceResult->getDistance(), "The distance from the reference should be 0");
+        $this->assertInternalType('array', $withReferenceResult->getCoordinates(), "The coordinates should be an array");
+
+        //Assert the none results
+        $this->assertInternalType('array', $result['none'], "The result should be an array");
+        $this->assertEmpty($result['none'], "The result should be empty");
     }
 
     /**
@@ -687,49 +687,49 @@ class FinderTest extends Base
         $this->assertInternalType('float', $result->getDistance());
         $this->assertInternalType('array', $result->getCoordinates());
     }
-    
+
     /**
      * @covers Paradox\toolbox\Finder::findOneNear
      */
     public function testFindOneNearInTransaction()
     {
-    	$client = $this->getClient();
-    	$finder = $client->getToolbox()->getFinder();
-    
-    	//Get the reference pod
-    	$reference = $this->finder->findOne($this->collectionName, 'doc.name == @name', array('name' => 'Horacio Manuel Cartes Jara'));
-    
-    	$client->begin();
-    	$finder->findOneNear($this->collectionName, array('latitude' => 48, 'longitude' => 48),
+        $client = $this->getClient();
+        $finder = $client->getToolbox()->getFinder();
+
+        //Get the reference pod
+        $reference = $this->finder->findOne($this->collectionName, 'doc.name == @name', array('name' => 'Horacio Manuel Cartes Jara'));
+
+        $client->begin();
+        $finder->findOneNear($this->collectionName, array('latitude' => 48, 'longitude' => 48),
                  "myplaceholder.name IN [@name, 'Priscah Jeptoo']", array('name' => 'Horacio Manuel Cartes Jara'), "myplaceholder");
-    	$client->registerResult('withCoordinates');
-    
-    	$finder->findOneNear($this->collectionName, $reference,
+        $client->registerResult('withCoordinates');
+
+        $finder->findOneNear($this->collectionName, $reference,
                 "myplaceholder.name IN [@name, 'Priscah Jeptoo']", array('name' => 'Tsegaye Kebede'), "myplaceholder");
-    	$client->registerResult('withReference');
-    
-    	$finder->findOneNear($this->collectionName, $reference,
-    			'myplaceholder.name == "Nonexistent Name"', array(), "myplaceholder");
-    	$client->registerResult('none');
-    
-    	$result = $client->commit();
-   
-    	//Assert the with coordinates results
-    	$withCoordinatesResult = $result['withCoordinates'];
-    	$this->assertInstanceOf('Paradox\AModel', $withCoordinatesResult, 'Result items should have the type Paradox\AModel');
-    	$this->assertEquals('Horacio Manuel Cartes Jara', $withCoordinatesResult->get('name'), "The name of the found document does not match");
-    	$this->assertInternalType('float', $withCoordinatesResult->getDistance(), "Distance from the coordinates should be a float");
-    	$this->assertInternalType('array', $withCoordinatesResult->getCoordinates(), "The coordinates should be an array");
-    
-    	//Assert the with reference results
-    	$withReferenceResult = $result['withReference'];
-    	$this->assertInstanceOf('Paradox\AModel', $withReferenceResult, 'Result items should have the type Paradox\AModel');
-    	$this->assertEquals('Tsegaye Kebede', $withReferenceResult->get('name'), "The name of the found document does not match");
-    	$this->assertEquals(0, $withReferenceResult->getDistance(), "Distance from the reference should be 0");
-    	$this->assertInternalType('array', $withReferenceResult->getCoordinates(), "The coordinates should be an array");
-    
-    	//Assert the none results
-    	$this->assertNull($result['none'], "The result should be null");
+        $client->registerResult('withReference');
+
+        $finder->findOneNear($this->collectionName, $reference,
+                'myplaceholder.name == "Nonexistent Name"', array(), "myplaceholder");
+        $client->registerResult('none');
+
+        $result = $client->commit();
+
+        //Assert the with coordinates results
+        $withCoordinatesResult = $result['withCoordinates'];
+        $this->assertInstanceOf('Paradox\AModel', $withCoordinatesResult, 'Result items should have the type Paradox\AModel');
+        $this->assertEquals('Horacio Manuel Cartes Jara', $withCoordinatesResult->get('name'), "The name of the found document does not match");
+        $this->assertInternalType('float', $withCoordinatesResult->getDistance(), "Distance from the coordinates should be a float");
+        $this->assertInternalType('array', $withCoordinatesResult->getCoordinates(), "The coordinates should be an array");
+
+        //Assert the with reference results
+        $withReferenceResult = $result['withReference'];
+        $this->assertInstanceOf('Paradox\AModel', $withReferenceResult, 'Result items should have the type Paradox\AModel');
+        $this->assertEquals('Tsegaye Kebede', $withReferenceResult->get('name'), "The name of the found document does not match");
+        $this->assertEquals(0, $withReferenceResult->getDistance(), "Distance from the reference should be 0");
+        $this->assertInternalType('array', $withReferenceResult->getCoordinates(), "The coordinates should be an array");
+
+        //Assert the none results
+        $this->assertNull($result['none'], "The result should be null");
     }
 
     /**
@@ -803,57 +803,57 @@ class FinderTest extends Base
         $this->assertInternalType('float', $result->getDistance());
         $this->assertInternalType('array', $result->getCoordinates());
     }
-    
+
     /**
      * @covers Paradox\toolbox\Finder::findWithin
      */
     public function testFindWithinInTransaction()
     {
-    	$client = $this->getClient();
-    	$finder = $client->getToolbox()->getFinder();
+        $client = $this->getClient();
+        $finder = $client->getToolbox()->getFinder();
 
-    	//Get the reference pod
-    	$reference = $this->finder->findOne($this->collectionName, 'doc.name == @name', array('name' => 'Horacio Manuel Cartes Jara'));
-    	
-    	$client->begin();
-    	$finder->findWithin($this->collectionName, array('latitude' => 48, 'longitude' => 48),
+        //Get the reference pod
+        $reference = $this->finder->findOne($this->collectionName, 'doc.name == @name', array('name' => 'Horacio Manuel Cartes Jara'));
+
+        $client->begin();
+        $finder->findWithin($this->collectionName, array('latitude' => 48, 'longitude' => 48),
                                 100000, "myplaceholder.name IN [@name, 'Priscah Jeptoo']", array('name' => 'Horacio Manuel Cartes Jara'), "myplaceholder");
-    	$client->registerResult('withCoordinates');
-    
-    	$finder->findWithin($this->collectionName, $reference,
-                100000, "myplaceholder.name IN [@name, 'Priscah Jeptoo']", array('name' => 'Tsegaye Kebede'), "myplaceholder");
-    	$client->registerResult('withReference');
-    	 
-    	$finder->findWithin($this->collectionName, $reference,
-    			100000, 'myplaceholder.name == "Nonexistent Name"', array(), "myplaceholder");
-    	$client->registerResult('none');
+        $client->registerResult('withCoordinates');
 
-    	$result = $client->commit();
-    	
-    	//Assert the with coordinates results
-    	$this->assertInternalType('array', $result['withCoordinates'], "Returned result set should be an array");
-    	$this->assertCount(1, $result['withCoordinates'], "Number of returned results should be 1");
-    	 
-    	$withCoordinatesResult = reset($result['withCoordinates']);
-    	$this->assertInstanceOf('Paradox\AModel', $withCoordinatesResult, 'Result items should have the type Paradox\AModel');
-    	$this->assertEquals('Horacio Manuel Cartes Jara', $withCoordinatesResult->get('name'), "The name of the found document does not match");
-    	$this->assertInternalType('float', $withCoordinatesResult->getDistance(), "The distance from the coordinates should be a float");
-    	$this->assertInternalType('array', $withCoordinatesResult->getCoordinates(), "The coordinates should be an array");
-    
-    	//Assert the with reference results
-    	$this->assertArrayNotHasKey($reference->getId(), $result['withReference'], "The reference was in the results list");
-    	$this->assertInternalType('array', $result['withReference'], "Returned result set should be an array");
-    	$this->assertCount(1, $result['withReference'], "Number of returned results should be 1");
-    	 
-    	$withReferenceResult = reset($result['withReference']);
-    	$this->assertInstanceOf('Paradox\AModel', $withReferenceResult, 'Result items should have the type Paradox\AModel');
-    	$this->assertEquals('Tsegaye Kebede', $withReferenceResult->get('name'), "The name of the found document does not match");
-    	$this->assertEquals(0, $withReferenceResult->getDistance(), "The distance from the reference should be 0");
-    	$this->assertInternalType('array', $withReferenceResult->getCoordinates(), "The coordinates should be an array");
-    	 
-    	//Assert the none results
-    	$this->assertInternalType('array', $result['none'], "The result should be an array");
-    	$this->assertEmpty($result['none'], "The result should be empty");
+        $finder->findWithin($this->collectionName, $reference,
+                100000, "myplaceholder.name IN [@name, 'Priscah Jeptoo']", array('name' => 'Tsegaye Kebede'), "myplaceholder");
+        $client->registerResult('withReference');
+
+        $finder->findWithin($this->collectionName, $reference,
+                100000, 'myplaceholder.name == "Nonexistent Name"', array(), "myplaceholder");
+        $client->registerResult('none');
+
+        $result = $client->commit();
+
+        //Assert the with coordinates results
+        $this->assertInternalType('array', $result['withCoordinates'], "Returned result set should be an array");
+        $this->assertCount(1, $result['withCoordinates'], "Number of returned results should be 1");
+
+        $withCoordinatesResult = reset($result['withCoordinates']);
+        $this->assertInstanceOf('Paradox\AModel', $withCoordinatesResult, 'Result items should have the type Paradox\AModel');
+        $this->assertEquals('Horacio Manuel Cartes Jara', $withCoordinatesResult->get('name'), "The name of the found document does not match");
+        $this->assertInternalType('float', $withCoordinatesResult->getDistance(), "The distance from the coordinates should be a float");
+        $this->assertInternalType('array', $withCoordinatesResult->getCoordinates(), "The coordinates should be an array");
+
+        //Assert the with reference results
+        $this->assertArrayNotHasKey($reference->getId(), $result['withReference'], "The reference was in the results list");
+        $this->assertInternalType('array', $result['withReference'], "Returned result set should be an array");
+        $this->assertCount(1, $result['withReference'], "Number of returned results should be 1");
+
+        $withReferenceResult = reset($result['withReference']);
+        $this->assertInstanceOf('Paradox\AModel', $withReferenceResult, 'Result items should have the type Paradox\AModel');
+        $this->assertEquals('Tsegaye Kebede', $withReferenceResult->get('name'), "The name of the found document does not match");
+        $this->assertEquals(0, $withReferenceResult->getDistance(), "The distance from the reference should be 0");
+        $this->assertInternalType('array', $withReferenceResult->getCoordinates(), "The coordinates should be an array");
+
+        //Assert the none results
+        $this->assertInternalType('array', $result['none'], "The result should be an array");
+        $this->assertEmpty($result['none'], "The result should be empty");
     }
 
     /**
@@ -938,53 +938,53 @@ class FinderTest extends Base
      */
     public function testFindAllWithinInTransaction()
     {
-    	$client = $this->getClient();
-    	$finder = $client->getToolbox()->getFinder();
-    
-    	//Get the reference pod
-    	$reference = $this->finder->findOne($this->collectionName, 'doc.name == @name', array('name' => 'Horacio Manuel Cartes Jara'));
-    	 
-    	$client->begin();
-    	$finder->findAllWithin($this->collectionName, array('latitude' => 48, 'longitude' => 48),
-    			100000, "FILTER myplaceholder.name IN [@name, 'Priscah Jeptoo']", array('name' => 'Horacio Manuel Cartes Jara'), "myplaceholder");
-    	$client->registerResult('withCoordinates');
-    
-    	$finder->findAllWithin($this->collectionName, $reference,
-    			100000, "FILTER myplaceholder.name IN [@name, 'Priscah Jeptoo']", array('name' => 'Tsegaye Kebede'), "myplaceholder");
-    	$client->registerResult('withReference');
-    
-    	$finder->findAllWithin($this->collectionName, $reference,
-    			100000, 'FILTER myplaceholder.name == "Nonexistent Name"', array(), "myplaceholder");
-    	$client->registerResult('none');
-    
-    	$result = $client->commit();
-    	 
-    	//Assert the with coordinates results
-    	$this->assertInternalType('array', $result['withCoordinates'], "Returned result set should be an array");
-    	$this->assertCount(1, $result['withCoordinates'], "Number of returned results should be 1");
-    
-    	$withCoordinatesResult = reset($result['withCoordinates']);
-    	$this->assertInstanceOf('Paradox\AModel', $withCoordinatesResult, 'Result items should have the type Paradox\AModel');
-    	$this->assertEquals('Horacio Manuel Cartes Jara', $withCoordinatesResult->get('name'), "The name of the found document does not match");
-    	$this->assertInternalType('float', $withCoordinatesResult->getDistance(), "The distance from the coordinates should be a float");
-    	$this->assertInternalType('array', $withCoordinatesResult->getCoordinates(), "The coordinates should be an array");
-    
-    	//Assert the with reference results
-    	$this->assertArrayNotHasKey($reference->getId(), $result['withReference'], "The reference was in the results list");
-    	$this->assertInternalType('array', $result['withReference'], "Returned result set should be an array");
-    	$this->assertCount(1, $result['withReference'], "Number of returned results should be 1");
-    
-    	$withReferenceResult = reset($result['withReference']);
-    	$this->assertInstanceOf('Paradox\AModel', $withReferenceResult, 'Result items should have the type Paradox\AModel');
-    	$this->assertEquals('Tsegaye Kebede', $withReferenceResult->get('name'), "The name of the found document does not match");
-    	$this->assertEquals(0, $withReferenceResult->getDistance(), "The distance from the reference should be 0");
-    	$this->assertInternalType('array', $withReferenceResult->getCoordinates(), "The coordinates should be an array");
-    
-    	//Assert the none results
-    	$this->assertInternalType('array', $result['none'], "The result should be an array");
-    	$this->assertEmpty($result['none'], "The result should be empty");
+        $client = $this->getClient();
+        $finder = $client->getToolbox()->getFinder();
+
+        //Get the reference pod
+        $reference = $this->finder->findOne($this->collectionName, 'doc.name == @name', array('name' => 'Horacio Manuel Cartes Jara'));
+
+        $client->begin();
+        $finder->findAllWithin($this->collectionName, array('latitude' => 48, 'longitude' => 48),
+                100000, "FILTER myplaceholder.name IN [@name, 'Priscah Jeptoo']", array('name' => 'Horacio Manuel Cartes Jara'), "myplaceholder");
+        $client->registerResult('withCoordinates');
+
+        $finder->findAllWithin($this->collectionName, $reference,
+                100000, "FILTER myplaceholder.name IN [@name, 'Priscah Jeptoo']", array('name' => 'Tsegaye Kebede'), "myplaceholder");
+        $client->registerResult('withReference');
+
+        $finder->findAllWithin($this->collectionName, $reference,
+                100000, 'FILTER myplaceholder.name == "Nonexistent Name"', array(), "myplaceholder");
+        $client->registerResult('none');
+
+        $result = $client->commit();
+
+        //Assert the with coordinates results
+        $this->assertInternalType('array', $result['withCoordinates'], "Returned result set should be an array");
+        $this->assertCount(1, $result['withCoordinates'], "Number of returned results should be 1");
+
+        $withCoordinatesResult = reset($result['withCoordinates']);
+        $this->assertInstanceOf('Paradox\AModel', $withCoordinatesResult, 'Result items should have the type Paradox\AModel');
+        $this->assertEquals('Horacio Manuel Cartes Jara', $withCoordinatesResult->get('name'), "The name of the found document does not match");
+        $this->assertInternalType('float', $withCoordinatesResult->getDistance(), "The distance from the coordinates should be a float");
+        $this->assertInternalType('array', $withCoordinatesResult->getCoordinates(), "The coordinates should be an array");
+
+        //Assert the with reference results
+        $this->assertArrayNotHasKey($reference->getId(), $result['withReference'], "The reference was in the results list");
+        $this->assertInternalType('array', $result['withReference'], "Returned result set should be an array");
+        $this->assertCount(1, $result['withReference'], "Number of returned results should be 1");
+
+        $withReferenceResult = reset($result['withReference']);
+        $this->assertInstanceOf('Paradox\AModel', $withReferenceResult, 'Result items should have the type Paradox\AModel');
+        $this->assertEquals('Tsegaye Kebede', $withReferenceResult->get('name'), "The name of the found document does not match");
+        $this->assertEquals(0, $withReferenceResult->getDistance(), "The distance from the reference should be 0");
+        $this->assertInternalType('array', $withReferenceResult->getCoordinates(), "The coordinates should be an array");
+
+        //Assert the none results
+        $this->assertInternalType('array', $result['none'], "The result should be an array");
+        $this->assertEmpty($result['none'], "The result should be empty");
     }
-    
+
     /**
      * @covers Paradox\toolbox\Finder::findAllWithin
      */
@@ -1063,45 +1063,45 @@ class FinderTest extends Base
      */
     public function testFindOneWithinInTransaction()
     {
-    	$client = $this->getClient();
-    	$finder = $client->getToolbox()->getFinder();
-    
-    	//Get the reference pod
-    	$reference = $this->finder->findOne($this->collectionName, 'doc.name == @name', array('name' => 'Horacio Manuel Cartes Jara'));
-    	 
-    	$client->begin();
-    	$finder->findOneWithin($this->collectionName, array('latitude' => 48, 'longitude' => 48),
-    			100000, "myplaceholder.name IN [@name, 'Priscah Jeptoo']", array('name' => 'Horacio Manuel Cartes Jara'), "myplaceholder");
-    	$client->registerResult('withCoordinates');
-    
-    	$finder->findOneWithin($this->collectionName, $reference,
-    			100000, "myplaceholder.name IN [@name, 'Priscah Jeptoo']", array('name' => 'Tsegaye Kebede'), "myplaceholder");
-    	$client->registerResult('withReference');
-    
-    	$finder->findOneWithin($this->collectionName, $reference,
-    			100000, 'myplaceholder.name == "Nonexistent Name"', array(), "myplaceholder");
-    	$client->registerResult('none');
-    
-    	$result = $client->commit();
-    	 
-    	//Assert the with coordinates results
-    	$withCoordinatesResult = $result['withCoordinates'];
-    	$this->assertInstanceOf('Paradox\AModel', $withCoordinatesResult, 'Result items should have the type Paradox\AModel');
-    	$this->assertEquals('Horacio Manuel Cartes Jara', $withCoordinatesResult->get('name'), "The name of the found document does not match");
-    	$this->assertInternalType('float', $withCoordinatesResult->getDistance(), "The distance from the coordinates should be a float");
-    	$this->assertInternalType('array', $withCoordinatesResult->getCoordinates(), "The coordinates should be an array");
-    
-    	//Assert the with reference results
-    	$withReferenceResult = $result['withReference'];
-    	$this->assertInstanceOf('Paradox\AModel', $withReferenceResult, 'Result items should have the type Paradox\AModel');
-    	$this->assertEquals('Tsegaye Kebede', $withReferenceResult->get('name'), "The name of the found document does not match");
-    	$this->assertEquals(0, $withReferenceResult->getDistance(), "The distance from the reference should be 0");
-    	$this->assertInternalType('array', $withReferenceResult->getCoordinates(), "The coordinates should be an array");
-    
-    	//Assert the none results
-    	$this->assertNull($result['none'], "The result should be null");
+        $client = $this->getClient();
+        $finder = $client->getToolbox()->getFinder();
+
+        //Get the reference pod
+        $reference = $this->finder->findOne($this->collectionName, 'doc.name == @name', array('name' => 'Horacio Manuel Cartes Jara'));
+
+        $client->begin();
+        $finder->findOneWithin($this->collectionName, array('latitude' => 48, 'longitude' => 48),
+                100000, "myplaceholder.name IN [@name, 'Priscah Jeptoo']", array('name' => 'Horacio Manuel Cartes Jara'), "myplaceholder");
+        $client->registerResult('withCoordinates');
+
+        $finder->findOneWithin($this->collectionName, $reference,
+                100000, "myplaceholder.name IN [@name, 'Priscah Jeptoo']", array('name' => 'Tsegaye Kebede'), "myplaceholder");
+        $client->registerResult('withReference');
+
+        $finder->findOneWithin($this->collectionName, $reference,
+                100000, 'myplaceholder.name == "Nonexistent Name"', array(), "myplaceholder");
+        $client->registerResult('none');
+
+        $result = $client->commit();
+
+        //Assert the with coordinates results
+        $withCoordinatesResult = $result['withCoordinates'];
+        $this->assertInstanceOf('Paradox\AModel', $withCoordinatesResult, 'Result items should have the type Paradox\AModel');
+        $this->assertEquals('Horacio Manuel Cartes Jara', $withCoordinatesResult->get('name'), "The name of the found document does not match");
+        $this->assertInternalType('float', $withCoordinatesResult->getDistance(), "The distance from the coordinates should be a float");
+        $this->assertInternalType('array', $withCoordinatesResult->getCoordinates(), "The coordinates should be an array");
+
+        //Assert the with reference results
+        $withReferenceResult = $result['withReference'];
+        $this->assertInstanceOf('Paradox\AModel', $withReferenceResult, 'Result items should have the type Paradox\AModel');
+        $this->assertEquals('Tsegaye Kebede', $withReferenceResult->get('name'), "The name of the found document does not match");
+        $this->assertEquals(0, $withReferenceResult->getDistance(), "The distance from the reference should be 0");
+        $this->assertInternalType('array', $withReferenceResult->getCoordinates(), "The coordinates should be an array");
+
+        //Assert the none results
+        $this->assertNull($result['none'], "The result should be null");
     }
-    
+
     /**
      * @covers Paradox\toolbox\Finder::findOneWithin
      */
@@ -1169,36 +1169,36 @@ class FinderTest extends Base
         $this->assertInstanceOf('Paradox\AModel', $result, 'The found document does not have the type Paradox\AModel');
         $this->assertEquals('Tsegaye Kebede', $result->get('name'), "The document returned does not have the same name as the queried name");
     }
-    
+
     /**
      * @covers Paradox\toolbox\Finder::search
      */
     public function testSearchInTransaction()
     {
-    	$client = $this->getClient();
-    	$finder = $client->getToolbox()->getFinder();
+        $client = $this->getClient();
+        $finder = $client->getToolbox()->getFinder();
 
-    	$client->begin();
-    	
-    	$finder->search($this->collectionName, 'bio', 'marathon', "placeholder.name in [@name]", array('name' => 'Tsegaye Kebede'), 'placeholder');
-    	$client->registerResult('found');
-    	
-    	$finder->search($this->collectionName, 'bio', 'marathon', "placeholder.name in [\"Nonexistent Person\"]", array(), 'placeholder');
-    	$client->registerResult('none');
-    
-    	$result = $client->commit();
-    
-    	//Assert the found results
-    	$this->assertInternalType('array', $result['found'], 'Returned result is not an array');
+        $client->begin();
+
+        $finder->search($this->collectionName, 'bio', 'marathon', "placeholder.name in [@name]", array('name' => 'Tsegaye Kebede'), 'placeholder');
+        $client->registerResult('found');
+
+        $finder->search($this->collectionName, 'bio', 'marathon', "placeholder.name in [\"Nonexistent Person\"]", array(), 'placeholder');
+        $client->registerResult('none');
+
+        $result = $client->commit();
+
+        //Assert the found results
+        $this->assertInternalType('array', $result['found'], 'Returned result is not an array');
         $this->assertCount(1, $result['found'], "The number of documents found is not 1");
 
         $foundResult = reset($result['found']);
         $this->assertInstanceOf('Paradox\AModel', $foundResult, 'The found document does not have the type Paradox\AModel');
         $this->assertEquals('Tsegaye Kebede', $foundResult->get('name'), "The document returned does not have the same name as the queried name");
-        
-    	//Assert the none results
-    	$this->assertInternalType('array', $result, "The result should be an array");
-    	$this->assertEmpty($result['none'], "The result should be empty");
+
+        //Assert the none results
+        $this->assertInternalType('array', $result, "The result should be an array");
+        $this->assertEmpty($result['none'], "The result should be empty");
     }
 
     /**
@@ -1243,36 +1243,36 @@ class FinderTest extends Base
         $this->assertInstanceOf('Paradox\AModel', $result, 'The found document does not have the type Paradox\AModel');
         $this->assertEquals('Tsegaye Kebede', $result->get('name'), "The document returned does not have the same name as the queried name");
     }
-    
+
     /**
      * @covers Paradox\toolbox\Finder::searchAll
      */
     public function testSearchAllInTransaction()
     {
-    	$client = $this->getClient();
-    	$finder = $client->getToolbox()->getFinder();
+        $client = $this->getClient();
+        $finder = $client->getToolbox()->getFinder();
 
-    	$client->begin();
-    	 
-    	$finder->searchAll($this->collectionName, 'bio', 'marathon', "FILTER placeholder.name in [@name]", array('name' => 'Tsegaye Kebede'), 'placeholder');
-    	$client->registerResult('found');
-    	 
-    	$finder->searchAll($this->collectionName, 'bio', 'marathon', "FILTER placeholder.name in [\"Nonexistent Person\"]", array(), 'placeholder');
-    	$client->registerResult('none');
-    
-    	$result = $client->commit();
-    
-    	//Assert the found results
-    	$this->assertInternalType('array', $result['found'], 'Returned result is not an array');
-    	$this->assertCount(1, $result['found'], "The number of documents found is not 1");
-    
-    	$foundResult = reset($result['found']);
-    	$this->assertInstanceOf('Paradox\AModel', $foundResult, 'The found document does not have the type Paradox\AModel');
-    	$this->assertEquals('Tsegaye Kebede', $foundResult->get('name'), "The document returned does not have the same name as the queried name");
-    
-    	//Assert the none results
-    	$this->assertInternalType('array', $result, "The result should be an array");
-    	$this->assertEmpty($result['none'], "The result should be empty");
+        $client->begin();
+
+        $finder->searchAll($this->collectionName, 'bio', 'marathon', "FILTER placeholder.name in [@name]", array('name' => 'Tsegaye Kebede'), 'placeholder');
+        $client->registerResult('found');
+
+        $finder->searchAll($this->collectionName, 'bio', 'marathon', "FILTER placeholder.name in [\"Nonexistent Person\"]", array(), 'placeholder');
+        $client->registerResult('none');
+
+        $result = $client->commit();
+
+        //Assert the found results
+        $this->assertInternalType('array', $result['found'], 'Returned result is not an array');
+        $this->assertCount(1, $result['found'], "The number of documents found is not 1");
+
+        $foundResult = reset($result['found']);
+        $this->assertInstanceOf('Paradox\AModel', $foundResult, 'The found document does not have the type Paradox\AModel');
+        $this->assertEquals('Tsegaye Kebede', $foundResult->get('name'), "The document returned does not have the same name as the queried name");
+
+        //Assert the none results
+        $this->assertInternalType('array', $result, "The result should be an array");
+        $this->assertEmpty($result['none'], "The result should be empty");
     }
 
     /**
@@ -1313,32 +1313,32 @@ class FinderTest extends Base
         $this->assertInstanceOf('Paradox\AModel', $result, 'The found document does not have the type Paradox\AModel');
         $this->assertEquals('Tsegaye Kebede', $result->get('name'), "The document returned does not have the same name as the queried name");
     }
-    
+
     /**
      * @covers Paradox\toolbox\Finder::searchForOne
      */
     public function testSearchForOneInTransaction()
     {
-    	$client = $this->getClient();
-    	$finder = $client->getToolbox()->getFinder();
-    
-    	$client->begin();
-    
-    	$finder->searchForOne($this->collectionName, 'bio', 'marathon', "placeholder.name in [@name]", array('name' => 'Tsegaye Kebede'), 'placeholder');
-    	$client->registerResult('found');
-    
-    	$finder->searchForOne($this->collectionName, 'bio', 'marathon', "placeholder.name in [\"Nonexistent Person\"]", array(), 'placeholder');
-    	$client->registerResult('none');
-    
-    	$result = $client->commit();
-    
-    	//Assert the found results
-    	$foundResult = $result['found'];
-    	$this->assertInstanceOf('Paradox\AModel', $foundResult, 'The found document does not have the type Paradox\AModel');
-    	$this->assertEquals('Tsegaye Kebede', $foundResult->get('name'), "The document returned does not have the same name as the queried name");
-    
-    	//Assert the none results
-    	$this->assertNull($result['none'], "The result should be null");
+        $client = $this->getClient();
+        $finder = $client->getToolbox()->getFinder();
+
+        $client->begin();
+
+        $finder->searchForOne($this->collectionName, 'bio', 'marathon', "placeholder.name in [@name]", array('name' => 'Tsegaye Kebede'), 'placeholder');
+        $client->registerResult('found');
+
+        $finder->searchForOne($this->collectionName, 'bio', 'marathon', "placeholder.name in [\"Nonexistent Person\"]", array(), 'placeholder');
+        $client->registerResult('none');
+
+        $result = $client->commit();
+
+        //Assert the found results
+        $foundResult = $result['found'];
+        $this->assertInstanceOf('Paradox\AModel', $foundResult, 'The found document does not have the type Paradox\AModel');
+        $this->assertEquals('Tsegaye Kebede', $foundResult->get('name'), "The document returned does not have the same name as the queried name");
+
+        //Assert the none results
+        $this->assertNull($result['none'], "The result should be null");
     }
 
     /**
@@ -1367,7 +1367,6 @@ class FinderTest extends Base
 
         $this->assertNull($result, "Result should be null if nothing is found");
     }
-
 
     /**
      * @covers Paradox\toolbox\Finder::generateReferenceData

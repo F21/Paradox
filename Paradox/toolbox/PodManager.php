@@ -546,8 +546,8 @@ class PodManager extends AObservable
      */
     private function generateCreateEdgeCommand($fromKeyIsJSVar, $fromKey, $toKeyIsJSVar, $toKey, $data, $id = null, $idIsVariable = false)
     {
-    	$command = "graph.addEdge(";
-    	
+        $command = "graph.addEdge(";
+
         if ($fromKeyIsJSVar) {
             $command .= "graph.getVertex(result.$fromKey._id)";
         } else {
@@ -561,19 +561,19 @@ class PodManager extends AObservable
         } else {
             $command .= "graph.getVertex('$toKey')";
         }
-        
+
         $command .= ", ";
-        
+
         if ($id) {
-        
-        	if ($idIsVariable) {
-        		$command .= "$id";
-        	} else {
-        		$command .= "'$id'";
-        	}
-        
+
+            if ($idIsVariable) {
+                $command .= "$id";
+            } else {
+                $command .= "'$id'";
+            }
+
         } else {
-        	$command .= "null";
+            $command .= "null";
         }
 
         $command .= ", $data)._properties;";

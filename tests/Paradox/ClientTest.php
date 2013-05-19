@@ -58,29 +58,29 @@ class ClientTest extends Base
         } catch (\Exception $e) {
             //Ignore any errors
         }
-        
+
         try {
-        	$client->deleteAQLFunction("paradoxtest:helloworld");
+            $client->deleteAQLFunction("paradoxtest:helloworld");
         } catch (\Exception $e) {
-        	//Ignore the error
+            //Ignore the error
         }
-        
+
         try {
-        	$client->deleteAQLFunction("paradoxtest:helloworld2");
+            $client->deleteAQLFunction("paradoxtest:helloworld2");
         } catch (\Exception $e) {
-        	//Ignore the error
+            //Ignore the error
         }
-        
+
         try {
-        	$client->deleteAQLFunction("paradoxtest1:helloworld");
+            $client->deleteAQLFunction("paradoxtest1:helloworld");
         } catch (\Exception $e) {
-        	//Ignore the error
+            //Ignore the error
         }
-        
+
         try {
-        	$client->deleteAQLFunction("paradoxtest2:helloworld");
+            $client->deleteAQLFunction("paradoxtest2:helloworld");
         } catch (\Exception $e) {
-        	//Ignore the error
+            //Ignore the error
         }
 
         $client->createCollection($this->collectionName);
@@ -161,29 +161,29 @@ class ClientTest extends Base
         } catch (\Exception $e) {
             //Ignore any errors
         }
-        
+
         try {
-        	$client->deleteAQLFunction("paradoxtest:helloworld");
+            $client->deleteAQLFunction("paradoxtest:helloworld");
         } catch (\Exception $e) {
-        	//Ignore the error
+            //Ignore the error
         }
-        
+
         try {
-        	$client->deleteAQLFunction("paradoxtest:helloworld2");
+            $client->deleteAQLFunction("paradoxtest:helloworld2");
         } catch (\Exception $e) {
-        	//Ignore the error
+            //Ignore the error
         }
-        
+
         try {
-        	$client->deleteAQLFunction("paradoxtest1:helloworld");
+            $client->deleteAQLFunction("paradoxtest1:helloworld");
         } catch (\Exception $e) {
-        	//Ignore the error
+            //Ignore the error
         }
-        
+
         try {
-        	$client->deleteAQLFunction("paradoxtest2:helloworld");
+            $client->deleteAQLFunction("paradoxtest2:helloworld");
         } catch (\Exception $e) {
-        	//Ignore the error
+            //Ignore the error
         }
     }
 
@@ -1081,23 +1081,23 @@ class ClientTest extends Base
         //Delete the user
         $this->client->deleteUser('testuser');
     }
-    
+
     /**
      * @covers Paradox\Client::updateUserData
      */
     public function testUpdateUserData()
     {
-    	$result = $this->client->createUser('testuser', 'password', true, array('name' => 'david'));
-    
-    	//Update
-    	$user = $this->client->updateUserData('testuser', array('age' => 20));
-    
-    	//Verify
-    	$user = $this->client->getUserInfo('testuser');
-    	$this->assertEquals(20, $user['data']['age'], 'The age does not match');
-    
-    	//Delete the user
-    	$this->client->deleteUser('testuser');
+        $result = $this->client->createUser('testuser', 'password', true, array('name' => 'david'));
+
+        //Update
+        $user = $this->client->updateUserData('testuser', array('age' => 20));
+
+        //Verify
+        $user = $this->client->getUserInfo('testuser');
+        $this->assertEquals(20, $user['data']['age'], 'The age does not match');
+
+        //Delete the user
+        $this->client->deleteUser('testuser');
     }
 
     /**
@@ -1129,254 +1129,254 @@ class ClientTest extends Base
 
         $this->assertInternalType('float', $time, "The time should be a float");
     }
-    
+
 
     /**
      * @covers Paradox\Client::begin
      */
     public function testBegin()
     {
-    	$this->client->begin();
-    	
-    	$this->assertTrue($this->client->getToolbox()->getTransactionManager()->hasTransaction(), "The transaction was not started");
+        $this->client->begin();
+
+        $this->assertTrue($this->client->getToolbox()->getTransactionManager()->hasTransaction(), "The transaction was not started");
     }
-    
+
     /**
      * @covers Paradox\Client::commit
      */
     public function testCommit()
     {
-		$this->client->begin();
-		
-		$document = $this->client->dispense($this->collectionName);
-		$document->set('name', 'john smith');
-		$this->client->store($document);
-		$this->client->registerResult('store1');
-		
-		$document2 = $this->client->dispense($this->collectionName);
-		$document2->set('name', 'david smith');
-		$this->client->store($document2);
-		$this->client->registerResult('store2');
-		
-		$document2->set('age', 20);
-		$this->client->store($document2);
-		$this->client->registerResult('store3');
-		
-		$this->client->delete($document2);
-		$this->client->registerResult('delete');
-		
-		$result = $this->client->commit();
-		
-		$this->assertNotNull($result['store1'], "The id after storing a document should not be null");
-		$this->assertNotNull($result['store2'], "The id after storing a document should not be null");
-		$this->assertNotNull($result['store3'], "The id after storing a document should not be null");
-    	$this->assertEquals($result['store2'], $result['store3'], "The 2 ids after storing the same document does not match");
-    	$this->assertTrue($result['delete'], "Deleting a document should return true");
+        $this->client->begin();
+
+        $document = $this->client->dispense($this->collectionName);
+        $document->set('name', 'john smith');
+        $this->client->store($document);
+        $this->client->registerResult('store1');
+
+        $document2 = $this->client->dispense($this->collectionName);
+        $document2->set('name', 'david smith');
+        $this->client->store($document2);
+        $this->client->registerResult('store2');
+
+        $document2->set('age', 20);
+        $this->client->store($document2);
+        $this->client->registerResult('store3');
+
+        $this->client->delete($document2);
+        $this->client->registerResult('delete');
+
+        $result = $this->client->commit();
+
+        $this->assertNotNull($result['store1'], "The id after storing a document should not be null");
+        $this->assertNotNull($result['store2'], "The id after storing a document should not be null");
+        $this->assertNotNull($result['store3'], "The id after storing a document should not be null");
+        $this->assertEquals($result['store2'], $result['store3'], "The 2 ids after storing the same document does not match");
+        $this->assertTrue($result['delete'], "Deleting a document should return true");
     }
-    
+
     /**
      * @covers Paradox\Client::cancel
      */
     public function testCancel()
     {
-    	$this->client->begin();
-    	
-    	$document = $this->client->dispense($this->collectionName);
-    	$document->set('name', 'john smith');
-    	$this->client->store($document);
+        $this->client->begin();
 
-    	$this->client->cancel();
-    	
-    	$this->assertFalse($this->client->getToolbox()->getTransactionManager()->hasTransaction(), "The transaction was not cancelled");
+        $document = $this->client->dispense($this->collectionName);
+        $document->set('name', 'john smith');
+        $this->client->store($document);
+
+        $this->client->cancel();
+
+        $this->assertFalse($this->client->getToolbox()->getTransactionManager()->hasTransaction(), "The transaction was not cancelled");
     }
-    
+
     /**
      * @covers Paradox\Client::addReadCollection
      */
     public function testAddReadCollection()
     {
-    	$this->client->begin();
-    	$this->client->addReadCollection($this->collectionName);
+        $this->client->begin();
+        $this->client->addReadCollection($this->collectionName);
     }
-    
+
     /**
      * @covers Paradox\Client::addWriteCollection
      */
     public function testAddWriteCollection()
     {
-    	$this->client->begin();
-    	$this->client->addWriteCollection($this->collectionName);
+        $this->client->begin();
+        $this->client->addWriteCollection($this->collectionName);
     }
-    
+
     /**
      * @covers Paradox\Client::registerResult
      */
     public function testRegisterResult()
     {
-    	$this->client->begin();
-    	$document = $this->client->dispense($this->collectionName);
-    	$document->set('name', 'john smith');
-    	$this->client->store($document);
-    	$this->client->registerResult('store');
-    	$result = $this->client->commit();
-    	
-    	$this->assertNotNull($result['store'], "Store should return a valid id");
+        $this->client->begin();
+        $document = $this->client->dispense($this->collectionName);
+        $document->set('name', 'john smith');
+        $this->client->store($document);
+        $this->client->registerResult('store');
+        $result = $this->client->commit();
+
+        $this->assertNotNull($result['store'], "Store should return a valid id");
     }
-    
+
     /**
      * @covers Paradox\Client::pause
      */
     public function testPause()
     {
-    	$this->client->begin();
-    	$document = $this->client->dispense($this->collectionName);
-    	$document->set('name', 'john smith');
-    	$id1 = $this->client->store($document);
-    	
-    	$this->assertNull($id1, "Id should be null, since methods can't return things in a transaction");
-    	
-    	$this->client->pause();
-    	
-    	$document2 = $this->client->dispense($this->collectionName);
-    	$document2->set('name', 'john smith');
-    	$id2 = $this->client->store($document2);
-    	
-    	$this->assertNotNull($id2, "Id should not be null, since it is outside a transaction");
+        $this->client->begin();
+        $document = $this->client->dispense($this->collectionName);
+        $document->set('name', 'john smith');
+        $id1 = $this->client->store($document);
+
+        $this->assertNull($id1, "Id should be null, since methods can't return things in a transaction");
+
+        $this->client->pause();
+
+        $document2 = $this->client->dispense($this->collectionName);
+        $document2->set('name', 'john smith');
+        $id2 = $this->client->store($document2);
+
+        $this->assertNotNull($id2, "Id should not be null, since it is outside a transaction");
     }
-    
+
     /**
      * @covers Paradox\Client::resume
      */
     public function testResume()
     {
-    	$this->client->begin();
-    	$document = $this->client->dispense($this->collectionName);
-    	$document->set('name', 'john smith');
-    	$id1 = $this->client->store($document);
-    	
-    	$this->assertNull($id1, "Id should be null, since methods can't return things in a transaction");
-    	
-    	$this->client->pause();
-    	
-    	$document2 = $this->client->dispense($this->collectionName);
-    	$document2->set('name', 'john smith');
-    	$id2 = $this->client->store($document2);
-    	
-    	$this->assertNotNull($id2, "Id should not be null, since it is outside a transaction");
-    	
-    	$this->client->resume();
-    	
-    	$document3 = $this->client->dispense($this->collectionName);
-    	$document3->set('name', 'john smith');
-    	$id3 = $this->client->store($document3);
-    	
-    	$this->assertNull($id3, "Id should be null, since methods can't return things in a transaction");
+        $this->client->begin();
+        $document = $this->client->dispense($this->collectionName);
+        $document->set('name', 'john smith');
+        $id1 = $this->client->store($document);
+
+        $this->assertNull($id1, "Id should be null, since methods can't return things in a transaction");
+
+        $this->client->pause();
+
+        $document2 = $this->client->dispense($this->collectionName);
+        $document2->set('name', 'john smith');
+        $id2 = $this->client->store($document2);
+
+        $this->assertNotNull($id2, "Id should not be null, since it is outside a transaction");
+
+        $this->client->resume();
+
+        $document3 = $this->client->dispense($this->collectionName);
+        $document3->set('name', 'john smith');
+        $id3 = $this->client->store($document3);
+
+        $this->assertNull($id3, "Id should be null, since methods can't return things in a transaction");
     }
-    
+
     /**
      * @covers Paradox\Client::executeTransaction
      */
     public function testExecuteTransaction()
     {
-    	$action = "function(){ return 'hello'; }";
-    	
-    	$result = $this->client->executeTransaction($action);
-    	
-    	$this->assertEquals('hello', $result, "The result does not match");
+        $action = "function(){ return 'hello'; }";
+
+        $result = $this->client->executeTransaction($action);
+
+        $this->assertEquals('hello', $result, "The result does not match");
     }
-    
+
     /**
      * @covers Paradox\Client::createAQLFunction
      */
     public function testCreateAQLFunction()
     {
-    	$action = "function(){ return 'hello'; }";
-    	 
-    	$result = $this->client->createAQLFunction("paradoxtest:helloworld", $action);
-    	 
-    	$registered = $this->client->listAQLFunctions("paradoxtest");
-    	
-    	$this->assertCount(1, $registered, "There should only be one paradoxtest function");
-    	$this->assertArrayHasKey("paradoxtest:helloworld", $registered, "The AQL function was not registered");
-    	$this->assertEquals($action, $registered['paradoxtest:helloworld'], "The AQL function's code does not match");
-    	
-    	$this->client->deleteAQLFunction("paradoxtest:helloworld");
+        $action = "function(){ return 'hello'; }";
+
+        $result = $this->client->createAQLFunction("paradoxtest:helloworld", $action);
+
+        $registered = $this->client->listAQLFunctions("paradoxtest");
+
+        $this->assertCount(1, $registered, "There should only be one paradoxtest function");
+        $this->assertArrayHasKey("paradoxtest:helloworld", $registered, "The AQL function was not registered");
+        $this->assertEquals($action, $registered['paradoxtest:helloworld'], "The AQL function's code does not match");
+
+        $this->client->deleteAQLFunction("paradoxtest:helloworld");
     }
-    
+
     /**
      * @covers Paradox\Client::deleteAQLFunction
      */
     public function testDeleteAQLFunction()
     {
-    	$action = "function(){ return 'hello'; }";
-    
-    	$result = $this->client->createAQLFunction("paradoxtest:helloworld", $action);
-    
-    	$registered = $this->client->listAQLFunctions("paradoxtest");
-    	 
-    	$this->assertCount(1, $registered, "There should only be one paradoxtest function");
-    	$this->assertArrayHasKey("paradoxtest:helloworld", $registered, "The AQL function was not registered");
+        $action = "function(){ return 'hello'; }";
 
-    	$this->client->deleteAQLFunction("paradoxtest:helloworld");
-    	
-    	$registered = $this->client->listAQLFunctions("paradoxtest");
-    	
-    	$this->assertEmpty($registered, "The AQL function was not deleted");
+        $result = $this->client->createAQLFunction("paradoxtest:helloworld", $action);
+
+        $registered = $this->client->listAQLFunctions("paradoxtest");
+
+        $this->assertCount(1, $registered, "There should only be one paradoxtest function");
+        $this->assertArrayHasKey("paradoxtest:helloworld", $registered, "The AQL function was not registered");
+
+        $this->client->deleteAQLFunction("paradoxtest:helloworld");
+
+        $registered = $this->client->listAQLFunctions("paradoxtest");
+
+        $this->assertEmpty($registered, "The AQL function was not deleted");
     }
-    
+
     /**
      * @covers Paradox\Client::deleteAQLFunctionsByNamespace
      */
     public function testDeleteAQLFunctionsByNamespace()
     {
-    	$function = "function(){return 'hello';}";
-    
-    	$this->client->createAQLFunction("paradoxtest:helloworld", $function);
-    	$this->client->createAQLFunction("paradoxtest:helloworld2", $function);
-    
-    	$registered = $this->client->listAQLFunctions("paradoxtest");
-    
-    	$this->assertCount(2, $registered, "There should be 2 paradoxtest functions");
-    	$this->assertArrayHasKey("paradoxtest:helloworld", $registered, "The AQL function was not registered");
-    	$this->assertArrayHasKey("paradoxtest:helloworld2", $registered, "The AQL function was not registered");
-    
-    	$this->client->deleteAQLFunctionsByNamespace("paradoxtest");
-    	 
-    	$registered = $this->client->listAQLFunctions("paradoxtest");
-    	 
-    	$this->assertEmpty($registered, "There should be no paradoxtest functions registered");
+        $function = "function(){return 'hello';}";
+
+        $this->client->createAQLFunction("paradoxtest:helloworld", $function);
+        $this->client->createAQLFunction("paradoxtest:helloworld2", $function);
+
+        $registered = $this->client->listAQLFunctions("paradoxtest");
+
+        $this->assertCount(2, $registered, "There should be 2 paradoxtest functions");
+        $this->assertArrayHasKey("paradoxtest:helloworld", $registered, "The AQL function was not registered");
+        $this->assertArrayHasKey("paradoxtest:helloworld2", $registered, "The AQL function was not registered");
+
+        $this->client->deleteAQLFunctionsByNamespace("paradoxtest");
+
+        $registered = $this->client->listAQLFunctions("paradoxtest");
+
+        $this->assertEmpty($registered, "There should be no paradoxtest functions registered");
     }
-    
+
     /**
      * @covers Paradox\Client::listAQLFunctions
      */
     public function testListAQLFunctions()
     {
-    	$action = "function(){ return 'hello'; }";
-    
-    	$result = $this->client->createAQLFunction("paradoxtest1:helloworld", $action);
-    	$result = $this->client->createAQLFunction("paradoxtest2:helloworld", $action);
-    
-    	$registered = $this->client->listAQLFunctions("paradoxtest1");
-    
-    	$this->assertCount(1, $registered, "There should only be one paradoxtest function");
-    	$this->assertArrayHasKey("paradoxtest1:helloworld", $registered, "The AQL function was not registered");
-    	
-    	$registered = $this->client->listAQLFunctions("paradoxtest2");
-    	
-    	$this->assertCount(1, $registered, "There should only be one paradoxtest function");
-    	$this->assertArrayHasKey("paradoxtest2:helloworld", $registered, "The AQL function was not registered");
-    
-    	$this->client->deleteAQLFunction("paradoxtest1:helloworld");
-    	$this->client->deleteAQLFunction("paradoxtest2:helloworld");
-    	 
-    	$registered = $this->client->listAQLFunctions("paradoxtest1");
-    	 
-    	$this->assertEmpty($registered, "The AQL function was not deleted");
-    	
-    	$registered = $this->client->listAQLFunctions("paradoxtest2");
-    	
-    	$this->assertEmpty($registered, "The AQL function was not deleted");
+        $action = "function(){ return 'hello'; }";
+
+        $result = $this->client->createAQLFunction("paradoxtest1:helloworld", $action);
+        $result = $this->client->createAQLFunction("paradoxtest2:helloworld", $action);
+
+        $registered = $this->client->listAQLFunctions("paradoxtest1");
+
+        $this->assertCount(1, $registered, "There should only be one paradoxtest function");
+        $this->assertArrayHasKey("paradoxtest1:helloworld", $registered, "The AQL function was not registered");
+
+        $registered = $this->client->listAQLFunctions("paradoxtest2");
+
+        $this->assertCount(1, $registered, "There should only be one paradoxtest function");
+        $this->assertArrayHasKey("paradoxtest2:helloworld", $registered, "The AQL function was not registered");
+
+        $this->client->deleteAQLFunction("paradoxtest1:helloworld");
+        $this->client->deleteAQLFunction("paradoxtest2:helloworld");
+
+        $registered = $this->client->listAQLFunctions("paradoxtest1");
+
+        $this->assertEmpty($registered, "The AQL function was not deleted");
+
+        $registered = $this->client->listAQLFunctions("paradoxtest2");
+
+        $this->assertEmpty($registered, "The AQL function was not deleted");
     }
 
     /**

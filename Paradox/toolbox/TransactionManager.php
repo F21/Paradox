@@ -3,7 +3,6 @@ namespace Paradox\toolbox;
 use Paradox\Toolbox;
 use Paradox\pod\Vertex;
 use Paradox\exceptions\TransactionManagerException;
-use Paradox\exceptions\ToolboxException;
 
 /**
  * Paradox is an elegant Object Document Mananger (ODM) to use with the ArangoDB Document/Graph database server.
@@ -90,9 +89,9 @@ class TransactionManager
         if (!$this->_activeTransaction) {
             throw new TransactionManagerException("There is no active transaction to commit.");
         }
-        
+
         if (empty($this->_commands)) {
-        	throw new TransactionManagerException("There is no transaction operations to commit.");
+            throw new TransactionManagerException("There is no transaction operations to commit.");
         }
 
         $commandText = 'function () { var db = require("internal").db; ';
@@ -133,10 +132,10 @@ class TransactionManager
      */
     public function cancel()
     {
-    	if (!$this->_activeTransaction) {
-    		throw new TransactionManagerException("There is no active transaction to cancel.");
-    	}
-    	
+        if (!$this->_activeTransaction) {
+            throw new TransactionManagerException("There is no active transaction to cancel.");
+        }
+
         $this->clearTransactionInfo();
 
         return true;
@@ -160,10 +159,10 @@ class TransactionManager
      */
     public function addReadCollection($collection)
     {
-    	if (!$this->_activeTransaction) {
-    		throw new TransactionManagerException("There is no active transaction.");
-    	}
-    	
+        if (!$this->_activeTransaction) {
+            throw new TransactionManagerException("There is no active transaction.");
+        }
+
         if (!in_array($collection, $this->_collections['read'])) {
             $this->_collections['read'][] = $collection;
         }
@@ -175,10 +174,10 @@ class TransactionManager
      */
     public function addWriteCollection($collection)
     {
-    	if (!$this->_activeTransaction) {
-    		throw new TransactionManagerException("There is no active transaction.");
-    	}
-    	
+        if (!$this->_activeTransaction) {
+            throw new TransactionManagerException("There is no active transaction.");
+        }
+
         if (!in_array($collection, $this->_collections['write'])) {
             $this->_collections['write'][] = $collection;
         }
@@ -192,14 +191,14 @@ class TransactionManager
      */
     public function registerResult($name, $command = null)
     {
-    	if (!$this->_activeTransaction) {
-    		throw new TransactionManagerException("There is no active transaction.");
-    	}
-    	
-    	if(empty($this->_commands)){
-    		throw new TransactionManagerException("There are no commands for this transaction.");
-    	}
-    	
+        if (!$this->_activeTransaction) {
+            throw new TransactionManagerException("There is no active transaction.");
+        }
+
+        if (empty($this->_commands)) {
+            throw new TransactionManagerException("There are no commands for this transaction.");
+        }
+
         //Get the last command's id (current array element)
         end($this->_commands);
         $id = key($this->_commands);
@@ -246,14 +245,14 @@ class TransactionManager
      */
     public function pause()
     {
-    	if (!$this->_activeTransaction) {
-    		throw new TransactionManagerException("There is no active transaction.");
-    	}
-    	
-    	if($this->_transactionPaused){
-    		throw new TransactionManagerException("The transaction is already paused.");
-    	}
-    	
+        if (!$this->_activeTransaction) {
+            throw new TransactionManagerException("There is no active transaction.");
+        }
+
+        if ($this->_transactionPaused) {
+            throw new TransactionManagerException("The transaction is already paused.");
+        }
+
         $this->_transactionPaused = true;
     }
 
@@ -262,14 +261,14 @@ class TransactionManager
      */
     public function resume()
     {
-    	if (!$this->_activeTransaction) {
-    		throw new TransactionManagerException("There is no active transaction.");
-    	}
-    	 
-    	if(!$this->_transactionPaused){
-    		throw new TransactionManagerException("The transaction is not paused.");
-    	}
-    	
+        if (!$this->_activeTransaction) {
+            throw new TransactionManagerException("There is no active transaction.");
+        }
+
+        if (!$this->_transactionPaused) {
+            throw new TransactionManagerException("The transaction is not paused.");
+        }
+
         $this->_transactionPaused = false;
     }
 
@@ -284,10 +283,10 @@ class TransactionManager
      */
     public function addCommand($command, $action, $object = null, $isGraph = false, $data = array())
     {
-    	if (!$this->_activeTransaction) {
-    		throw new TransactionManagerException("There is no active transaction.");
-    	}
-    	
+        if (!$this->_activeTransaction) {
+            throw new TransactionManagerException("There is no active transaction.");
+        }
+
         $id = $this->random();
         $this->_commands[$id] = array('command' => $command, 'action' => $action, 'object' => $object, 'isGraph' => $isGraph, 'data' => $data);
 
@@ -315,7 +314,7 @@ class TransactionManager
                     break;
 
                 case "PodManager:delete":
-                	$this->_toolbox->getPodManager()->processDeleteResult($command['object']->getPod());
+                    $this->_toolbox->getPodManager()->processDeleteResult($command['object']->getPod());
                     $processed = true;
                     break;
 
@@ -386,7 +385,7 @@ class TransactionManager
                 default:
                     throw new TransactionManagerException("Invalid or unimplemented action ({$command['action']}) while processing the transaction results.");
             }
-            
+
             if (array_key_exists($id, $this->_registeredResults)) {
                 $processedResults[$this->_registeredResults[$id]] = $processed;
             }
