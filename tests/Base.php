@@ -19,14 +19,14 @@ class Base extends \PHPUnit_Framework_TestCase
      * @param  string          $graph    The optional name of the graph to manage.
      * @return \Paradox\Client
      */
-    protected function getClient($endpoint = 'tcp://192.168.1.21:8529/', $username = 'root', $password = '', $graph = null)
+    protected function getClient($endpoint = 'tcp://localhost:8529/', $username = 'root', $password = '', $graph = null)
     {
         return $client = new Client($endpoint, $username, $password, $graph);
     }
 
     protected function getDefaultEndpoint()
     {
-        return 'tcp://192.168.1.21:8529/';
+        return 'tcp://localhost:8529/';
     }
 
     protected function getDefaultUsername()
