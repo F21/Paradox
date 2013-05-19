@@ -433,6 +433,14 @@ class TransactionManager
 
         return $id;
     }
+    
+    /**
+     * Whether a transaction has been started or not.
+     * @return boolean
+     */
+    public function transactionStarted(){
+    	return $this->_activeTransaction;
+    }
 
     /**
      * Returns whether there is an active transaction that has not been paused.

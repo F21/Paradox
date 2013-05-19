@@ -388,18 +388,20 @@ class ServerTest extends Base
     /**
      * @covers Paradox\toolbox\Server::deleteAQLFunctionsByNamespace
      */
-    public function testDeleteAQLFunctionsByNamespaceThatDoesNotExist()
+    public function testDeleteAQLFunctionsByNamespaceOnInvalidServer()
     {
 
-        try {
-            $this->server->deleteAQLFunctionsByNamespace('NamespaceThatDefinitelyDoesNotExist');
-        } catch (\Exception $e) {
-            $this->assertInstanceOf('Paradox\exceptions\ServerException', $e, 'Exception thrown was not of the type Paradox\exceptions\ServerException');
-
-            return;
-        }
-
-        $this->fail('Tried to delete an aql function namespace that does not exist, but an exception was not thrown');
+    	$client = $this->getClient('tcp://nonexistentserver', $this->getDefaultUsername(), $this->getDefaultPassword());
+    	
+    	try {
+    		$functions = $client->getToolbox()->getServer()->deleteAQLFunctionsByNamespace('paradoxtest');
+    	} catch (\Exception $e) {
+    		$this->assertInstanceOf('Paradox\exceptions\ServerException', $e, 'Exception thrown was not of the type Paradox\exceptions\ServerException');
+    	
+    		return;
+    	}
+    	
+    	$this->fail('Tried to delete aql functions in a namespace on a server that does not exist, but an exception was not thrown');
     }
 
     /**

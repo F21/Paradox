@@ -759,6 +759,8 @@ class Client
     {
         return $this->getToolbox($this->_currentConnection)->getServer()->getTime();
     }
+    
+    
 
     /**
      * Begin a transaction.
@@ -844,6 +846,14 @@ class Client
     public function executeTransaction($action, $readCollections = array(), $writeCollections = array(), $parameters = array())
     {
         return $this->getToolbox($this->_currentConnection)->getTransactionManager()->executeTransaction($action, $readCollections, $writeCollections, $parameters);
+    }
+    
+    /**
+     * Whether a transaction has been started or not.
+     * @return boolean
+     */
+    public function transactionStarted(){
+    	return $this->getToolbox($this->_currentConnection)->getTransactionManager()->transactionStarted();
     }
 
     /**

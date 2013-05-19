@@ -941,21 +941,32 @@ class TransactionManagerTest extends Base
 
         $this->assertNotEquals($generated1, $generated2, "The 2 generated ids should not be equal");
     }
+    
+    /**
+     * @covers Paradox\toolbox\TransactionManager::transactionStarted
+     */
+    public function testTransactionStarted()
+    {
+    	$this->assertFalse($this->transactionManager->transactionStarted(), "There should be no active or unpaused transaction");
+    
+    	$this->transactionManager->begin();
+    	$this->assertTrue($this->transactionManager->transactionStarted(), "There should be an active or unpaused transaction");
+    }
 
     /**
      * @covers Paradox\toolbox\TransactionManager::hasTransaction
      */
     public function testHasTransaction()
     {
-        $this->assertFalse($this->transactionManager->hasTransaction(), "There should be no active or unpaused transactions");
+        $this->assertFalse($this->transactionManager->hasTransaction(), "There should be no active or unpaused transaction");
 
         $this->transactionManager->begin();
-        $this->assertTrue($this->transactionManager->hasTransaction(), "There should be an active or unpaused transactions");
+        $this->assertTrue($this->transactionManager->hasTransaction(), "There should be an active or unpaused transaction");
 
         $this->transactionManager->pause();
-        $this->assertFalse($this->transactionManager->hasTransaction(), "There should be no active or unpaused transactions");
+        $this->assertFalse($this->transactionManager->hasTransaction(), "There should be no active or unpaused transaction");
 
         $this->transactionManager->resume();
-        $this->assertTrue($this->transactionManager->hasTransaction(), "There should be an active or unpaused transactions");
+        $this->assertTrue($this->transactionManager->hasTransaction(), "There should be an active or unpaused transaction");
     }
 }

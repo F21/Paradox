@@ -1284,6 +1284,18 @@ class ClientTest extends Base
 
         $this->assertEquals('hello', $result, "The result does not match");
     }
+    
+    /**
+     * @covers Paradox\Client::transactionStarted
+     */
+    public function testTransactionStarted()
+    {
+    	$this->assertFalse($this->client->transactionStarted(), "There should be no active transaction");
+    	
+    	$this->client->begin();
+    	
+    	$this->assertTrue($this->client->transactionStarted(), "There should be an active transaction");
+    }
 
     /**
      * @covers Paradox\Client::createAQLFunction

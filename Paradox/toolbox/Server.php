@@ -162,11 +162,10 @@ class Server
      */
     public function createAQLFunction($name, $code)
     {
-        $userFunction = new AqlUserFunction($this->_toolbox->getConnection());
-        $userFunction->setName($name);
-        $userFunction->setCode($code);
-
         try {
+        	$userFunction = new AqlUserFunction($this->_toolbox->getConnection());
+        	$userFunction->setName($name);
+        	$userFunction->setCode($code);
             $userFunction->register();
         } catch (\Exception $e) {
             $normalised = $this->_toolbox->normaliseDriverExceptions($e);
@@ -183,9 +182,8 @@ class Server
      */
     public function deleteAQLFunction($name)
     {
-        $userFunction = new AqlUserFunction($this->_toolbox->getConnection());
-
         try {
+        	$userFunction = new AqlUserFunction($this->_toolbox->getConnection());
             $userFunction->unregister($name);
         } catch (\Exception $e) {
             $normalised = $this->_toolbox->normaliseDriverExceptions($e);
@@ -202,9 +200,8 @@ class Server
      */
     public function deleteAQLFunctionsByNamespace($namespace)
     {
-        $userFunction = new AqlUserFunction($this->_toolbox->getConnection());
-
         try {
+        	$userFunction = new AqlUserFunction($this->_toolbox->getConnection());
             $userFunction->unregister($namespace, true);
         } catch (\Exception $e) {
             $normalised = $this->_toolbox->normaliseDriverExceptions($e);
