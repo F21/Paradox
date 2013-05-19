@@ -13,7 +13,7 @@ use Paradox\AModel;
  * Document pod
  * Represents an ArangoDB document. Implements IObserver to listen to events from the Pod Manager.
  *
- * @version 1.2.3
+ * @version 1.3.0
  *
  * @author Francis Chuang <francis.chuang@gmail.com>
  * @link https://github.com/F21/Paradox

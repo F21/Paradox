@@ -2,6 +2,7 @@
 namespace Paradox\toolbox;
 use Paradox\Toolbox;
 use Paradox\exceptions\ServerException;
+use triagens\ArangoDb\AqlUserFunction;
 
 /**
  * Paradox is an elegant Object Document Mananger (ODM) to use with the ArangoDB Document/Graph database server.
@@ -10,7 +11,7 @@ use Paradox\exceptions\ServerException;
  * Server manager.
  * Manages server tasks, for example, creating and deleting users and retriving server statistics.
  *
- * @version 1.2.3
+ * @version 1.3.0
  *
  * @author Francis Chuang <francis.chuang@gmail.com>
  * @link https://github.com/F21/Paradox
@@ -151,6 +152,89 @@ class Server
             $normalised = $this->_toolbox->normaliseDriverExceptions($e);
             throw new ServerException($normalised['message'], $normalised['code']);
         }
+    }
+    
+    /**
+     * Register an AQL function with the server.
+     * @param string $name The name of the server
+     * @param string $code The javascript code of the function.
+     * @throws ServerException
+     */
+    public function createAQLFunction($name, $code){
+    	
+    	$userFunction = new AqlUserFunction($this->_toolbox->getConnection());
+    	$userFunction->setName($name);
+    	$userFunction->setCode($code);
+    	
+    	try {
+    		$userFunction->register();
+    	} catch (\Exception $e) {
+    		$normalised = $this->_toolbox->normaliseDriverExceptions($e);
+    		throw new ServerException($normalised['message'], $normalised['code']);
+    	}
+    	
+    	return true;
+    }
+    
+    /**
+     * Delete an AQL function by its name.
+     * @param string $name The name of the function to delete.
+     * @throws ServerException
+     */
+    public function deleteAQLFunction($name){
+    	$userFunction = new AqlUserFunction($this->_toolbox->getConnection());
+    	
+    	try {
+    		$userFunction->unregister($name);
+    	} catch (\Exception $e) {
+    		$normalised = $this->_toolbox->normaliseDriverExceptions($e);
+    		throw new ServerException($normalised['message'], $normalised['code']);
+    	}
+    	
+    	return true;
+    }
+    
+    /**
+     * Delete all the AQL functions within a namespace.
+     * @param string $namespace The name of the namespace to delete.
+     * @throws ServerException
+     */
+    public function deleteAQLFunctionsByNamespace($namespace){
+    	$userFunction = new AqlUserFunction($this->_toolbox->getConnection());
+    	 
+    	try {
+    		$userFunction->unregister($namespace, true);
+    	} catch (\Exception $e) {
+    		$normalised = $this->_toolbox->normaliseDriverExceptions($e);
+    		throw new ServerException($normalised['message'], $normalised['code']);
+    	}
+    	 
+    	return true;
+    }
+    
+    /**
+     * List the AQL functions registered on the server and optionally, filter by namespace.
+     * @param string $namespace The optional namespace to filter the list of AQL functions on.
+     * @throws ServerException
+     */
+    public function listAQLFunctions($namespace = null){
+
+    	try {
+    		$userFunction = new AqlUserFunction($this->_toolbox->getConnection());
+    		$functions = $userFunction->getRegisteredUserFunctions($namespace);
+    		
+    		$result = array();
+    		
+    		foreach ($functions as $function) {
+    			$result[$function['name']] = $function['code'];
+    		}
+    		
+    		return $result;
+    		
+    	} catch (\Exception $e) {
+    		$normalised = $this->_toolbox->normaliseDriverExceptions($e);
+    		throw new ServerException($normalised['message'], $normalised['code']);
+    	}
     }
 
     /**

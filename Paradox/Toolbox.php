@@ -24,7 +24,7 @@ use triagens\ArangoDb\Transaction;
  * Toolbox
  * Each toolbox represents a connection. The toolbox acts as a box from which we can get our tools from, from example, the PodManager, Finder, etc.
  *
- * @version 1.2.3
+ * @version 1.3.0
  *
  * @author Francis Chuang <francis.chuang@gmail.com>
  * @link https://github.com/F21/Paradox

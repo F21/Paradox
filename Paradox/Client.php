@@ -10,7 +10,7 @@ use triagens\ArangoDb\Graph;
  * Paradox client
  * Provides an entry point to the library. For most users, the client should provide almost everything they need.
  *
- * @version 1.2.3
+ * @version 1.3.0
  *
  * @author Francis Chuang <francis.chuang@gmail.com>
  * @link https://github.com/F21/Paradox
@@ -844,6 +844,43 @@ class Client
     public function executeTransaction($action, $readCollections = array(), $writeCollections = array(), $parameters = array())
     {
         return $this->getToolbox($this->_currentConnection)->getTransactionManager()->executeTransaction($action, $readCollections, $writeCollections, $parameters);
+    }
+    
+    /**
+     * Register an AQL function with the server.
+     * @param string $name The name of the server
+     * @param string $code The javascript code of the function.
+     * @throws ServerException
+     */
+    public function createAQLFunction($name, $code){
+    	return $this->getToolbox($this->_currentConnection)->getServer()->createAQLFunction($name, $code);
+    }
+    
+    /**
+     * Delete an AQL function by its name.
+     * @param string $name The name of the function to delete.
+     * @throws ServerException
+     */
+    public function deleteAQLFunction($name){
+    	return $this->getToolbox($this->_currentConnection)->getServer()->deleteAQLFunction($name);
+    }
+    
+    /**
+     * Delete all the AQL functions within a namespace.
+     * @param string $namespace The name of the namespace to delete.
+     * @throws ServerException
+     */
+    public function deleteAQLFunctionsByNamespace($namespace){
+    	return $this->getToolbox($this->_currentConnection)->getServer()->deleteAQLFunctionsByNamespace($namespace);
+    }
+    
+    /**
+     * List the AQL functions registered on the server and optionally, filter by namespace.
+     * @param string $namespace The optional namespace to filter the list of AQL functions on.
+     * @throws ServerException
+     */
+    public function listAQLFunctions($namespace = null){
+    	return $this->getToolbox($this->_currentConnection)->getServer()->listAQLFunctions($namespace);
     }
 
     /**

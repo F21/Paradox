@@ -8,7 +8,7 @@ namespace Paradox;
  * Default model formatter
  * The default model formatter that just asks the library to instantiate \Paradox\GenericModel for everything.
  *
- * @version 1.2.3
+ * @version 1.3.0
  *
  * @author Francis Chuang <francis.chuang@gmail.com>
  * @link https://github.com/F21/Paradox

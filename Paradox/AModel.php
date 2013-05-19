@@ -12,7 +12,7 @@ use Paradox\exceptions\ModelException;
  * You can define your own custom methods and properties in your own models. In addition, the model provides
  * several events that you can act own during the lifecycle of a pod.
  *
- * @version 1.2.3
+ * @version 1.3.0
  *
  * @author Francis Chuang <francis.chuang@gmail.com>
  * @link https://github.com/F21/Paradox

@@ -8,7 +8,7 @@ namespace Paradox;
  * Event
  * An event object passed to listeners that contain details about the event.
  *
- * @version 1.2.3
+ * @version 1.3.0
  *
  * @author Francis Chuang <francis.chuang@gmail.com>
  * @link https://github.com/F21/Paradox

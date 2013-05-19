@@ -9,7 +9,7 @@ namespace Paradox;
  * A simple script to autoload the class files for the library. The project is structured to be PSR-0 compliant, so you can also use your own
  * autoloader.
  *
- * @version 1.2.3
+ * @version 1.3.0
  *
  * @author Francis Chuang <francis.chuang@gmail.com>
  * @link https://github.com/F21/Paradox
