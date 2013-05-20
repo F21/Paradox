@@ -187,6 +187,16 @@ class Client
     {
         return $this->getToolbox($this->_currentConnection)->getQuery()->getOne($query, $parameters);
     }
+    
+    /**
+     * Converts query results to pods.
+     * @param string $type The type of the pod
+     * @param array $data An array of the query result to convert.
+     * @return array
+     */
+    public function convertToPods($type, array $data){
+    	return $this->getToolbox($this->_currentConnection)->getQuery()->convertToPods($type, $data);
+    }
 
     /**
      * Returns the execution plan for a query. This will not execute the query.

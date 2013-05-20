@@ -443,6 +443,23 @@ class ClientTest extends Base
 
         $this->assertInternalType('array', $result, "The result should be an array");
     }
+    
+    /**
+     * @covers Paradox\Client::convertToPods
+     */
+    public function testConvertToPods()
+    {
+    	$result = $this->client->getAll("FOR doc in $this->collectionName RETURN doc");
+    
+    	$converted = $this->client->convertToPods($this->collectionName, $result);
+    	
+    	$this->assertInternalType('array', $converted, "The result should be an array");
+    	
+    	foreach ($converted as $pod) {
+    		$this->assertInstanceOf('Paradox\AModel', $pod, 'Pods should be of the type Paradox\AModel');
+    		$this->assertEquals($this->collectionName, $pod->getPod()->getType(), "The pod's type does not match");
+    	}
+    }
 
     /**
      * @covers Paradox\Client::explain
