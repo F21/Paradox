@@ -4,7 +4,7 @@ php:
   - "5.5"
   
 before_script:
-  - echo -e "Host github.com\n\tStrictHostKeyChecking no\n" >> ~/.ssh/config
+  - sudo echo -e "Host github.com\n\tStrictHostKeyChecking no\n" >> ~/.ssh/config
   - chmod 777 ./tests/bin/setup.sh
   - ./tests/bin/setup.sh
   - composer install --prefer-source --no-interaction 
