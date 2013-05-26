@@ -109,6 +109,22 @@ class Query
             }
         }
     }
+    
+    /**
+     * Converts query results to pods.
+     * @param string $type The type of the pod
+     * @param array $data An array of the query result to convert.
+     * @return array
+     */
+    public function convertToPods($type, array $data){
+    	$converted = $this->_toolbox->getPodManager()->convertToPods($type, $data);
+    	
+    	foreach ($converted as $model) {
+    		$model->getPod()->setSaved();
+    	}
+    	
+    	return $converted;
+    }
 
     /**
      * Returns the execution plan for a query. This will not execute the query.

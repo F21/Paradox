@@ -2,6 +2,7 @@
 namespace tests\Paradox\toolbox;
 use tests\Base;
 use Paradox\toolbox\Query;
+use Paradox\AModel;
 
 /**
  * Tests for the query helper.
@@ -253,6 +254,25 @@ class QueryTest extends Base
         $result = $this->query->getOne($query, array('@collection' => $this->collectionName, 'nonexistentname' => "PersonThatDoesNotExist"));
 
         $this->assertNull($result, "The result should be null since nothing was found");
+    }
+    
+    /**
+     * @covers Paradox\toolbox\Query::convertToPods
+     */
+    public function testConvertToPods()
+    {
+    	$query = "FOR doc in @@collection return doc";
+
+        $results = $this->query->getAll($query, array('@collection' => $this->collectionName));
+    	
+    	$pods = $this->query->convertToPods($this->collectionName, $results);
+    	
+    	$this->assertInternalType('array', $pods, "The result should be an array");
+    	
+    	foreach ($pods as $pod) {
+    		$this->assertInstanceOf('Paradox\AModel', $pod, 'Pods should be of the type Paradox\AModel');
+    		$this->assertEquals($this->collectionName, $pod->getPod()->getType(), "The pod's type does not match");
+    	}
     }
 
     /**
