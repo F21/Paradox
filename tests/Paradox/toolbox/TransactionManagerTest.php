@@ -941,16 +941,16 @@ class TransactionManagerTest extends Base
 
         $this->assertNotEquals($generated1, $generated2, "The 2 generated ids should not be equal");
     }
-    
+
     /**
      * @covers Paradox\toolbox\TransactionManager::transactionStarted
      */
     public function testTransactionStarted()
     {
-    	$this->assertFalse($this->transactionManager->transactionStarted(), "There should be no active or unpaused transaction");
-    
-    	$this->transactionManager->begin();
-    	$this->assertTrue($this->transactionManager->transactionStarted(), "There should be an active or unpaused transaction");
+        $this->assertFalse($this->transactionManager->transactionStarted(), "There should be no active or unpaused transaction");
+
+        $this->transactionManager->begin();
+        $this->assertTrue($this->transactionManager->transactionStarted(), "There should be an active or unpaused transaction");
     }
 
     /**

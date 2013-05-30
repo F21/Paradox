@@ -204,9 +204,9 @@ class PodManager extends AObservable
                                //store command. This determines if that is the case and rewrites the command as a replace.
                                if ($id !== false) {
                                        $this->addTransactionCommand("function(){graph.removeEdge(graph.getEdge(result.$id._id)); return true;}();", "PodManager:store", $model, true);
-                                       $this->addTransactionCommand($this->generateCreateEdgeCommand($fromKeyIsJSVar, $fromKey, $toKeyIsJSVar, $toKey, $pod->toTransactionJSON(), "result.$id._key", true), "PodManager:store", $model, true);
+                                       $this->addTransactionCommand($this->generateCreateEdgeCommand($fromKeyIsJSVar, $fromKey, $toKeyIsJSVar, $toKey, $pod->toTransactionJSON(), "result.$id._key", true, $pod->getLabel()), "PodManager:store", $model, true);
                                } else {
-                                       $this->addTransactionCommand($this->generateCreateEdgeCommand($fromKeyIsJSVar, $fromKey, $toKeyIsJSVar, $toKey, $pod->toTransactionJSON()), "PodManager:store", $model, true);
+                                       $this->addTransactionCommand($this->generateCreateEdgeCommand($fromKeyIsJSVar, $fromKey, $toKeyIsJSVar, $toKey, $pod->toTransactionJSON(), null, false, $pod->getLabel()), "PodManager:store", $model, true);
                                }
                            } else {
                                $doc = $pod->toDriverDocument();
@@ -220,7 +220,7 @@ class PodManager extends AObservable
                         if ($this->hasTransaction()) {
                             $this->_toolbox->getTransactionManager()->addWriteCollection($this->_toolbox->getEdgeCollectionName());
                             $this->addTransactionCommand("function(){graph.removeEdge(graph.getEdge('{$pod->getId()}')); return true;}();", "PodManager:store", $model, true);
-                            $this->addTransactionCommand($this->generateCreateEdgeCommand($fromKeyIsJSVar, $fromKey, $toKeyIsJSVar, $toKey, $pod->toTransactionJSON(), $pod->getKey()), "PodManager:store", $model, true);
+                            $this->addTransactionCommand($this->generateCreateEdgeCommand($fromKeyIsJSVar, $fromKey, $toKeyIsJSVar, $toKey, $pod->toTransactionJSON(), $pod->getKey(), false, $pod->getLabel()), "PodManager:store", $model, true);
                         } else {
                             $id = $pod->getId();
                             $revision = $pod->getRevision() + mt_rand(0, 1000);
@@ -542,9 +542,10 @@ class PodManager extends AObservable
      * @param  string  $data           JSON representation of the edge data.
      * @param  string  $id             An optional id for the edge.
      * @param  boolean $idIsVariable   Whether the id string is a javascript variable.
+     * @param  string  $label          The optional label of the edge
      * @return string
      */
-    private function generateCreateEdgeCommand($fromKeyIsJSVar, $fromKey, $toKeyIsJSVar, $toKey, $data, $id = null, $idIsVariable = false)
+    private function generateCreateEdgeCommand($fromKeyIsJSVar, $fromKey, $toKeyIsJSVar, $toKey, $data, $id = null, $idIsVariable = false, $label = null)
     {
         $command = "graph.addEdge(";
 
@@ -574,6 +575,10 @@ class PodManager extends AObservable
 
         } else {
             $command .= "null";
+        }
+
+        if ($label) {
+            $command .= ", '$label'";
         }
 
         $command .= ", $data)._properties;";

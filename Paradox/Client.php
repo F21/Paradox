@@ -187,15 +187,16 @@ class Client
     {
         return $this->getToolbox($this->_currentConnection)->getQuery()->getOne($query, $parameters);
     }
-    
+
     /**
      * Converts query results to pods.
-     * @param string $type The type of the pod
-     * @param array $data An array of the query result to convert.
+     * @param  string $type The type of the pod
+     * @param  array  $data An array of the query result to convert.
      * @return array
      */
-    public function convertToPods($type, array $data){
-    	return $this->getToolbox($this->_currentConnection)->getQuery()->convertToPods($type, $data);
+    public function convertToPods($type, array $data)
+    {
+        return $this->getToolbox($this->_currentConnection)->getQuery()->convertToPods($type, $data);
     }
 
     /**
@@ -769,8 +770,6 @@ class Client
     {
         return $this->getToolbox($this->_currentConnection)->getServer()->getTime();
     }
-    
-    
 
     /**
      * Begin a transaction.
@@ -857,13 +856,14 @@ class Client
     {
         return $this->getToolbox($this->_currentConnection)->getTransactionManager()->executeTransaction($action, $readCollections, $writeCollections, $parameters);
     }
-    
+
     /**
      * Whether a transaction has been started or not.
      * @return boolean
      */
-    public function transactionStarted(){
-    	return $this->getToolbox($this->_currentConnection)->getTransactionManager()->transactionStarted();
+    public function transactionStarted()
+    {
+        return $this->getToolbox($this->_currentConnection)->getTransactionManager()->transactionStarted();
     }
 
     /**

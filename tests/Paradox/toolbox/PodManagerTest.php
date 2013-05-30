@@ -1138,6 +1138,11 @@ class PodManagerTest extends Base
         $result = $method->invoke($manager, true, 'someproperty.id', true, 'anotherproperty.id', '{"name": "john smith"}');
         $this->assertEquals("graph.addEdge(graph.getVertex(result.someproperty.id._id), graph.getVertex(result.anotherproperty.id._id), null, {\"name\": \"john smith\"})._properties;", $result,
                 "The generated edge command does not match.");
+
+        //With an edge label
+        $result = $method->invoke($manager, true, 'someproperty.id', true, 'anotherproperty.id', '{"name": "john smith"}', null, false, 'mylabel');
+        $this->assertEquals("graph.addEdge(graph.getVertex(result.someproperty.id._id), graph.getVertex(result.anotherproperty.id._id), null, 'mylabel', {\"name\": \"john smith\"})._properties;", $result,
+                "The generated edge command does not match.");
     }
 
     /**

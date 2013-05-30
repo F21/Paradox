@@ -1,3 +1,9 @@
+v1.3.x (2013-XX-XX)
+-----------------------
+
+* Fixed edge labels not being set in transactions.
+
+
 v1.3.0 (2013-05-17)
 -----------------------
 
