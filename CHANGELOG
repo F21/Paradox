@@ -1,7 +1,8 @@
-v1.3.x (2013-XX-XX)
+v1.3.1 (2013-05-31)
 -----------------------
 
 * Fixed edge labels not being set in transactions.
+* Fixed composer.json's autoloader namespace (fixed by @luebbert42).
 
 
 v1.3.0 (2013-05-17)
