@@ -76,13 +76,13 @@ If you are new to Paradox, we recommend reading our documentation in the [wiki](
 
 ### Versioning
 Paradox tracks the version of ArangoDB. For example, if Pardox is version 1.2.x, then it is expected to work with 1.2.x of ArangoDB.
-Note that we only track the major and minor version of ArangoDB. The patch version (last number) is independent or ArangoDB and specific to Paradox.
+Note that we only track the major and minor version of ArangoDB. The patch version (last number) is independent of ArangoDB and specific to Paradox.
 
 ### Contributing
 Paradox is a very new library, so your contributions (issues and pull request) are appreciated :)
 
 When contributing, please take note of the following
-* Code is to be in psr-2 standard + all. For a list standards, see the list on the [php-cs-fixer](https://github.com/fabpot/PHP-CS-Fixer) page.
+* Code is to be in psr-2 standard + symfony. For a list standards, see the list on the [php-cs-fixer](https://github.com/fabpot/PHP-CS-Fixer) page.
 * If you want to use php-cs-fixer, run it with `php-cs-fixer fix /path/to/project --level=all`.
 * When submitting a PR, make sure you also include tests to test all code paths of your addition. 
 
