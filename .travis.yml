@@ -4,6 +4,7 @@ php:
   - "5.5"
   
 before_script:
+  - composer self-update
   - chmod 777 ./tests/bin/setup.sh
   - ./tests/bin/setup.sh
   - composer install --prefer-source --no-interaction 
