@@ -906,6 +906,15 @@ class Client
     {
         return $this->getToolbox($this->_currentConnection)->getServer()->listAQLFunctions($namespace);
     }
+    
+    /**
+     * Given the id in ArangoDB format (mycollection/123456) parse it and return the key (123456).
+     * @param  string $id
+     * @return string
+     */
+    public function parseIdForKey($id){
+    	return $this->getToolbox($this->_currentConnection)->parseIdForKey($id);
+    }
 
     /**
      * Set to true to turn on the debugger. Set it to false to turn it off.

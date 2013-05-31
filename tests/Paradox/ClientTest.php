@@ -1407,6 +1407,15 @@ class ClientTest extends Base
 
         $this->assertEmpty($registered, "The AQL function was not deleted");
     }
+    
+    /**
+     * @covers Paradox\Client::parseIdForKey
+     */
+    public function testParseIdForKey()
+    {
+    	$result = $this->client->parseIdForKey('mycollection/123456');
+    	$this->assertEquals('123456', $result, "The parsed id is incorrect");
+    }
 
     /**
      * @covers Paradox\Client::debug
