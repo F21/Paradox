@@ -324,6 +324,17 @@ class Document implements IObserver
     }
 
     /**
+     * Return an associative array representation of this document.
+     * @return array
+     */
+    public function toArray()
+    {
+        $result = array('_id' => $this->getId(), '_key' => $this->getKey(), '_rev' => $this->getRevision());
+
+        return array_merge($result, $this->_data);
+    }
+
+    /**
      * Returns a JSON representation of this document.
      * @return string
      */

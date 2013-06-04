@@ -532,6 +532,22 @@ class DocumentTest extends Base
     }
 
     /**
+     * @covers Paradox\pod\Document::toArray
+     */
+    public function testToArray()
+    {
+        $this->document->setId('mycollection/123456');
+        $this->document->setRevision('myrevision');
+        $this->document->set('mykey', 'myvalue');
+
+        $converted = $this->document->toArray();
+
+        $this->assertEquals('mycollection/123456', $converted['_id'], "The converted document's id does not match");
+        $this->assertEquals('myrevision', $converted['_rev'], "The converted document's revision does not match");
+        $this->assertEquals('myvalue', $converted['mykey'], "The converted document's data does not match");
+    }
+
+    /**
      * @covers Paradox\pod\Document::toJSON
      */
     public function testToJSON()
