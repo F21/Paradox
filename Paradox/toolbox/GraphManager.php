@@ -265,9 +265,9 @@ class GraphManager
     /**
      * Get the neighbour vertices connected to this vertex via some edge. The vertices and their connecting edges can be filtered by AQL.
      * @param Document|AModel|string A vertex pod, model or string of the vertex id.
-     * @param string $direction "in" for inbound neighbours, "out" for outbound neighbours and "any" for all neighbours.
-     * @param string|array $labels     A string representing one label or an array of labels we want the inbound edges to have.
-     * @param string $aql       An optional AQL fragment if we want to filter the edges or vertices, for example:
+     * @param string       $direction "in" for inbound neighbours, "out" for outbound neighbours and "any" for all neighbours.
+     * @param string|array $labels    A string representing one label or an array of labels we want the inbound edges to have.
+     * @param string       $aql       An optional AQL fragment if we want to filter the edges or vertices, for example:
      *                    FILTER doc.edge.someproperty == "somevalue" && doc.vertex.anotherproperty == "anothervalue"
      * @param  array  $params      An optional associative array containing parameters to bind to the query.
      * @param  string $placeholder Set this to something else if you do not wish to use "doc" to refer to documents in your query.
@@ -288,9 +288,9 @@ class GraphManager
         if (strtolower($direction) == "out") {
             $direction = "outbound";
         }
-        
-        if($labels && !is_array($labels)){
-        	$labels = array($labels);
+
+        if ($labels && !is_array($labels)) {
+            $labels = array($labels);
         }
 
         $vertexCollection = $this->_toolbox->generateBindingParameter('@vertexCollection', $params);
@@ -301,22 +301,22 @@ class GraphManager
         if (!$labels) {
             $query = "FOR $placeholder in NEIGHBORS(@$vertexCollection, @$edgeCollection, @$vertexParameter, @$directionParameter) " . $aql . " return $placeholder.vertex";
         } else {
-        	$count = 0;
-        	
-        	$labelString = '';
-        	
-        	foreach ($labels as $label) {
-        		$labelParameter = $this->_toolbox->generateBindingParameter('label', $params);
-        		
-        		if($count > 0){
-        			$labelString .= ", ";
-        		}
-        		
-        		$labelString .= "{'\$label': @$labelParameter}";
+            $count = 0;
 
-        		$params[$labelParameter] = $label;
-        		$count++;
-        	}
+            $labelString = '';
+
+            foreach ($labels as $label) {
+                $labelParameter = $this->_toolbox->generateBindingParameter('label', $params);
+
+                if ($count > 0) {
+                    $labelString .= ", ";
+                }
+
+                $labelString .= "{'\$label': @$labelParameter}";
+
+                $params[$labelParameter] = $label;
+                $count++;
+            }
 
             $query = "FOR $placeholder in NEIGHBORS(@$vertexCollection, @$edgeCollection, @$vertexParameter, @$directionParameter, [$labelString]) " . $aql . " return $placeholder.vertex";
         }

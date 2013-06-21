@@ -75,7 +75,7 @@ class GraphManagerTest extends Base
         $gaga = $client->dispense("vertex"); //Lady gaga has no friends
         $gaga->set('name', "lady gaga");
         $client->store($gaga);
-        
+
         $peter = $client->dispense("vertex"); //Lady gaga has no friends
         $peter->set('name', "peter smith");
         $client->store($peter);
@@ -91,7 +91,7 @@ class GraphManagerTest extends Base
         $friends3 = $barack->relateTo($john, "friends");
         $friends3->set('yearsKnown', 2);
         $client->store($friends3);
-        
+
         $colleagues1 = $barack->relateTo($peter, "colleague");
         $colleagues1->set('yearsKnown', 2);
         $client->store($colleagues1);
@@ -624,26 +624,26 @@ class GraphManagerTest extends Base
             $this->assertNotEquals($barack->getId(), $vertex->getId(), 'The vertex should not be the same vertex as the one querying for neighbours');
         }
     }
-    
+
     /**
      * @covers Paradox\toolbox\GraphManager::getNeighbours
      */
     public function testGetNeighboursWithMultipleLabels()
     {
-    	$client = $this->getClient($this->getDefaultEndpoint(), $this->getDefaultUsername(), $this->getDefaultPassword(), $this->graphName);
-    	$manager = $client->getToolbox()->getGraphManager();
-    
-    	$barack = $client->findOne("vertex", "doc.name == @name", array('name' => 'barack obama'));
-    
-    	$vertices = $manager->getNeighbours($barack, "any", array("friends", "colleague"));
-    
-    	$this->assertInternalType('array', $vertices, "Returned list of vertices should be an array");
-    	$this->assertCount(2, $vertices, "The number of vertices should be 2");
-    
-    	foreach ($vertices as $id => $vertex) {
-    		$this->assertInstanceOf('Paradox\AModel', $vertex, 'The vertex in the result list is not of type Paradox\AModel');
-    		$this->assertNotEquals($barack->getId(), $vertex->getId(), 'The vertex should not be the same vertex as the one querying for neighbours');
-    	}
+        $client = $this->getClient($this->getDefaultEndpoint(), $this->getDefaultUsername(), $this->getDefaultPassword(), $this->graphName);
+        $manager = $client->getToolbox()->getGraphManager();
+
+        $barack = $client->findOne("vertex", "doc.name == @name", array('name' => 'barack obama'));
+
+        $vertices = $manager->getNeighbours($barack, "any", array("friends", "colleague"));
+
+        $this->assertInternalType('array', $vertices, "Returned list of vertices should be an array");
+        $this->assertCount(2, $vertices, "The number of vertices should be 2");
+
+        foreach ($vertices as $id => $vertex) {
+            $this->assertInstanceOf('Paradox\AModel', $vertex, 'The vertex in the result list is not of type Paradox\AModel');
+            $this->assertNotEquals($barack->getId(), $vertex->getId(), 'The vertex should not be the same vertex as the one querying for neighbours');
+        }
     }
 
     /**
