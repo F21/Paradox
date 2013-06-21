@@ -1,7 +1,8 @@
-v1.3.2 (2013-XX-XX)
+v1.$.x (2013-XX-XX)
 -----------------------
 
 * Added toArray() method to convert pods into associative arrays.
+* getNeighbours() for vertices now support passing in an array of labels.
 
 v1.3.1 (2013-05-31)
 -----------------------

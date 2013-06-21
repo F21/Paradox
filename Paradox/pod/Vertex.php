@@ -86,16 +86,16 @@ class Vertex extends Document
     /**
      * Get the neighbour vertices connected to this vertex via some edge. The vertices and their connecting edges can be filtered by AQL.
      * @param string $direction "in" for inbound neighbours, "out" for outbound neighbours and "any" for all neighbours.
-     * @param string $label     A string representing one label or an array of labels we want the inbound edges to have.
+     * @param string|array $labels     A string representing one label or an array of labels we want the inbound edges to have.
      * @param string $aql       An optional AQL fragment if we want to filter the edges or vertices, for example:
      *                    FILTER doc.edge.someproperty == "somevalue" && doc.vertex.anotherproperty == "anothervalue"
      * @param  array  $params      An optional associative array containing parameters to bind to the query.
      * @param  string $placeholder Set this to something else if you do not wish to use "doc" to refer to documents in your query.
      * @return array
      */
-    public function getNeighbours($direction = "any", $label = null, $aql = "", $params = array(), $placeholder = "doc")
+    public function getNeighbours($direction = "any", $labels = null, $aql = "", $params = array(), $placeholder = "doc")
     {
-       return $this->_toolbox->getGraphManager()->getNeighbours($this->getId(), $direction, $label, $aql, $params, $placeholder);
+       return $this->_toolbox->getGraphManager()->getNeighbours($this->getId(), $direction, $labels, $aql, $params, $placeholder);
     }
 
     /**
