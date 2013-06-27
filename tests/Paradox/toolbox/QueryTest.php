@@ -153,23 +153,23 @@ class QueryTest extends Base
             $this->assertInternalType('array', $result, "Each result in the result set should be an array");
         }
     }
-    
+
     /**
      * @covers Paradox\toolbox\Query::getAll
      */
     public function testGetAllWithCount()
     {
-    	$query = "FOR doc in @@collection return doc";
-    
-    	$results = $this->query->getAll($query, array('@collection' => $this->collectionName), true);
+        $query = "FOR doc in @@collection return doc";
 
-    	$this->assertInternalType('array', $results, "The result set should be an array");
-    	$this->assertCount(4, $results['results'], "The result set should contain 4 results");
-    	$this->assertEquals(4, $results['count'], "The count should be 4");
-    
-    	foreach ($results['results'] as $result) {
-    		$this->assertInternalType('array', $result, "Each result in the result set should be an array");
-    	}
+        $results = $this->query->getAll($query, array('@collection' => $this->collectionName), true);
+
+        $this->assertInternalType('array', $results, "The result set should be an array");
+        $this->assertCount(4, $results['results'], "The result set should contain 4 results");
+        $this->assertEquals(4, $results['count'], "The count should be 4");
+
+        foreach ($results['results'] as $result) {
+            $this->assertInternalType('array', $result, "Each result in the result set should be an array");
+        }
     }
 
     /**
@@ -204,40 +204,40 @@ class QueryTest extends Base
         $this->assertInternalType('array', $result['none'], "The result set should be an array");
         $this->assertEmpty($result['none'], "The result set should be empty");
     }
-    
+
     /**
      * @covers Paradox\toolbox\Query::getAll
      */
     public function testGetAllInTransactionWithCount()
     {
-    	$client = $this->getClient();
-    	$query = $client->getToolbox()->getQuery();
-    
-    	$client->begin();
-    
-    	$aql = "FOR doc in @@collection return doc";
-    	$query->getAll($aql, array('@collection' => $this->collectionName), true);
-    	$client->registerResult('found');
-    
-    	$aql = 'FOR doc in @@collection FILTER doc.name == "InvalidName" return doc';
-    	$query->getAll($aql, array('@collection' => $this->collectionName), true);
-    	$client->registerResult('none');
-    
-    	$result = $client->commit();
-    
-    	//Assert the found
-    	$this->assertInternalType('array', $result['found'], "The result set should be an array");
-    	$this->assertCount(4, $result['found']['results'], "The result set should contain 4 results");
-    	$this->assertEquals(4, $result['found']['count'], "The count should be 4");
-    
-    	foreach ($result['found']['results'] as $document) {
-    		$this->assertInternalType('array', $document, "Each result in the result set should be an array");
-    	}
-    
-    	//Assert none
-    	$this->assertInternalType('array', $result['none']['results'], "The result set should be an array");
-    	$this->assertEmpty($result['none']['results'], "The result set should be empty");
-    	$this->assertEquals(0, $result['none']['count'], "The count should be 0");
+        $client = $this->getClient();
+        $query = $client->getToolbox()->getQuery();
+
+        $client->begin();
+
+        $aql = "FOR doc in @@collection return doc";
+        $query->getAll($aql, array('@collection' => $this->collectionName), true);
+        $client->registerResult('found');
+
+        $aql = 'FOR doc in @@collection FILTER doc.name == "InvalidName" return doc';
+        $query->getAll($aql, array('@collection' => $this->collectionName), true);
+        $client->registerResult('none');
+
+        $result = $client->commit();
+
+        //Assert the found
+        $this->assertInternalType('array', $result['found'], "The result set should be an array");
+        $this->assertCount(4, $result['found']['results'], "The result set should contain 4 results");
+        $this->assertEquals(4, $result['found']['count'], "The count should be 4");
+
+        foreach ($result['found']['results'] as $document) {
+            $this->assertInternalType('array', $document, "Each result in the result set should be an array");
+        }
+
+        //Assert none
+        $this->assertInternalType('array', $result['none']['results'], "The result set should be an array");
+        $this->assertEmpty($result['none']['results'], "The result set should be empty");
+        $this->assertEquals(0, $result['none']['count'], "The count should be 0");
     }
 
     /**

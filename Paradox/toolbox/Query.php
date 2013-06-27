@@ -46,12 +46,12 @@ class Query
     {
         if ($this->_toolbox->getTransactionManager()->hasTransaction()) {
             $statement = json_encode(array('query' => $query, 'bindVars' => $parameters), JSON_FORCE_OBJECT);
-            
-            if($includeCount){
-            	$statement['count'] = true;
-            	$this->_toolbox->getTransactionManager()->addCommand("function(){var cursor = db._createStatement($statement).execute(); return {count: cursor.count(), results: cursor.elements()};}();" , "Query:getAll");
-            }else{
-            	$this->_toolbox->getTransactionManager()->addCommand("db._createStatement($statement).execute().elements();" , "Query:getAll");
+
+            if ($includeCount) {
+                $statement['count'] = true;
+                $this->_toolbox->getTransactionManager()->addCommand("function(){var cursor = db._createStatement($statement).execute(); return {count: cursor.count(), results: cursor.elements()};}();" , "Query:getAll");
+            } else {
+                $this->_toolbox->getTransactionManager()->addCommand("db._createStatement($statement).execute().elements();" , "Query:getAll");
             }
 
         } else {
@@ -62,9 +62,9 @@ class Query
             );
 
             $statement = new Statement($this->_toolbox->getConnection(), $data);
-            
-            if($includeCount){
-            	$statement->setCount(true);
+
+            if ($includeCount) {
+                $statement->setCount(true);
             }
 
             try {
@@ -76,10 +76,10 @@ class Query
 
             $results = $cursor->getAll();
 
-            if($includeCount){
-            	return array('results' => $results, 'count' => $cursor->getCount());
-            }else{
-            	return $results;
+            if ($includeCount) {
+                return array('results' => $results, 'count' => $cursor->getCount());
+            } else {
+                return $results;
             }
         }
     }
