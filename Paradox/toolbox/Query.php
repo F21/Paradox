@@ -42,11 +42,16 @@ class Query
      * @throws QueryException
      * @return array
      */
-    public function getAll($query, array $parameters = array())
+    public function getAll($query, array $parameters = array(), $includeCount = false)
     {
         if ($this->_toolbox->getTransactionManager()->hasTransaction()) {
             $statement = json_encode(array('query' => $query, 'bindVars' => $parameters), JSON_FORCE_OBJECT);
-            $this->_toolbox->getTransactionManager()->addCommand("db._createStatement($statement).execute().elements();" , "Query:getAll");
+            
+            if($includeCount){
+            	$this->_toolbox->getTransactionManager()->addCommand("function(){var cursor = db._createStatement($statement).execute(); return {count: cursor.count(), results: cursor.elements()};}();" , "Query:getAll");
+            }else{
+            	$this->_toolbox->getTransactionManager()->addCommand("db._createStatement($statement).execute().elements();" , "Query:getAll");
+            }
 
         } else {
             $data = array(
@@ -56,6 +61,10 @@ class Query
             );
 
             $statement = new Statement($this->_toolbox->getConnection(), $data);
+            
+            if($includeCount){
+            	$statement->setCount(true);
+            }
 
             try {
                 $cursor = $statement->execute();
@@ -66,7 +75,11 @@ class Query
 
             $results = $cursor->getAll();
 
-            return $results;
+            if($includeCount){
+            	return array('results' => $results, 'count' => $cursor->getCount());
+            }else{
+            	return $results;
+            }
         }
     }
 
