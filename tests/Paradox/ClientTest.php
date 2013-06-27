@@ -433,6 +433,18 @@ class ClientTest extends Base
         $this->assertInternalType('array', $result, "The result set should be an array");
         $this->assertCount(4, $result, "The result set should contain only 4 results");
     }
+    
+    /**
+     * @covers Paradox\Client::getAll
+     */
+    public function testGetAllWithCount()
+    {
+    	$result = $this->client->getAll("FOR doc in $this->collectionName RETURN doc", array(), true);
+    
+    	$this->assertInternalType('array', $result, "The result set should be an array");
+    	$this->assertCount(4, $result['results'], "The result set should contain only 4 results");
+    	$this->assertEquals(4, $result['count'], "The count should be 4");
+    }
 
     /**
      * @covers Paradox\Client::getOne

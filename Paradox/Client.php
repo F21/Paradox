@@ -172,9 +172,9 @@ class Client
      * @param  array  $parameters An optional associative array containing parameters to bind to the query.
      * @return array
      */
-    public function getAll($query, array $parameters = array())
+    public function getAll($query, array $parameters = array(), $includeCount = false)
     {
-        return $this->getToolbox($this->_currentConnection)->getQuery()->getAll($query, $parameters);
+        return $this->getToolbox($this->_currentConnection)->getQuery()->getAll($query, $parameters, $includeCount);
     }
 
     /**
