@@ -48,6 +48,7 @@ class Query
             $statement = json_encode(array('query' => $query, 'bindVars' => $parameters), JSON_FORCE_OBJECT);
             
             if($includeCount){
+            	$statement['count'] = true;
             	$this->_toolbox->getTransactionManager()->addCommand("function(){var cursor = db._createStatement($statement).execute(); return {count: cursor.count(), results: cursor.elements()};}();" , "Query:getAll");
             }else{
             	$this->_toolbox->getTransactionManager()->addCommand("db._createStatement($statement).execute().elements();" , "Query:getAll");
