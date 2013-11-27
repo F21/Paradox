@@ -5,7 +5,8 @@
 
 Master (stable): [![Build Status](https://travis-ci.org/F21/Paradox.png?branch=master)](https://travis-ci.org/F21/Paradox)
 &nbsp;&nbsp;&nbsp;&nbsp;Devel (unstable): [![Build Status](https://travis-ci.org/F21/Paradox.png?branch=devel)](https://travis-ci.org/F21/Paradox)
-Coverage: [![Coverage Status](https://coveralls.io/repos/F21/Paradox/badge.png)](https://coveralls.io/r/F21/Paradox)
+&nbsp;&nbsp;&nbsp;&nbsp;Coverage: [![Coverage Status](https://coveralls.io/repos/F21/Paradox/badge.png)](https://coveralls.io/r/F21/Paradox)
+
 ----------------------------------------------------------------------------
 
 ### Supported ArangoDB Version
