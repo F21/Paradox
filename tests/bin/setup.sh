@@ -12,3 +12,9 @@ fi
 
 sudo apt-get update
 sudo apt-get install arangodb=1.4.3
+
+echo "Waiting until ArangoDB is ready on port 8529"
+while [[ -z `curl -s 'http://127.0.0.1:8529/_api/version' ` ]] ; do
+  echo -n "."
+  sleep 2s
+done
