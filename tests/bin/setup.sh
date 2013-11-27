@@ -11,4 +11,4 @@ elif [ $TRAVIS_BRANCH == "master" ]; then
 fi
 
 sudo apt-get update
-sudo apt-get install arangodb
+sudo apt-get install arangodb=1.4.3
