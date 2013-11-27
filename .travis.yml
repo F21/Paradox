@@ -9,4 +9,9 @@ before_script:
   - ./tests/bin/setup.sh
   - composer install --prefer-source --no-interaction 
 
-script: phpunit --configuration ./tests/phpunit.xml
+script: 
+  - mkdir -p build/logs
+  - phpunit --configuration ./tests/phpunit.xml
+  
+after_script:
+  - php vendor/bin/coveralls
