@@ -60,25 +60,25 @@ class ClientTest extends Base
         }
 
         try {
-            $client->deleteAQLFunction("paradoxtest:helloworld");
+            $client->deleteAQLFunction("paradoxtest::helloworld");
         } catch (\Exception $e) {
             //Ignore the error
         }
 
         try {
-            $client->deleteAQLFunction("paradoxtest:helloworld2");
+            $client->deleteAQLFunction("paradoxtest::helloworld2");
         } catch (\Exception $e) {
             //Ignore the error
         }
 
         try {
-            $client->deleteAQLFunction("paradoxtest1:helloworld");
+            $client->deleteAQLFunction("paradoxtest1::helloworld");
         } catch (\Exception $e) {
             //Ignore the error
         }
 
         try {
-            $client->deleteAQLFunction("paradoxtest2:helloworld");
+            $client->deleteAQLFunction("paradoxtest2::helloworld");
         } catch (\Exception $e) {
             //Ignore the error
         }
@@ -163,25 +163,25 @@ class ClientTest extends Base
         }
 
         try {
-            $client->deleteAQLFunction("paradoxtest:helloworld");
+            $client->deleteAQLFunction("paradoxtest::helloworld");
         } catch (\Exception $e) {
             //Ignore the error
         }
 
         try {
-            $client->deleteAQLFunction("paradoxtest:helloworld2");
+            $client->deleteAQLFunction("paradoxtest::helloworld2");
         } catch (\Exception $e) {
             //Ignore the error
         }
 
         try {
-            $client->deleteAQLFunction("paradoxtest1:helloworld");
+            $client->deleteAQLFunction("paradoxtest1::helloworld");
         } catch (\Exception $e) {
             //Ignore the error
         }
 
         try {
-            $client->deleteAQLFunction("paradoxtest2:helloworld");
+            $client->deleteAQLFunction("paradoxtest2::helloworld");
         } catch (\Exception $e) {
             //Ignore the error
         }
@@ -1333,15 +1333,15 @@ class ClientTest extends Base
     {
         $action = "function(){ return 'hello'; }";
 
-        $result = $this->client->createAQLFunction("paradoxtest:helloworld", $action);
+        $result = $this->client->createAQLFunction("paradoxtest::helloworld", $action);
 
         $registered = $this->client->listAQLFunctions("paradoxtest");
 
         $this->assertCount(1, $registered, "There should only be one paradoxtest function");
-        $this->assertArrayHasKey("paradoxtest:helloworld", $registered, "The AQL function was not registered");
-        $this->assertEquals($action, $registered['paradoxtest:helloworld'], "The AQL function's code does not match");
+        $this->assertArrayHasKey("paradoxtest::helloworld", $registered, "The AQL function was not registered");
+        $this->assertEquals($action, $registered['paradoxtest::helloworld'], "The AQL function's code does not match");
 
-        $this->client->deleteAQLFunction("paradoxtest:helloworld");
+        $this->client->deleteAQLFunction("paradoxtest::helloworld");
     }
 
     /**
@@ -1351,14 +1351,14 @@ class ClientTest extends Base
     {
         $action = "function(){ return 'hello'; }";
 
-        $result = $this->client->createAQLFunction("paradoxtest:helloworld", $action);
+        $result = $this->client->createAQLFunction("paradoxtest::helloworld", $action);
 
         $registered = $this->client->listAQLFunctions("paradoxtest");
 
         $this->assertCount(1, $registered, "There should only be one paradoxtest function");
-        $this->assertArrayHasKey("paradoxtest:helloworld", $registered, "The AQL function was not registered");
+        $this->assertArrayHasKey("paradoxtest::helloworld", $registered, "The AQL function was not registered");
 
-        $this->client->deleteAQLFunction("paradoxtest:helloworld");
+        $this->client->deleteAQLFunction("paradoxtest::helloworld");
 
         $registered = $this->client->listAQLFunctions("paradoxtest");
 
@@ -1372,14 +1372,14 @@ class ClientTest extends Base
     {
         $function = "function(){return 'hello';}";
 
-        $this->client->createAQLFunction("paradoxtest:helloworld", $function);
-        $this->client->createAQLFunction("paradoxtest:helloworld2", $function);
+        $this->client->createAQLFunction("paradoxtest::helloworld", $function);
+        $this->client->createAQLFunction("paradoxtest::helloworld2", $function);
 
         $registered = $this->client->listAQLFunctions("paradoxtest");
 
         $this->assertCount(2, $registered, "There should be 2 paradoxtest functions");
-        $this->assertArrayHasKey("paradoxtest:helloworld", $registered, "The AQL function was not registered");
-        $this->assertArrayHasKey("paradoxtest:helloworld2", $registered, "The AQL function was not registered");
+        $this->assertArrayHasKey("paradoxtest::helloworld", $registered, "The AQL function was not registered");
+        $this->assertArrayHasKey("paradoxtest::helloworld2", $registered, "The AQL function was not registered");
 
         $this->client->deleteAQLFunctionsByNamespace("paradoxtest");
 
@@ -1395,21 +1395,21 @@ class ClientTest extends Base
     {
         $action = "function(){ return 'hello'; }";
 
-        $result = $this->client->createAQLFunction("paradoxtest1:helloworld", $action);
-        $result = $this->client->createAQLFunction("paradoxtest2:helloworld", $action);
+        $result = $this->client->createAQLFunction("paradoxtest1::helloworld", $action);
+        $result = $this->client->createAQLFunction("paradoxtest2::helloworld", $action);
 
         $registered = $this->client->listAQLFunctions("paradoxtest1");
 
         $this->assertCount(1, $registered, "There should only be one paradoxtest function");
-        $this->assertArrayHasKey("paradoxtest1:helloworld", $registered, "The AQL function was not registered");
+        $this->assertArrayHasKey("paradoxtest1::helloworld", $registered, "The AQL function was not registered");
 
         $registered = $this->client->listAQLFunctions("paradoxtest2");
 
         $this->assertCount(1, $registered, "There should only be one paradoxtest function");
-        $this->assertArrayHasKey("paradoxtest2:helloworld", $registered, "The AQL function was not registered");
+        $this->assertArrayHasKey("paradoxtest2::helloworld", $registered, "The AQL function was not registered");
 
-        $this->client->deleteAQLFunction("paradoxtest1:helloworld");
-        $this->client->deleteAQLFunction("paradoxtest2:helloworld");
+        $this->client->deleteAQLFunction("paradoxtest1::helloworld");
+        $this->client->deleteAQLFunction("paradoxtest2::helloworld");
 
         $registered = $this->client->listAQLFunctions("paradoxtest1");
 
