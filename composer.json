@@ -24,9 +24,11 @@
 	],
 	"require" : {
 		"triagens/arangodb" : "dev-devel#c58cd7faf428fe47cbfb803ab6563a9a08cdaef4",
-		"satooshi/php-coveralls": "dev-master",
 		"php" : ">=5.4.0"
 	},
+	"require-dev" : {
+	    "satooshi/php-coveralls": "dev-master"
+	}
 	"autoload" : {
 		"psr-0" : {
 			"Paradox" : "."
