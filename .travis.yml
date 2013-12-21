@@ -7,7 +7,7 @@ php:
 +matrix:
   allow_failures:
     - php: hhvm
-	
+
 before_script:
   - composer self-update
   - chmod 777 ./tests/bin/setup.sh
