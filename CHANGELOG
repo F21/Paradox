@@ -1,9 +1,11 @@
-v1.$.x (2013-XX-XX)
+v1.$.x (2013-12-21)
 -----------------------
 
 * Added toArray() method to convert pods into associative arrays.
 * getNeighbours() for vertices now support passing in an array of labels.
 * getAll() now supports an additional parameter to return the total number of found documents.
+* Support for ArangoDB 1.4.x.
+* Support removing pod property (contributed by @Bethrezen).
 
 v1.3.1 (2013-05-31)
 -----------------------

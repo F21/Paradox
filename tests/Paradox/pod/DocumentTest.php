@@ -246,6 +246,46 @@ class DocumentTest extends Base
 
         $this->fail("Setting an invalid id did not throw an exception");
     }
+    
+    /**
+     * @covers Paradox\pod\Document::remove
+     */
+    public function testRemove()
+    {
+    	//First we need to create a ReflectionClass object
+    	//passing in the class name as a variable
+    	$reflectionClass = new \ReflectionClass('Paradox\pod\Document');
+    
+    	//Then we need to get the property we wish to test
+    	//and make it accessible
+    	$data = $reflectionClass->getProperty('_data');
+    	$data->setAccessible(true);
+    
+    	$this->document->set('mykey', 'myvalue');
+    	$this->document->remove('mykey');
+    
+    	$this->assertArrayNotHasKey('mykey', $data->getValue($this->document), 'The data array should not have a "mykey" key');
+
+    	$this->assertTrue($this->document->hasChanged(), "The document was not marked as changed");
+    }
+    
+    /**
+     * @covers Paradox\pod\Document::remove
+     */
+    public function testRemoveWithSystemKey()
+    {
+    
+    	try {
+    		$this->document->remove('_id');
+    	} catch (\Exception $e) {
+    		$this->assertInstanceOf('Paradox\exceptions\PodException', $e, 'Exception thrown was not a Paradox\exceptions\PodException');
+    
+    		return;
+    	}
+    
+    	$this->fail("Removing a system property on a document did not throw an exception");
+    
+    }
 
     /**
      * @covers Paradox\pod\Document::getKey
