@@ -1,4 +1,4 @@
-v1.$.x (2013-12-21)
+v1.4.0 (2013-12-21)
 -----------------------
 
 * Added toArray() method to convert pods into associative arrays.
