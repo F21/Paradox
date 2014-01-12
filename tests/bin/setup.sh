@@ -1,20 +1,59 @@
 #!/bin/bash
 
-if [ $TRAVIS_BRANCH == "devel" ]; then
-  sudo wget http://www.arangodb.org/repositories/devel/xUbuntu_12.04/Release.key
-  sudo apt-key add - < Release.key  
-  echo 'deb http://www.arangodb.org/repositories/arangodb/xUbuntu_12.04/ /' >> /etc/apt/sources.list.d/arangodb.list
-elif [ $TRAVIS_BRANCH == "master" ]; then
-  sudo wget http://www.arangodb.org/repositories/stable/xUbuntu_12.04/Release.key
-  sudo apt-key add - < Release.key  
-  echo 'deb http://www.arangodb.org/repositories/arangodb/xUbuntu_12.04/ /' >> /etc/apt/sources.list.d/arangodb.list
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+cd $DIR
+
+VERSION=1.4.4
+NAME=ArangoDB-$VERSION
+
+if [ ! -d "$DIR/$NAME" ]; then
+  # download ArangoDB
+  echo "wget http://www.arangodb.org/repositories/travisCI/$NAME.tar.gz"
+  wget http://www.arangodb.org/repositories/travisCI/$NAME.tar.gz
+  echo "tar zxf $NAME.tar.gz"
+  tar zvxf $NAME.tar.gz
 fi
 
-sudo apt-get update
-sudo apt-get install arangodb=1.4.4
+ARCH=$(arch)
+PID=$(echo $PPID)
+TMP_DIR="/tmp/arangodb.$PID"
+PID_FILE="/tmp/arangodb.$PID.pid"
+ARANGODB_DIR="$DIR/$NAME"
+ARANGOD="${ARANGODB_DIR}/bin/arangod_x86_64"
+
+# create database directory
+mkdir ${TMP_DIR}
+
+echo "Starting ArangoDB '${ARANGOD}'"
+
+${ARANGOD} \
+    --database.directory ${TMP_DIR} \
+    --configuration none \
+    --server.endpoint tcp://127.0.0.1:8529 \
+    --javascript.app-path ${ARANGODB_DIR}/js/apps \
+    --javascript.startup-directory ${ARANGODB_DIR}/js \
+    --javascript.modules-path ${ARANGODB_DIR}/js/server/modules:${ARANGODB_DIR}/js/common/modules:${ARANGODB_DIR}/js/node \
+    --javascript.package-path ${ARANGODB_DIR}/js/npm:${ARANGODB_DIR}/js/common/test-data/modules \
+    --javascript.action-directory ${ARANGODB_DIR}/js/actions \
+    --database.maximal-journal-size 1048576 \
+    --server.disable-authentication true \
+    --javascript.gc-interval 1 &
+
+sleep 2
+
+echo "Check for arangod process"
+process=$(ps auxww | grep "bin/arangod" | grep -v grep)
+
+if [ "x$process" == "x" ]; then
+  echo "no 'arangod' process found"
+  echo "ARCH = $ARCH"
+  exit 1
+fi
 
 echo "Waiting until ArangoDB is ready on port 8529"
 while [[ -z `curl -s 'http://127.0.0.1:8529/_api/version' ` ]] ; do
   echo -n "."
   sleep 2s
 done
+
+echo "ArangoDB is up"
