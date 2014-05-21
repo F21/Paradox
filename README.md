@@ -10,7 +10,7 @@ Master (stable): [![Build Status](https://travis-ci.org/F21/Paradox.png?branch=m
 ----------------------------------------------------------------------------
 
 ### Supported ArangoDB Version
-1.4.3
+2.0.7
 
 ### Welcome
 Paradox is an elegant Object Document Mananger (ODM) to use with the ArangoDB Document/Graph database server. It's designed
