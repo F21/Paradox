@@ -32,12 +32,8 @@ ${ARANGOD} \
     --server.endpoint tcp://127.0.0.1:8529 \
     --javascript.app-path ${ARANGODB_DIR}/js/apps \
     --javascript.startup-directory ${ARANGODB_DIR}/js \
-    --javascript.modules-path ${ARANGODB_DIR}/js/server/modules:${ARANGODB_DIR}/js/common/modules:${ARANGODB_DIR}/js/node \
-    --javascript.package-path ${ARANGODB_DIR}/js/npm:${ARANGODB_DIR}/js/common/test-data/modules \
-    --javascript.action-directory ${ARANGODB_DIR}/js/actions \
     --database.maximal-journal-size 1048576 \
-    --server.disable-authentication true \
-    --javascript.gc-interval 1 &
+    --server.disable-authentication true &
 
 sleep 2
 
