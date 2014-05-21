@@ -535,7 +535,7 @@ class CollectionManagerTest extends Base
         $this->assertEquals("long", $indexInfo['fields'][1], 'The first indexed field is not "long"');
         $this->assertArrayNotHasKey('geoJson', $indexInfo, "geoJson is enabled");
         $this->assertFalse($indexInfo['constraint'], "The index was created as a constraint");
-        $this->assertArrayNotHasKey('ignoreNull', $indexInfo, "ignoreNull is enabled");
+        $this->assertFalse($indexInfo['ignoreNull'], "ignoreNull is enabled");
     }
 
     /**
