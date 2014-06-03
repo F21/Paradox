@@ -1,3 +1,9 @@
+v2.0.0 (2014-05-21)
+-----------------------
+* Now using ArangoDB-PHP 2.0.
+* Fixed failing test due to changes in ArangoDB.
+* Set travis to test against ArangoDB 2.0.7.
+
 v1.4.0 (2013-12-21)
 -----------------------
 
