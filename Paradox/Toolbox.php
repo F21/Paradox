@@ -16,6 +16,7 @@ use triagens\ArangoDb\UserHandler;
 use triagens\ArangoDb\AdminHandler;
 use Paradox\toolbox\TransactionManager;
 use triagens\ArangoDb\Transaction;
+use Paradox\pod\Document;
 
 /**
  * Paradox is an elegant Object Document Mananger (ODM) to use with the ArangoDB Document/Graph database server.
@@ -288,11 +289,11 @@ class Toolbox
 
     /**
      * Returns the name of the model we should instantiate given a type.
-     * @param string $type The name of the collection. For toolboxes that manages graphs, only "vertex" and "edge" is valid.
+     * @param Document $pod The document pod.
      */
-    public function formatModel($type)
+    public function formatModel($pod)
     {
-        return $this->_formatter->formatModel($type, $this->_graph);
+        return $this->_formatter->formatModel($pod, $this->_graph);
     }
 
     /**

@@ -1268,7 +1268,7 @@ class PodManagerTest extends Base
 
         $pod = new Document($property->getValue($manager), $this->collectionName);
 
-        $model = $setupModelMethod->invoke($manager, $this->collectionName, $pod);
+        $model = $setupModelMethod->invoke($manager, $pod);
         $this->assertInstanceOf('Paradox\AModel', $model, 'An Paradox\AModel was not created');
 
         $this->assertInstanceOf('Paradox\pod\Document', $model->getPod(), 'The inner pod was not of the type Paradox\pod\Document');

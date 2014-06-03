@@ -1,6 +1,7 @@
 <?php
 namespace Paradox;
 
+use Paradox\pod\Document;
 /**
  * Paradox is an elegant Object Document Mananger (ODM) to use with the ArangoDB Document/Graph database server.
  * Paradox requires ArangoDB-PHP to communication with the server, so it needs to be installed and avaliable.
@@ -18,10 +19,10 @@ class DefaultModelFormatter implements IModelFormatter
 {
     /**
      * Returns \Paradox\GenericModel for all types.
-     * @param string  $type    The type of the pod. For graphs, only "vertex" and "edge" is valid.
+     * @param Document $pod	The document pod.
      * @param boolean $isGraph Whether this pod is being dispensed from a connection that operates on graphs.
      */
-    public function formatModel($type, $isGraph)
+    public function formatModel($pod, $isGraph)
     {
         return '\Paradox\GenericModel';
     }

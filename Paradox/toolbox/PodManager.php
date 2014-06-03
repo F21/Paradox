@@ -596,7 +596,7 @@ class PodManager extends AObservable
         $vertex = new Vertex($this->_toolbox, $data, $new);
         $this->attachEventsToPod($vertex);
 
-        return $this->setupModel("vertex", $vertex);
+        return $this->setupModel($vertex, $vertex);
     }
 
     /**
@@ -609,7 +609,7 @@ class PodManager extends AObservable
         $edge = new Edge($this->_toolbox, $data, $new);
         $this->attachEventsToPod($edge);
 
-        return $this->setupModel("edge", $edge);
+        return $this->setupModel($edge, $edge);
     }
 
     /**
@@ -622,7 +622,7 @@ class PodManager extends AObservable
         $document = new Document($this->_toolbox, $type, $data, $new);
         $this->attachEventsToPod($document);
 
-        return $this->setupModel($type, $document);
+        return $this->setupModel($document, $document);
     }
 
     /**
@@ -636,14 +636,13 @@ class PodManager extends AObservable
 
     /**
      * Convinence function that sets up the model for a pod and associates the model with it.
-     * @param  string              $type The type of the pod.
      * @param  Document            $pod  The pod we want to set up the model for.
      * @throws PodManagerException
-     * @return Ambigous            AModel
+     * @return AModel
      */
-    private function setupModel($type, Document $pod)
+    private function setupModel(Document $pod)
     {
-        $name = $this->_toolbox->formatModel($type);
+        $name = $this->_toolbox->formatModel($pod);
 
         $model = new $name();
 

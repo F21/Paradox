@@ -2,6 +2,7 @@
 namespace tests\Paradox;
 use tests\Base;
 use Paradox\DefaultModelFormatter;
+use Paradox\pod\Document;
 
 /**
  * Tests for the default formatter.
@@ -32,7 +33,11 @@ class DefaultModelFormatterTest extends Base
      */
     public function testFormatModel()
     {
-        $result = $this->modelFormatter->formatModel('sometype', true);
+    	$client = $this->getClient();
+    	
+    	$pod = new Document($client->getToolbox(), 'test');
+    	
+        $result = $this->modelFormatter->formatModel($pod, true);
 
         $this->assertEquals('\Paradox\GenericModel', $result, 'The default model formatter should always return "\Paradox\GenericModel"');
     }

@@ -1,3 +1,8 @@
+v2.1.0 (2014-05-21)
+-----------------------
+* Use ArangoDB 2.1.0 for testing.
+* [BC] Pass pod data to the formatModel() in the model formatter.
+
 v2.0.0 (2014-05-21)
 -----------------------
 * Now using ArangoDB-PHP 2.0.

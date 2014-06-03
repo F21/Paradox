@@ -4,6 +4,7 @@ use tests\Base;
 use Paradox\Debug;
 use Paradox\DefaultModelFormatter;
 use Paradox\Toolbox;
+use Paradox\pod\Document;
 
 /**
  * Tests for the toolbox.
@@ -339,8 +340,10 @@ class ToolboxTest extends Base
 
         $client = $this->getClient();
         $client->setModelFormatter($formatter);
+        
+        $document = new Document($client->getToolbox(), 'sometype');
 
-        $this->assertEquals('SomeModel', $client->getToolbox()->formatModel('sometype'), "The formatted model does not match");
+        $this->assertEquals('SomeModel', $client->getToolbox()->formatModel($document), "The formatted model does not match");
     }
 
     /**
