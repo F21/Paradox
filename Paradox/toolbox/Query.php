@@ -50,9 +50,9 @@ class Query
             if ($includeCount) {
                 $statement['count'] = true;
                 $statement = json_encode($statement, JSON_FORCE_OBJECT);
-                $this->_toolbox->getTransactionManager()->addCommand("function(){var cursor = db._createStatement($statement).execute(); return {count: cursor.count(), results: cursor.elements()};}();" , "Query:getAll");
+                $this->_toolbox->getTransactionManager()->addCommand("function () {var cursor = db._createStatement($statement).execute(); return {count: cursor.count(), results: cursor.elements()};}();" , "Query:getAll");
             } else {
-            	$statement = json_encode($statement, JSON_FORCE_OBJECT);
+                $statement = json_encode($statement, JSON_FORCE_OBJECT);
                 $this->_toolbox->getTransactionManager()->addCommand("db._createStatement($statement).execute().elements();" , "Query:getAll");
             }
 
@@ -98,7 +98,7 @@ class Query
         if ($this->_toolbox->getTransactionManager()->hasTransaction()) {
 
             $statement = json_encode(array('query' => $query, 'bindVars' => $parameters), JSON_FORCE_OBJECT);
-            $this->_toolbox->getTransactionManager()->addCommand("function(){var elements = db._createStatement($statement).execute().elements(); return elements[0] ? elements[0] : null}();" , "Query:getOne");
+            $this->_toolbox->getTransactionManager()->addCommand("function () {var elements = db._createStatement($statement).execute().elements(); return elements[0] ? elements[0] : null}();" , "Query:getOne");
 
         } else {
             $data = array(

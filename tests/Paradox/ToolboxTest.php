@@ -340,7 +340,7 @@ class ToolboxTest extends Base
 
         $client = $this->getClient();
         $client->setModelFormatter($formatter);
-        
+
         $document = new Document($client->getToolbox(), 'sometype');
 
         $this->assertEquals('SomeModel', $client->getToolbox()->formatModel($document), "The formatted model does not match");

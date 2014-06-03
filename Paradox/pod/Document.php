@@ -146,7 +146,8 @@ class Document implements IObserver
      * @param  string  $key     The property we wish to unset.
      * @throws PodException
      */
-    public function remove($key) {
+    public function remove($key)
+    {
         if (in_array($key, $this->getReservedFields())) {
             throw new PodException("You cannot set the property $key. This is reserved for system use.");
         }
@@ -155,7 +156,7 @@ class Document implements IObserver
 
         unset($this->_data[$key]);
     }
-    
+
     /**
      * Get the value of a property from the pod.
      * @param  string       $key

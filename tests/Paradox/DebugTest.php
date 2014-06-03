@@ -58,7 +58,7 @@ class DebugTest extends Base
     {
         $request = new \triagens\ArangoDb\TraceRequest(array("Some-Header" => "somevalue"), "GET", "/_api/some/endpoint", '{"key": "value"}');
 
-        $this->setOutputCallback(function($output){
+        $this->setOutputCallback(function ($output) {
             $this->assertInternalType('string', $output);
         });
 
@@ -75,7 +75,7 @@ class DebugTest extends Base
     {
         $request = new \triagens\ArangoDb\TraceResponse(array("Some-Header" => "somevalue"), 200, '{"key": "value"}', 100);
 
-        $this->setOutputCallback(function($output){
+        $this->setOutputCallback(function ($output) {
             $this->assertInternalType('string', $output);
         });
 
@@ -92,7 +92,7 @@ class DebugTest extends Base
     {
         $request = new \triagens\ArangoDb\TraceResponse(array("Some-Header" => "somevalue"), 400, '{"key": "value"}', 100);
 
-        $this->setOutputCallback(function($output){
+        $this->setOutputCallback(function ($output) {
             $this->assertInternalType('string', $output);
         });
 

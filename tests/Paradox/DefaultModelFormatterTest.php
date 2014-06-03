@@ -33,10 +33,10 @@ class DefaultModelFormatterTest extends Base
      */
     public function testFormatModel()
     {
-    	$client = $this->getClient();
-    	
-    	$pod = new Document($client->getToolbox(), 'test');
-    	
+        $client = $this->getClient();
+
+        $pod = new Document($client->getToolbox(), 'test');
+
         $result = $this->modelFormatter->formatModel($pod, true);
 
         $this->assertEquals('\Paradox\GenericModel', $result, 'The default model formatter should always return "\Paradox\GenericModel"');

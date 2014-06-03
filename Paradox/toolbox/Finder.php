@@ -131,7 +131,7 @@ class Finder
         if ($this->_toolbox->getTransactionManager()->hasTransaction()) {
             $this->_toolbox->getTransactionManager()->addReadCollection($type);
             $statement = json_encode(array('query' => $query, 'bindVars' => $params), JSON_FORCE_OBJECT);
-            $this->_toolbox->getTransactionManager()->addCommand("function(){var elements = db._createStatement($statement).execute().elements(); return elements[0] ? elements[0] : null}();", "Finder:findOne", null, false, array('type' => $type));
+            $this->_toolbox->getTransactionManager()->addCommand("function () {var elements = db._createStatement($statement).execute().elements(); return elements[0] ? elements[0] : null}();", "Finder:findOne", null, false, array('type' => $type));
 
         } else {
             try {
@@ -350,7 +350,7 @@ class Finder
         if ($this->_toolbox->getTransactionManager()->hasTransaction()) {
             $this->_toolbox->getTransactionManager()->addReadCollection($type);
             $statement = json_encode(array('query' => $query, 'bindVars' => $params), JSON_FORCE_OBJECT);
-            $this->_toolbox->getTransactionManager()->addCommand("function(){var elements = db._createStatement($statement).execute().elements(); return elements[0] ? elements[0] : null}();" , "Finder:findOneNear", null, false, array('type' => $type, 'coordinates' => $coordinates));
+            $this->_toolbox->getTransactionManager()->addCommand("function () {var elements = db._createStatement($statement).execute().elements(); return elements[0] ? elements[0] : null}();" , "Finder:findOneNear", null, false, array('type' => $type, 'coordinates' => $coordinates));
 
         } else {
             try {
@@ -535,7 +535,7 @@ class Finder
         if ($this->_toolbox->getTransactionManager()->hasTransaction()) {
             $this->_toolbox->getTransactionManager()->addReadCollection($type);
             $statement = json_encode(array('query' => $query, 'bindVars' => $params), JSON_FORCE_OBJECT);
-            $this->_toolbox->getTransactionManager()->addCommand("function(){var elements = db._createStatement($statement).execute().elements(); return elements[0] ? elements[0] : null}();", "Finder:findOneWithin", null, false, array('type' => $type, 'coordinates' => $coordinates));
+            $this->_toolbox->getTransactionManager()->addCommand("function () {var elements = db._createStatement($statement).execute().elements(); return elements[0] ? elements[0] : null}();", "Finder:findOneWithin", null, false, array('type' => $type, 'coordinates' => $coordinates));
 
         } else {
             try {
@@ -670,7 +670,7 @@ class Finder
         if ($this->_toolbox->getTransactionManager()->hasTransaction()) {
             $this->_toolbox->getTransactionManager()->addReadCollection($type);
             $statement = json_encode(array('query' => $aqlStatement, 'bindVars' => $params), JSON_FORCE_OBJECT);
-            $this->_toolbox->getTransactionManager()->addCommand("function(){var elements = db._createStatement($statement).execute().elements(); return elements[0] ? elements[0] : null}();" , "Finder:searchForOne", null, false, array('type' => $type));
+            $this->_toolbox->getTransactionManager()->addCommand("function () {var elements = db._createStatement($statement).execute().elements(); return elements[0] ? elements[0] : null}();" , "Finder:searchForOne", null, false, array('type' => $type));
 
         } else {
             try {

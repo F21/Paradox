@@ -493,7 +493,7 @@ class TransactionManagerTest extends Base
      */
     public function testExecuteTransaction()
     {
-        $action = "function(param){return param;}";
+        $action = "function (param) {return param;}";
         $result = $this->transactionManager->executeTransaction($action, array($this->collectionName), array($this->collectionName), array('1', '2'));
 
         $this->assertInternalType('array', $result, "The returned result should be an array");
@@ -509,7 +509,7 @@ class TransactionManagerTest extends Base
      */
     public function testExecuteTransactionWithInvalidAction()
     {
-        $action = "function(param){bad function}";
+        $action = "function (param) {bad function}";
 
         try {
             $result = $this->transactionManager->executeTransaction($action, array($this->collectionName), array($this->collectionName), array('1', '2'));

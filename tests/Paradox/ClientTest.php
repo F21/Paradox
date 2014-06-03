@@ -1307,7 +1307,7 @@ class ClientTest extends Base
      */
     public function testExecuteTransaction()
     {
-        $action = "function(){ return 'hello'; }";
+        $action = "function () { return 'hello'; }";
 
         $result = $this->client->executeTransaction($action);
 
@@ -1331,7 +1331,7 @@ class ClientTest extends Base
      */
     public function testCreateAQLFunction()
     {
-        $action = "function(){ return 'hello'; }";
+        $action = "function () { return 'hello'; }";
 
         $result = $this->client->createAQLFunction("paradoxtest::helloworld", $action);
 
@@ -1349,7 +1349,7 @@ class ClientTest extends Base
      */
     public function testDeleteAQLFunction()
     {
-        $action = "function(){ return 'hello'; }";
+        $action = "function () { return 'hello'; }";
 
         $result = $this->client->createAQLFunction("paradoxtest::helloworld", $action);
 
@@ -1370,7 +1370,7 @@ class ClientTest extends Base
      */
     public function testDeleteAQLFunctionsByNamespace()
     {
-        $function = "function(){return 'hello';}";
+        $function = "function () {return 'hello';}";
 
         $this->client->createAQLFunction("paradoxtest::helloworld", $function);
         $this->client->createAQLFunction("paradoxtest::helloworld2", $function);
@@ -1393,7 +1393,7 @@ class ClientTest extends Base
      */
     public function testListAQLFunctions()
     {
-        $action = "function(){ return 'hello'; }";
+        $action = "function () { return 'hello'; }";
 
         $result = $this->client->createAQLFunction("paradoxtest1::helloworld", $action);
         $result = $this->client->createAQLFunction("paradoxtest2::helloworld", $action);

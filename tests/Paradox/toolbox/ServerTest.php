@@ -292,7 +292,7 @@ class ServerTest extends Base
      */
     public function testCreateAQLFunction()
     {
-        $function = "function(){return 'hello';}";
+        $function = "function () {return 'hello';}";
 
         $this->server->createAQLFunction("paradoxtest::helloworld", $function);
 
@@ -328,7 +328,7 @@ class ServerTest extends Base
      */
     public function testDeleteAQLFunction()
     {
-        $function = "function(){return 'hello';}";
+        $function = "function () {return 'hello';}";
 
         $this->server->createAQLFunction("paradoxtest::helloworld", $function);
 
@@ -367,7 +367,7 @@ class ServerTest extends Base
      */
     public function testDeleteAQLFunctionsByNamespace()
     {
-        $function = "function(){return 'hello';}";
+        $function = "function () {return 'hello';}";
 
         $this->server->createAQLFunction("paradoxtest::helloworld", $function);
         $this->server->createAQLFunction("paradoxtest::helloworld2", $function);
@@ -409,7 +409,7 @@ class ServerTest extends Base
      */
     public function testListAQLFunctions()
     {
-        $function = "function(){return 'hello';}";
+        $function = "function () {return 'hello';}";
 
         $this->server->createAQLFunction("paradoxtest::helloworld", $function);
         $this->server->createAQLFunction("paradoxtest2::helloworld", $function);

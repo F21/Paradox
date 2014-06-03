@@ -203,7 +203,7 @@ class PodManager extends AObservable
                                //In a transaction, since all commands are executed in a block on commit, the pod will not have a saved state if it has a previous
                                //store command. This determines if that is the case and rewrites the command as a replace.
                                if ($id !== false) {
-                                       $this->addTransactionCommand("function(){graph.removeEdge(graph.getEdge(result.$id._id)); return true;}();", "PodManager:store", $model, true);
+                                       $this->addTransactionCommand("function () {graph.removeEdge(graph.getEdge(result.$id._id)); return true;}();", "PodManager:store", $model, true);
                                        $this->addTransactionCommand($this->generateCreateEdgeCommand($fromKeyIsJSVar, $fromKey, $toKeyIsJSVar, $toKey, $pod->toTransactionJSON(), "result.$id._key", true, $pod->getLabel()), "PodManager:store", $model, true);
                                } else {
                                        $this->addTransactionCommand($this->generateCreateEdgeCommand($fromKeyIsJSVar, $fromKey, $toKeyIsJSVar, $toKey, $pod->toTransactionJSON(), null, false, $pod->getLabel()), "PodManager:store", $model, true);
@@ -219,7 +219,7 @@ class PodManager extends AObservable
                         //We delete the pod then save it, because ArangoDB does not provide a way to update the To and From vertices.
                         if ($this->hasTransaction()) {
                             $this->_toolbox->getTransactionManager()->addWriteCollection($this->_toolbox->getEdgeCollectionName());
-                            $this->addTransactionCommand("function(){graph.removeEdge(graph.getEdge('{$pod->getId()}')); return true;}();", "PodManager:store", $model, true);
+                            $this->addTransactionCommand("function () {graph.removeEdge(graph.getEdge('{$pod->getId()}')); return true;}();", "PodManager:store", $model, true);
                             $this->addTransactionCommand($this->generateCreateEdgeCommand($fromKeyIsJSVar, $fromKey, $toKeyIsJSVar, $toKey, $pod->toTransactionJSON(), $pod->getKey(), false, $pod->getLabel()), "PodManager:store", $model, true);
                         } else {
                             $id = $pod->getId();
@@ -300,9 +300,9 @@ class PodManager extends AObservable
                     $this->_toolbox->getTransactionManager()->addWriteCollection($this->_toolbox->getVertexCollectionName());
 
                     if ($id !== false) {
-                        $this->addTransactionCommand("function(){graph.removeVertex(graph.getVertex(result.$id._id)); return true;}();", "PodManager:delete", $model, true);
+                        $this->addTransactionCommand("function () {graph.removeVertex(graph.getVertex(result.$id._id)); return true;}();", "PodManager:delete", $model, true);
                     } else {
-                        $this->addTransactionCommand("function(){graph.removeVertex(graph.getVertex('{$pod->getId()}')); return true;}();", "PodManager:delete", $model, true);
+                        $this->addTransactionCommand("function () {graph.removeVertex(graph.getVertex('{$pod->getId()}')); return true;}();", "PodManager:delete", $model, true);
                     }
 
                 } else {
@@ -316,9 +316,9 @@ class PodManager extends AObservable
                     $this->_toolbox->getTransactionManager()->addWriteCollection($this->_toolbox->getEdgeCollectionName());
 
                     if ($id !== false) {
-                        $this->addTransactionCommand("function(){graph.removeEdge(graph.getEdge(result.$id._id)); return true;}();", "PodManager:delete", $model, true);
+                        $this->addTransactionCommand("function () {graph.removeEdge(graph.getEdge(result.$id._id)); return true;}();", "PodManager:delete", $model, true);
                     } else {
-                        $this->addTransactionCommand("function(){graph.removeEdge(graph.getEdge('{$pod->getId()}')); return true;}();", "PodManager:delete", $model, true);
+                        $this->addTransactionCommand("function () {graph.removeEdge(graph.getEdge('{$pod->getId()}')); return true;}();", "PodManager:delete", $model, true);
                     }
 
                 } else {
@@ -333,9 +333,9 @@ class PodManager extends AObservable
                     $this->_toolbox->getTransactionManager()->addWriteCollection($pod->getType());
 
                     if ($id !== false) {
-                        $this->addTransactionCommand("function(){db.{$pod->getType()}.remove(result.$id._id, true); return true;}();", "PodManager:delete", $model);
+                        $this->addTransactionCommand("function () {db.{$pod->getType()}.remove(result.$id._id, true); return true;}();", "PodManager:delete", $model);
                     } else {
-                        $this->addTransactionCommand("function(){db.{$pod->getType()}.remove('{$pod->getId()}', true); return true;}();", "PodManager:delete", $model);
+                        $this->addTransactionCommand("function () {db.{$pod->getType()}.remove('{$pod->getId()}', true); return true;}();", "PodManager:delete", $model);
                     }
 
                 } else {
@@ -373,7 +373,7 @@ class PodManager extends AObservable
 
                         if ($this->hasTransaction()) {
                             $this->_toolbox->getTransactionManager()->addReadCollection($this->_toolbox->getVertexCollectionName());
-                            $this->addTransactionCommand("function(){var temp = graph.getVertex('$id'); return temp ? temp._properties : null}();", "PodManager:load", null, true, array('type' => $type));
+                            $this->addTransactionCommand("function () {var temp = graph.getVertex('$id'); return temp ? temp._properties : null}();", "PodManager:load", null, true, array('type' => $type));
                         } else {
                             $vertex = $driver->getVertex($this->_toolbox->getGraph(), $id);
 

@@ -339,7 +339,7 @@ class AObservableTest extends Base
 
         $observer->expects($this->once())
         ->method('onEvent')
-        ->will($this->returnCallback(function($eventObject){
+        ->will($this->returnCallback(function ($eventObject) {
             $eventObject->stopPropagation();
         }));
 
