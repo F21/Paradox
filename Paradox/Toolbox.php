@@ -17,6 +17,7 @@ use triagens\ArangoDb\AdminHandler;
 use Paradox\toolbox\TransactionManager;
 use triagens\ArangoDb\Transaction;
 use Paradox\pod\Document;
+use Paradox\toolbox\DatabaseManager;
 
 /**
  * Paradox is an elegant Object Document Mananger (ODM) to use with the ArangoDB Document/Graph database server.
@@ -56,6 +57,12 @@ class Toolbox
      * @var string
      */
     private $_graph;
+    
+    /**
+     * The name of the database.
+     * @var string
+     */
+    private $_database;
 
     /**
      * An instance of the ArangoDB-PHP DocumentHandler or GraphHandler.
@@ -86,6 +93,12 @@ class Toolbox
      * @var CollectionManager
      */
     private $_collectionManager;
+    
+    /**
+     * An instance of the database manager.
+     * @var DatabaseManager
+     */
+    private $_databaseManager;
 
     /**
      * An instance of the finder.
@@ -126,18 +139,24 @@ class Toolbox
     /**
      * Sets up the toolbox and create and inject any required components.
      * @param string          $endpoint  The endpoint to the server, for example tcp://localhost:8529
-     * @param string          $username  The username to use for the connection.
-     * @param string          $password  The password to use for the connection.
-     * @param string          $graph     The name of the graph, if you want the connection to work on a graph. For connections working on standard collections/documents, you don't need this.
+     * @param array $options {
+     * 		An array of optional configuration options
+     * 		
+     * 		@type string $username The username to use for the connection.
+     * 		@type string $password The password to use for the connection.
+     * 		@type string $graph    The name of the graph, if you want the connection to work on a graph. For connections working on standard collections/documents, you don't need this.
+     * 		@type string $database The name of the database to use. Defaults to _system
+     * }
      * @param Debug           $debug     A reference to the debugger.
      * @param IModelFormatter $formatter A reference to the model formatter.
      */
-    public function __construct($endpoint, $username = null, $password = null, $graph = null, Debug $debug, IModelFormatter $formatter)
+    public function __construct($endpoint, array $options = array(), Debug $debug, IModelFormatter $formatter)
     {
         $this->_endpoint = $endpoint;
-        $this->_username = $username;
-        $this->_password = $password;
-        $this->_graph = $graph;
+        $this->_username = isset($options['username']) ? $options['username'] : null;
+        $this->_password = isset($options['password']) ? $options['password'] : null;
+        $this->_graph = isset($options['graph']) ? $options['graph'] : null;
+        $this->_database = isset($options['database']) ? $options['database'] : '_system';
         $this->_debug = $debug;
         $this->_formatter = $formatter;
 
@@ -148,6 +167,7 @@ class Toolbox
         $this->_server = new Server($this);
         $this->_graphManager = new GraphManager($this);
         $this->_transactionManager = new TransactionManager($this);
+        $this->_databaseManager = new DatabaseManager($this);
     }
 
     /**
@@ -193,6 +213,14 @@ class Toolbox
     public function isGraph()
     {
         return (bool) $this->_graph;
+    }
+    
+    /**
+     * Get the name of the database
+     */
+    public function getDatabase()
+    {
+    	return $this->_database;
     }
 
     /**
@@ -243,12 +271,19 @@ class Toolbox
 
     /**
      * Get the graph manager.
-     * @throws ToolboxException
      * @return \Paradox\toolbox\GraphManager
      */
     public function getGraphManager()
     {
         return $this->_graphManager;
+    }
+    
+    /**
+     * Get the database manager.
+     * @return \Paradox\toolbox\DatabaseManager
+     */
+    public function getDatabaseManager(){
+    	return $this->_databaseManager;
     }
 
     /**
@@ -331,7 +366,8 @@ class Toolbox
                     // password for basic authorization
                     ConnectionOptions::OPTION_AUTH_PASSWD    => $this->_password,
                     ConnectionOptions::OPTION_TRACE          => $this->_debug,
-                    ConnectionOptions::OPTION_ENHANCED_TRACE => true
+                    ConnectionOptions::OPTION_ENHANCED_TRACE => true,
+            		ConnectionOptions::OPTION_DATABASE       => $this->_database
             );
 
             $this->_connection = new Connection($options);

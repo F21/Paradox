@@ -82,6 +82,12 @@ class ClientTest extends Base
         } catch (\Exception $e) {
             //Ignore the error
         }
+        
+        try{
+        	$client->deleteDatabase("mynewtestdatabase");
+        }catch (\Exception $e){
+        	//Ignore the error
+        }
 
         $client->createCollection($this->collectionName);
         $client->createGeoIndex($this->collectionName, 'geofield');
@@ -155,6 +161,12 @@ class ClientTest extends Base
         } catch (\Exception $e) {
             //Ignore any errors
         }
+        
+        try{
+        	$client->deleteDatabase("mynewtestdatabase");
+        }catch (\Exception $e){
+        	//Ignore the error
+        }
 
         try {
             $client->deleteUser('testuser');
@@ -204,7 +216,7 @@ class ClientTest extends Base
         $currentConnection = $reflectionClass->getProperty('_currentConnection');
         $currentConnection->setAccessible(true);
 
-        $client = new Client('tcp://someendpoint', 'someuser', 'somepassword');
+        $client = new Client('tcp://someendpoint', array('username' => 'someuser', 'password' => 'somepassword'));
 
         //Check the toolbox
         $this->assertArrayHasKey('default', $toolboxes->getValue($client), 'Setting a connection when instantiating the client should add it under the "default" key');
@@ -234,7 +246,7 @@ class ClientTest extends Base
         $toolboxes = $reflectionClass->getProperty('_toolboxes');
         $toolboxes->setAccessible(true);
 
-        $this->client->addConnection('newconnection', 'tcp://someendpoint', 'someuser', 'somepassword', $this->graphName);
+        $this->client->addConnection('newconnection', 'tcp://someendpoint', array('username' => 'someuser', 'password' => 'somepassword', 'graph' => $this->graphName));
 
         //Check the toolbox
         $this->assertArrayHasKey('newconnection', $toolboxes->getValue($this->client), 'The "newconnection" connection was not added');
@@ -262,7 +274,7 @@ class ClientTest extends Base
         $currentConnection = $reflectionClass->getProperty('_currentConnection');
         $currentConnection->setAccessible(true);
 
-        $this->client->addConnection('newconnection', 'tcp://someendpoint', 'someuser', 'somepassword', $this->graphName);
+        $this->client->addConnection('newconnection', 'tcp://someendpoint', array('username' => 'someuser', 'password' => 'somepassword', 'graph' => $this->graphName));
         $this->client->useConnection('newconnection');
 
         $this->assertEquals('newconnection', $currentConnection->getValue($this->client), 'The current connection should be set to "newconnection"');
@@ -290,7 +302,7 @@ class ClientTest extends Base
     public function testGetCurrentConnection()
     {
         $client = $this->getClient();
-        $client->addConnection('newtestconnection', 'tcp://localhost:8529', 'root', '');
+        $client->addConnection('newtestconnection', 'tcp://localhost:8529', array('username' => 'root', 'password' => ''));
         $client->useConnection('newtestconnection');
 
         $currentConnection = $client->getCurrentConnection();
@@ -322,7 +334,7 @@ class ClientTest extends Base
     public function testGetToolbox()
     {
         $client = $this->getClient();
-        $client->addConnection('mynewconnection', 'tcp://localhost:8529', 'root', '');
+        $client->addConnection('mynewconnection', 'tcp://localhost:8529', array('username' => 'root', 'password' => ''));
 
         $toolbox = $client->getToolbox('mynewconnection');
 
@@ -553,6 +565,56 @@ class ClientTest extends Base
         }
 
         $this->fail("Tried to get info on a graph that does not exist, but no exception was thrown");
+    }
+    
+    /**
+     * @covers Paradox\Client::createDatabase
+     * @covers Paradox\Client::deleteDatabase
+     */
+    public function testCreateAndDeleteDatabase()
+    {
+    	$this->client->createDatabase('mynewtestdatabase');
+    
+    	//Check that the database exists
+    	$databaseInfo = $this->client->getDatabaseInfo('mynewtestdatabase');
+    
+    	$this->assertInternalType('array', $databaseInfo, 'The database info should be an array');
+    	$this->assertNotEmpty($databaseInfo, 'The database info should not be empty');
+    
+    	//Delete the database
+    	$this->client->deleteDatabase('mynewtestdatabase');
+    
+    	try {
+    		$databaseInfo = $this->client->getDatabaseInfo('mynewtestdatabase');
+    	} catch (\Exception $e) {
+    		$this->assertInstanceOf('Paradox\exceptions\DatabaseManagerException', $e, 'Exception thrown was not a Paradox\exceptions\DatabaseManagerException');
+    
+    		return;
+    	}
+    
+    	$this->fail("Tried to get info on a database that does not exist, but no exception was thrown");
+    }
+    
+    /**
+     * @covers Paradox\Client::getDatabaseInfo
+     */
+    public function testGetDatabaseInfo()
+    {
+    	//Check that the database exists
+    	$databaseInfo = $this->client->getDatabaseInfo('_system');
+    
+    	$this->assertInternalType('array', $databaseInfo, 'The database info should be an array');
+    	$this->assertNotEmpty($databaseInfo, 'The database info should not be empty');
+    }
+    
+    /**
+     * @covers Paradox\Client::listDatabases
+     */
+    public function testListDatabases()
+    {
+    	$databases = $this->client->listDatabases();
+    
+    	$this->assertGreaterThanOrEqual(1, count($databases), "There should be at least 1 database on the server");
     }
 
     /**

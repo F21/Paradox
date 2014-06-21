@@ -123,7 +123,7 @@ class ToolboxTest extends Base
         $debugger = new Debug();
         $formatter = new DefaultModelFormatter();
 
-        $toolbox = new Toolbox($this->getDefaultEndpoint(), $this->getDefaultUsername(), $this->getDefaultPassword(), 'mygraph', $debugger, $formatter);
+        $toolbox = new Toolbox($this->getDefaultEndpoint(), array('username' => $this->getDefaultUsername(), 'password' => $this->getDefaultPassword(), 'graph' => 'mygraph'), $debugger, $formatter);
 
         $this->assertEquals($this->getDefaultEndpoint(), $endpointProperty->getValue($toolbox), "The endpoint does not match");
         $this->assertEquals($this->getDefaultUsername(), $usernameProperty->getValue($toolbox), "The username does not match");
@@ -220,6 +220,14 @@ class ToolboxTest extends Base
     {
         $this->assertFalse($this->toolbox->isGraph(), "The toolbox does not manage a graph, so isGraph() should return false");
     }
+    
+    /**
+     * @covers Paradox\Toolbox::getDatabase
+     */
+    public function testgetDatabase()
+    {
+    	$this->assertEquals('_system', $this->toolbox->getDatabase(), "The database name does not match");
+    }
 
     /**
      * @covers Paradox\Toolbox::getVertexCollectionName
@@ -293,6 +301,14 @@ class ToolboxTest extends Base
     public function testGetGraphManager()
     {
         $this->assertInstanceOf('Paradox\toolbox\GraphManager', $this->toolbox->getGraphManager(), 'Getting the graph manager did not return a Paradox\toolbox\GraphManager');
+    }
+    
+    /**
+     * @covers Paradox\Toolbox::getDatabaseManager
+     */
+    public function testGetDatabaseManager()
+    {
+    	$this->assertInstanceOf('Paradox\toolbox\DatabaseManager', $this->toolbox->getDatabaseManager(), 'Getting the database manager did not return a Paradox\toolbox\DatabaseManager');
     }
 
     /**

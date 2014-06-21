@@ -19,9 +19,9 @@ class Base extends \PHPUnit_Framework_TestCase
      * @param  string          $graph    The optional name of the graph to manage.
      * @return \Paradox\Client
      */
-    protected function getClient($endpoint = 'tcp://localhost:8529', $username = 'root', $password = '', $graph = null)
+    protected function getClient($endpoint = 'tcp://localhost:8529', $username = 'root', $password = '', $graph = null, $database = null)
     {
-        return $client = new Client($endpoint, $username, $password, $graph);
+        return $client = new Client($endpoint, array('username' => $username, 'password' => $password, 'graph' => $graph, 'database' => $database));
     }
 
     protected function getDefaultEndpoint()

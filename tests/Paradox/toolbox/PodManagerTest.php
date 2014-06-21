@@ -1113,7 +1113,7 @@ class PodManagerTest extends Base
     }
 
     /**
-     * @covers Paradox\toolbox\PodManager::GenerateCreateEdgeCommand
+     * @covers Paradox\toolbox\PodManager::generateCreateEdgeCommand
      */
     public function testGenerateCreateEdgeCommand()
     {

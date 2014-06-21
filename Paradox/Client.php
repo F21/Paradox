@@ -45,17 +45,22 @@ class Client
     /**
      * Instantiates the client with a set of connection credentials. The connection will have the name 'default'.
      * @param string $endpoint The endpoint to the server, for example tcp://localhost:8529
-     * @param string $username The username to use for the connection.
-     * @param string $password The password to use for the connection.
-     * @param string $graph    The name of the graph, if you want the connection to work on a graph. For connections working on standard collections/documents, you don't need this.
+     * @param array $options {
+     * 		An array of optional configuration options
+     * 		
+     * 		@type string $username The username to use for the connection.
+     * 		@type string $password The password to use for the connection.
+     * 		@type string $graph    The name of the graph, if you want the connection to work on a graph. For connections working on standard collections/documents, you don't need this.
+     * 		@type string $database The name of the database to use. Defaults to _system
+     * } 
      */
-    public function __construct($endpoint = null, $username = null, $password = null, $graph = null)
+    public function __construct($endpoint = null, array $options = array())
     {
         $this->_debug = new Debug(false);
         $this->_modelFormatter = new DefaultModelFormatter();
 
         if ($endpoint) {
-            $this->addConnection('default', $endpoint, $username, $password, $graph);
+            $this->addConnection('default', $endpoint, $options);
             $this->useConnection('default');
         }
     }
@@ -64,13 +69,18 @@ class Client
      * Add a connection to the client
      * @param string $name     The name of the connection.
      * @param string $endpoint The endpoint to the server, for example tcp://localhost:8529.
-     * @param string $username The username to use for the connection.
-     * @param string $password The password to use for the connection.
-     * @param string $graph    The name of the graph, if you want the connection to work on a graph. For connections working on standard collections/documents, you don't need this.
+     * @param array $options {
+     * 		An array of optional configuration options
+     * 		
+     * 		@type string $username The username to use for the connection.
+     * 		@type string $password The password to use for the connection.
+     * 		@type string $graph    The name of the graph, if you want the connection to work on a graph. For connections working on standard collections/documents, you don't need this.
+     * 		@type string $database The name of the database to use. Defaults to _system
+     * }
      */
-    public function addConnection($name, $endpoint, $username = '', $password = '', $graph = null)
+    public function addConnection($name, $endpoint, array $options = array())
     {
-        $this->_toolboxes[$name] = new Toolbox($endpoint, $username, $password, $graph, $this->_debug, $this->_modelFormatter);
+        $this->_toolboxes[$name] = new Toolbox($endpoint, $options, $this->_debug, $this->_modelFormatter);
     }
 
     /**
@@ -269,7 +279,7 @@ class Client
     {
         $toolbox = $this->getToolbox($this->_currentConnection);
         $toolbox->getGraphManager()->createGraph($name);
-        $this->addConnection($name, $toolbox->getEndpoint(), $toolbox->getUsername(), $toolbox->getPassword(), $name);
+        $this->addConnection($name, $toolbox->getEndpoint(), array('username' => $toolbox->getUsername(), 'password' => $toolbox->getPassword(), 'graph' => $name, 'database' => $toolbox->getDatabase()));
 
         return true;
     }
@@ -292,6 +302,41 @@ class Client
     public function deleteGraph($name)
     {
         return $this->getToolbox($this->_currentConnection)->getGraphManager()->deleteGraph($name);
+    }
+    
+    /**
+     * Create a database.
+     * @param string $name The name of the database.
+     * @return boolean
+     */
+    public function createDatabase($name){
+    	return $this->getToolbox($this->_currentConnection)->getDatabaseManager()->createDatabase($name);
+    }
+    
+    /**
+     * Delete a database.
+     * @param string $name The name of the database.
+     * @return boolean
+     */
+    public function deleteDatabase($name){
+    	return $this->getToolbox($this->_currentConnection)->getDatabaseManager()->deleteDatabase($name);
+    }
+    
+    /**
+     * Get information about a database.
+     * @param string $name The name of the database.
+     * @return array
+     */
+    public function getDatabaseInfo($name){
+    	return $this->getToolbox($this->_currentConnection)->getDatabaseManager()->getDatabaseInfo($name);
+    }
+    
+    /**
+     * List the databases availiable in the server.
+     * @return array
+     */
+    public function listDatabases(){
+    	return $this->getToolbox($this->_currentConnection)->getDatabaseManager()->listDatabases();
     }
 
     /**

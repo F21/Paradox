@@ -1,10 +1,17 @@
+v2.1.1 (2014-06-20)
+-----------------------
+
+* [BC] An array is used to pass in the username, password, graph name and database name when instantiating the client, adding a connection or instantiating a toolbox.
+
 v2.1.0 (2014-05-21)
 -----------------------
+
 * Use ArangoDB 2.1.0 for testing.
 * [BC] Pass pod data to the formatModel() in the model formatter.
 
 v2.0.0 (2014-05-21)
 -----------------------
+
 * Now using ArangoDB-PHP 2.0.
 * Fixed failing test due to changes in ArangoDB.
 * Set travis to test against ArangoDB 2.0.7.
