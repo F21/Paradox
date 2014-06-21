@@ -216,11 +216,19 @@ class Toolbox
     }
     
     /**
-     * Get the name of the database
+     * Get the name of the database.
      */
     public function getDatabase()
     {
     	return $this->_database;
+    }
+    
+    /**
+     * Set the database.
+     */
+    public function setDatabase($name){
+    	$this->_database = $name;
+    	$this->_connection = null;
     }
 
     /**

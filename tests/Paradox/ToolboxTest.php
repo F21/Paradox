@@ -113,6 +113,9 @@ class ToolboxTest extends Base
 
         $graphProperty = $reflectionClass->getProperty('_graph');
         $graphProperty->setAccessible(true);
+        
+        $databaseProperty = $reflectionClass->getProperty('_database');
+        $databaseProperty->setAccessible(true);
 
         $debugProperty = $reflectionClass->getProperty('_debug');
         $debugProperty->setAccessible(true);
@@ -131,6 +134,7 @@ class ToolboxTest extends Base
         $this->assertEquals('mygraph', $graphProperty->getValue($toolbox), "The graph does not match");
         $this->assertEquals($debugger, $debugProperty->getValue($toolbox), "The debugger does not match");
         $this->assertEquals($formatter, $formatterProperty->getValue($toolbox), "The formatter does not match");
+        $this->assertEquals('_system', $databaseProperty->getValue($toolbox), "The database does not match");
 
         //Check to see that the constructor has created all the tools in the toolbox
         $finderProperty = $reflectionClass->getProperty('_finder');
@@ -224,9 +228,37 @@ class ToolboxTest extends Base
     /**
      * @covers Paradox\Toolbox::getDatabase
      */
-    public function testgetDatabase()
+    public function testGetDatabase()
     {
     	$this->assertEquals('_system', $this->toolbox->getDatabase(), "The database name does not match");
+    }
+    
+    /**
+     * @covers Paradox\Toolbox::setDatabase
+     */
+    public function testSetDatabase()
+    {
+    	//First we need to create a ReflectionClass object
+        //passing in the class name as a variable
+        $reflectionClass = new \ReflectionClass('Paradox\Toolbox');
+
+        //Then we need to get the property we wish to test
+        //and make it accessible
+        $databaseProperty = $reflectionClass->getProperty('_database');
+        $databaseProperty->setAccessible(true);
+
+        $debugger = new Debug();
+        $formatter = new DefaultModelFormatter();
+
+        $toolbox = new Toolbox($this->getDefaultEndpoint(), array('username' => $this->getDefaultUsername(), 'password' => $this->getDefaultPassword(), 'graph' => 'mygraph'), $debugger, $formatter);
+
+        $toolbox->setDatabase('testdatabase');
+        
+        $this->assertEquals('testdatabase', $databaseProperty->getValue($toolbox), "The database was not changed after setting it.");
+        
+        $connection = $toolbox->getConnection();
+        
+        $this->assertEquals('testdatabase', $connection->getDatabase(), 'The connection triagens\ArangoDb\Connection object did not have the correct database selected.');
     }
 
     /**

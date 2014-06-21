@@ -616,6 +616,16 @@ class ClientTest extends Base
     
     	$this->assertGreaterThanOrEqual(1, count($databases), "There should be at least 1 database on the server");
     }
+    
+    /**
+     * @covers Paradox\Client::useDatabase
+     */
+    public function testUseDatabase()
+    {
+    	$databases = $this->client->useDatabase('testdatabase');
+    
+    	$this->assertEquals('testdatabase', $this->client->getToolbox()->getDatabase(), "The database was not changed after calling useDatabase()");
+    }
 
     /**
      * @covers Paradox\Client::getVertexCollectionName()

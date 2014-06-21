@@ -338,6 +338,13 @@ class Client
     public function listDatabases(){
     	return $this->getToolbox($this->_currentConnection)->getDatabaseManager()->listDatabases();
     }
+    
+    /**
+     * Selects a database
+     */
+    public function useDatabase($name){
+    	$this->getToolbox($this->_currentConnection)->setDatabase($name);
+    }
 
     /**
      * Get the name of the vertex collection.
