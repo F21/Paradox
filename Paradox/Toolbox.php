@@ -140,7 +140,7 @@ class Toolbox
      * Sets up the toolbox and create and inject any required components.
      * @param string $endpoint The endpoint to the server, for example tcp://localhost:8529
      * @param array  $options  {
-     *      An array of optional configuration options
+     *                         An array of optional configuration options
      *
      * 		@type string $username The username to use for the connection.
      * 		@type string $password The password to use for the connection.
