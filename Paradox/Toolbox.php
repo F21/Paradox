@@ -57,7 +57,7 @@ class Toolbox
      * @var string
      */
     private $_graph;
-    
+
     /**
      * The name of the database.
      * @var string
@@ -93,7 +93,7 @@ class Toolbox
      * @var CollectionManager
      */
     private $_collectionManager;
-    
+
     /**
      * An instance of the database manager.
      * @var DatabaseManager
@@ -138,10 +138,10 @@ class Toolbox
 
     /**
      * Sets up the toolbox and create and inject any required components.
-     * @param string          $endpoint  The endpoint to the server, for example tcp://localhost:8529
-     * @param array $options {
-     * 		An array of optional configuration options
-     * 		
+     * @param string $endpoint The endpoint to the server, for example tcp://localhost:8529
+     * @param array  $options  {
+     *      An array of optional configuration options
+     *
      * 		@type string $username The username to use for the connection.
      * 		@type string $password The password to use for the connection.
      * 		@type string $graph    The name of the graph, if you want the connection to work on a graph. For connections working on standard collections/documents, you don't need this.
@@ -214,21 +214,22 @@ class Toolbox
     {
         return (bool) $this->_graph;
     }
-    
+
     /**
      * Get the name of the database.
      */
     public function getDatabase()
     {
-    	return $this->_database;
+        return $this->_database;
     }
-    
+
     /**
      * Set the database.
      */
-    public function setDatabase($name){
-    	$this->_database = $name;
-    	$this->_connection = null;
+    public function setDatabase($name)
+    {
+        $this->_database = $name;
+        $this->_connection = null;
     }
 
     /**
@@ -285,13 +286,14 @@ class Toolbox
     {
         return $this->_graphManager;
     }
-    
+
     /**
      * Get the database manager.
      * @return \Paradox\toolbox\DatabaseManager
      */
-    public function getDatabaseManager(){
-    	return $this->_databaseManager;
+    public function getDatabaseManager()
+    {
+        return $this->_databaseManager;
     }
 
     /**
@@ -375,7 +377,7 @@ class Toolbox
                     ConnectionOptions::OPTION_AUTH_PASSWD    => $this->_password,
                     ConnectionOptions::OPTION_TRACE          => $this->_debug,
                     ConnectionOptions::OPTION_ENHANCED_TRACE => true,
-            		ConnectionOptions::OPTION_DATABASE       => $this->_database
+                    ConnectionOptions::OPTION_DATABASE       => $this->_database
             );
 
             $this->_connection = new Connection($options);

@@ -143,7 +143,7 @@ class Document implements IObserver
 
     /**
      * Remove a property for this pod.
-     * @param  string  $key     The property we wish to unset.
+     * @param  string       $key The property we wish to unset.
      * @throws PodException
      */
     public function remove($key)

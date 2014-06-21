@@ -223,8 +223,8 @@ class CollectionManager
 
     /**
      * Create a cap constraint on a collection.
-     * @param string $collection The name of the collection.
-     * @param int    $size       The size of the cap constraint.
+     * @param  string                     $collection The name of the collection.
+     * @param  int                        $size       The size of the cap constraint.
      * @link http://www.arangodb.org/manuals/current/IndexCapHttp.html
      * @throws CollectionManagerException
      * @return int                        Id of the index created.
@@ -243,11 +243,11 @@ class CollectionManager
 
     /**
      * Create a geo index on a collection.
-     * @param string       $collection The name of the collection.
-     * @param array|string $fields     An array of 2 fields representing the latitude and longitude, or 1 field representing a list attribute.
-     * @param boolean      $geoJson    Whether to use geoJson or not.
-     * @param boolean      $constraint Whether this is a constraint or not.
-     * @param boolean      $ignoreNull Whether to ignore null.
+     * @param  string                     $collection The name of the collection.
+     * @param  array|string               $fields     An array of 2 fields representing the latitude and longitude, or 1 field representing a list attribute.
+     * @param  boolean                    $geoJson    Whether to use geoJson or not.
+     * @param  boolean                    $constraint Whether this is a constraint or not.
+     * @param  boolean                    $ignoreNull Whether to ignore null.
      * @link http://www.arangodb.org/manuals/current/IndexGeoHttp.html
      * @throws CollectionManagerException
      * @return int                        Id of the index created.
@@ -270,9 +270,9 @@ class CollectionManager
 
     /**
      * Create a hash index on a collection.
-     * @param string       $collection The name of the collection.
-     * @param array|string $fields     The array of fields or a string representing 1 field.
-     * @param boolean      $unique     Whether the values in the index should be unique or not.
+     * @param  string                     $collection The name of the collection.
+     * @param  array|string               $fields     The array of fields or a string representing 1 field.
+     * @param  boolean                    $unique     Whether the values in the index should be unique or not.
      * @link http://www.arangodb.org/manuals/current/IndexHashHttp.html
      * @throws CollectionManagerException
      * @return int                        Id of the index created.
@@ -295,9 +295,9 @@ class CollectionManager
 
     /**
      * Create a fulltext index on a collection.
-     * @param string $collection The name of the collection.
-     * @param string $field      The field to index. Fulltext indices can currently only index one field.
-     * @param int    $minLength  The minimum length of words to index.
+     * @param  string                     $collection The name of the collection.
+     * @param  string                     $field      The field to index. Fulltext indices can currently only index one field.
+     * @param  int                        $minLength  The minimum length of words to index.
      * @link http://www.arangodb.org/manuals/current/IndexFulltextHttp.html
      * @throws CollectionManagerException
      * @return int                        Id of the index created.
@@ -322,9 +322,9 @@ class CollectionManager
 
     /**
      * Create a skip-list index on a collection.
-     * @param string       $collection The name of the collection.
-     * @param array|string $fields     The array of fields or a string representing 1 field.
-     * @param bool         $unique     Whether the index is unique or not.
+     * @param  string                     $collection The name of the collection.
+     * @param  array|string               $fields     The array of fields or a string representing 1 field.
+     * @param  bool                       $unique     Whether the index is unique or not.
      * @link http://www.arangodb.org/manuals/current/IndexSkiplistHttp.html
      * @throws CollectionManagerException
      * @return int                        Id of the index created.

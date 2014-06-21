@@ -636,7 +636,7 @@ class PodManager extends AObservable
 
     /**
      * Convinence function that sets up the model for a pod and associates the model with it.
-     * @param  Document            $pod  The pod we want to set up the model for.
+     * @param  Document            $pod The pod we want to set up the model for.
      * @throws PodManagerException
      * @return AModel
      */

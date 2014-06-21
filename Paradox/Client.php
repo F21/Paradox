@@ -45,14 +45,14 @@ class Client
     /**
      * Instantiates the client with a set of connection credentials. The connection will have the name 'default'.
      * @param string $endpoint The endpoint to the server, for example tcp://localhost:8529
-     * @param array $options {
-     * 		An array of optional configuration options
-     * 		
+     * @param array  $options  {
+     *      An array of optional configuration options
+     *
      * 		@type string $username The username to use for the connection.
      * 		@type string $password The password to use for the connection.
      * 		@type string $graph    The name of the graph, if you want the connection to work on a graph. For connections working on standard collections/documents, you don't need this.
      * 		@type string $database The name of the database to use. Defaults to _system
-     * } 
+     * }
      */
     public function __construct($endpoint = null, array $options = array())
     {
@@ -69,9 +69,9 @@ class Client
      * Add a connection to the client
      * @param string $name     The name of the connection.
      * @param string $endpoint The endpoint to the server, for example tcp://localhost:8529.
-     * @param array $options {
-     * 		An array of optional configuration options
-     * 		
+     * @param array  $options  {
+     *                         An array of optional configuration options
+     *
      * 		@type string $username The username to use for the connection.
      * 		@type string $password The password to use for the connection.
      * 		@type string $graph    The name of the graph, if you want the connection to work on a graph. For connections working on standard collections/documents, you don't need this.
@@ -303,47 +303,52 @@ class Client
     {
         return $this->getToolbox($this->_currentConnection)->getGraphManager()->deleteGraph($name);
     }
-    
+
     /**
      * Create a database.
-     * @param string $name The name of the database.
+     * @param  string  $name The name of the database.
      * @return boolean
      */
-    public function createDatabase($name){
-    	return $this->getToolbox($this->_currentConnection)->getDatabaseManager()->createDatabase($name);
+    public function createDatabase($name)
+    {
+        return $this->getToolbox($this->_currentConnection)->getDatabaseManager()->createDatabase($name);
     }
-    
+
     /**
      * Delete a database.
-     * @param string $name The name of the database.
+     * @param  string  $name The name of the database.
      * @return boolean
      */
-    public function deleteDatabase($name){
-    	return $this->getToolbox($this->_currentConnection)->getDatabaseManager()->deleteDatabase($name);
+    public function deleteDatabase($name)
+    {
+        return $this->getToolbox($this->_currentConnection)->getDatabaseManager()->deleteDatabase($name);
     }
-    
+
     /**
      * Get information about a database.
-     * @param string $name The name of the database.
+     * @param  string $name The name of the database.
      * @return array
      */
-    public function getDatabaseInfo($name){
-    	return $this->getToolbox($this->_currentConnection)->getDatabaseManager()->getDatabaseInfo($name);
+    public function getDatabaseInfo($name)
+    {
+        return $this->getToolbox($this->_currentConnection)->getDatabaseManager()->getDatabaseInfo($name);
     }
-    
+
     /**
      * List the databases availiable in the server.
      * @return array
      */
-    public function listDatabases(){
-    	return $this->getToolbox($this->_currentConnection)->getDatabaseManager()->listDatabases();
+    public function listDatabases()
+    {
+        return $this->getToolbox($this->_currentConnection)->getDatabaseManager()->listDatabases();
     }
-    
+
     /**
      * Selects a database
      */
-    public function useDatabase($name){
-    	$this->getToolbox($this->_currentConnection)->setDatabase($name);
+    public function useDatabase($name)
+    {
+        $this->getToolbox($this->_currentConnection)->setDatabase($name);
     }
 
     /**
@@ -472,10 +477,10 @@ class Client
 
     /**
      * Create a cap constraint on a collection.
-     * @param string $collection The name of the collection.
-     * @param int    $size       The size of the cap constraint.
+     * @param  string $collection The name of the collection.
+     * @param  int    $size       The size of the cap constraint.
      * @link http://www.arangodb.org/manuals/current/IndexCapHttp.html
-     * @return int Id of the index created.
+     * @return int    Id of the index created.
      */
     public function createCapConstraint($collection, $size)
     {
@@ -484,13 +489,13 @@ class Client
 
     /**
      * Create a geo index on a collection.
-     * @param string       $collection The name of the collection.
-     * @param array|string $fields     An array of 2 fields representing the latitude and longitude, or 1 field representing a list attribute.
-     * @param boolean      $geoJson    Whether to use geoJson or not.
-     * @param boolean      $constraint Whether this is a constraint or not.
-     * @param boolean      $ignoreNull Whether to ignore null.
+     * @param  string       $collection The name of the collection.
+     * @param  array|string $fields     An array of 2 fields representing the latitude and longitude, or 1 field representing a list attribute.
+     * @param  boolean      $geoJson    Whether to use geoJson or not.
+     * @param  boolean      $constraint Whether this is a constraint or not.
+     * @param  boolean      $ignoreNull Whether to ignore null.
      * @link http://www.arangodb.org/manuals/current/IndexGeoHttp.html
-     * @return int Id of the index created.
+     * @return int          Id of the index created.
      */
     public function createGeoIndex($collection, $fields, $geoJson = null, $constraint = null, $ignoreNull = null)
     {
@@ -499,11 +504,11 @@ class Client
 
     /**
      * Create a hash index on a collection.
-     * @param string       $collection The name of the collection.
-     * @param array|string $fields     The array of fields or a string representing 1 field.
-     * @param boolean      $unique     Whether the values in the index should be unique or not.
+     * @param  string       $collection The name of the collection.
+     * @param  array|string $fields     The array of fields or a string representing 1 field.
+     * @param  boolean      $unique     Whether the values in the index should be unique or not.
      * @link http://www.arangodb.org/manuals/current/IndexHashHttp.html
-     * @return int Id of the index created.
+     * @return int          Id of the index created.
      */
     public function createHashIndex($collection, $fields, $unique = null)
     {
@@ -512,11 +517,11 @@ class Client
 
     /**
      * Create a fulltext index on a collection.
-     * @param string $collection The name of the collection.
-     * @param string $field      The field to index. Fulltext indices can currently only index one field.
-     * @param int    $minLength  The minimum length of words to index.
+     * @param  string $collection The name of the collection.
+     * @param  string $field      The field to index. Fulltext indices can currently only index one field.
+     * @param  int    $minLength  The minimum length of words to index.
      * @link http://www.arangodb.org/manuals/current/IndexFulltextHttp.html
-     * @return int Id of the index created.
+     * @return int    Id of the index created.
      */
     public function createFulltextIndex($collection, $field, $minLength = null)
     {
@@ -525,11 +530,11 @@ class Client
 
     /**
      * Create a skip-list index on a collection.
-     * @param string       $collection The name of the collection.
-     * @param array|string $fields     The array of fields or a string representing 1 field.
-     * @param bool         $unique     Whether the index is unique or not.
+     * @param  string       $collection The name of the collection.
+     * @param  array|string $fields     The array of fields or a string representing 1 field.
+     * @param  bool         $unique     Whether the index is unique or not.
      * @link http://www.arangodb.org/manuals/current/IndexSkiplistHttp.html
-     * @return int Id of the index created.
+     * @return int          Id of the index created.
      */
     public function createSkipListIndex($collection, $fields, $unique = null)
     {

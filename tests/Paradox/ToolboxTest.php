@@ -113,7 +113,7 @@ class ToolboxTest extends Base
 
         $graphProperty = $reflectionClass->getProperty('_graph');
         $graphProperty->setAccessible(true);
-        
+
         $databaseProperty = $reflectionClass->getProperty('_database');
         $databaseProperty->setAccessible(true);
 
@@ -224,21 +224,21 @@ class ToolboxTest extends Base
     {
         $this->assertFalse($this->toolbox->isGraph(), "The toolbox does not manage a graph, so isGraph() should return false");
     }
-    
+
     /**
      * @covers Paradox\Toolbox::getDatabase
      */
     public function testGetDatabase()
     {
-    	$this->assertEquals('_system', $this->toolbox->getDatabase(), "The database name does not match");
+        $this->assertEquals('_system', $this->toolbox->getDatabase(), "The database name does not match");
     }
-    
+
     /**
      * @covers Paradox\Toolbox::setDatabase
      */
     public function testSetDatabase()
     {
-    	//First we need to create a ReflectionClass object
+        //First we need to create a ReflectionClass object
         //passing in the class name as a variable
         $reflectionClass = new \ReflectionClass('Paradox\Toolbox');
 
@@ -253,11 +253,11 @@ class ToolboxTest extends Base
         $toolbox = new Toolbox($this->getDefaultEndpoint(), array('username' => $this->getDefaultUsername(), 'password' => $this->getDefaultPassword(), 'graph' => 'mygraph'), $debugger, $formatter);
 
         $toolbox->setDatabase('testdatabase');
-        
+
         $this->assertEquals('testdatabase', $databaseProperty->getValue($toolbox), "The database was not changed after setting it.");
-        
+
         $connection = $toolbox->getConnection();
-        
+
         $this->assertEquals('testdatabase', $connection->getDatabase(), 'The connection triagens\ArangoDb\Connection object did not have the correct database selected.');
     }
 
@@ -334,13 +334,13 @@ class ToolboxTest extends Base
     {
         $this->assertInstanceOf('Paradox\toolbox\GraphManager', $this->toolbox->getGraphManager(), 'Getting the graph manager did not return a Paradox\toolbox\GraphManager');
     }
-    
+
     /**
      * @covers Paradox\Toolbox::getDatabaseManager
      */
     public function testGetDatabaseManager()
     {
-    	$this->assertInstanceOf('Paradox\toolbox\DatabaseManager', $this->toolbox->getDatabaseManager(), 'Getting the database manager did not return a Paradox\toolbox\DatabaseManager');
+        $this->assertInstanceOf('Paradox\toolbox\DatabaseManager', $this->toolbox->getDatabaseManager(), 'Getting the database manager did not return a Paradox\toolbox\DatabaseManager');
     }
 
     /**

@@ -19,8 +19,8 @@ class DefaultModelFormatter implements IModelFormatter
 {
     /**
      * Returns \Paradox\GenericModel for all types.
-     * @param Document $pod	The document pod.
-     * @param boolean $isGraph Whether this pod is being dispensed from a connection that operates on graphs.
+     * @param Document $pod     The document pod.
+     * @param boolean  $isGraph Whether this pod is being dispensed from a connection that operates on graphs.
      */
     public function formatModel($pod, $isGraph)
     {

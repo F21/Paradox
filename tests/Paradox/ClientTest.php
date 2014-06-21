@@ -82,11 +82,11 @@ class ClientTest extends Base
         } catch (\Exception $e) {
             //Ignore the error
         }
-        
-        try{
-        	$client->deleteDatabase("mynewtestdatabase");
-        }catch (\Exception $e){
-        	//Ignore the error
+
+        try {
+            $client->deleteDatabase("mynewtestdatabase");
+        } catch (\Exception $e) {
+            //Ignore the error
         }
 
         $client->createCollection($this->collectionName);
@@ -161,11 +161,11 @@ class ClientTest extends Base
         } catch (\Exception $e) {
             //Ignore any errors
         }
-        
-        try{
-        	$client->deleteDatabase("mynewtestdatabase");
-        }catch (\Exception $e){
-        	//Ignore the error
+
+        try {
+            $client->deleteDatabase("mynewtestdatabase");
+        } catch (\Exception $e) {
+            //Ignore the error
         }
 
         try {
@@ -566,65 +566,65 @@ class ClientTest extends Base
 
         $this->fail("Tried to get info on a graph that does not exist, but no exception was thrown");
     }
-    
+
     /**
      * @covers Paradox\Client::createDatabase
      * @covers Paradox\Client::deleteDatabase
      */
     public function testCreateAndDeleteDatabase()
     {
-    	$this->client->createDatabase('mynewtestdatabase');
-    
-    	//Check that the database exists
-    	$databaseInfo = $this->client->getDatabaseInfo('mynewtestdatabase');
-    
-    	$this->assertInternalType('array', $databaseInfo, 'The database info should be an array');
-    	$this->assertNotEmpty($databaseInfo, 'The database info should not be empty');
-    
-    	//Delete the database
-    	$this->client->deleteDatabase('mynewtestdatabase');
-    
-    	try {
-    		$databaseInfo = $this->client->getDatabaseInfo('mynewtestdatabase');
-    	} catch (\Exception $e) {
-    		$this->assertInstanceOf('Paradox\exceptions\DatabaseManagerException', $e, 'Exception thrown was not a Paradox\exceptions\DatabaseManagerException');
-    
-    		return;
-    	}
-    
-    	$this->fail("Tried to get info on a database that does not exist, but no exception was thrown");
+        $this->client->createDatabase('mynewtestdatabase');
+
+        //Check that the database exists
+        $databaseInfo = $this->client->getDatabaseInfo('mynewtestdatabase');
+
+        $this->assertInternalType('array', $databaseInfo, 'The database info should be an array');
+        $this->assertNotEmpty($databaseInfo, 'The database info should not be empty');
+
+        //Delete the database
+        $this->client->deleteDatabase('mynewtestdatabase');
+
+        try {
+            $databaseInfo = $this->client->getDatabaseInfo('mynewtestdatabase');
+        } catch (\Exception $e) {
+            $this->assertInstanceOf('Paradox\exceptions\DatabaseManagerException', $e, 'Exception thrown was not a Paradox\exceptions\DatabaseManagerException');
+
+            return;
+        }
+
+        $this->fail("Tried to get info on a database that does not exist, but no exception was thrown");
     }
-    
+
     /**
      * @covers Paradox\Client::getDatabaseInfo
      */
     public function testGetDatabaseInfo()
     {
-    	//Check that the database exists
-    	$databaseInfo = $this->client->getDatabaseInfo('_system');
-    
-    	$this->assertInternalType('array', $databaseInfo, 'The database info should be an array');
-    	$this->assertNotEmpty($databaseInfo, 'The database info should not be empty');
+        //Check that the database exists
+        $databaseInfo = $this->client->getDatabaseInfo('_system');
+
+        $this->assertInternalType('array', $databaseInfo, 'The database info should be an array');
+        $this->assertNotEmpty($databaseInfo, 'The database info should not be empty');
     }
-    
+
     /**
      * @covers Paradox\Client::listDatabases
      */
     public function testListDatabases()
     {
-    	$databases = $this->client->listDatabases();
-    
-    	$this->assertGreaterThanOrEqual(1, count($databases), "There should be at least 1 database on the server");
+        $databases = $this->client->listDatabases();
+
+        $this->assertGreaterThanOrEqual(1, count($databases), "There should be at least 1 database on the server");
     }
-    
+
     /**
      * @covers Paradox\Client::useDatabase
      */
     public function testUseDatabase()
     {
-    	$databases = $this->client->useDatabase('testdatabase');
-    
-    	$this->assertEquals('testdatabase', $this->client->getToolbox()->getDatabase(), "The database was not changed after calling useDatabase()");
+        $databases = $this->client->useDatabase('testdatabase');
+
+        $this->assertEquals('testdatabase', $this->client->getToolbox()->getDatabase(), "The database was not changed after calling useDatabase()");
     }
 
     /**

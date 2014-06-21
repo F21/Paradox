@@ -18,8 +18,8 @@ interface IModelFormatter
 {
     /**
      * Returns the name of the class to instantiate given the type and whether this is for a graph or not.
-     * @param Document $pod The document pod.
-     * @param boolean $isGraph Whether this is for a connection that manages graphs or not.
+     * @param Document $pod     The document pod.
+     * @param boolean  $isGraph Whether this is for a connection that manages graphs or not.
      */
     public function formatModel($pod, $isGraph);
 }

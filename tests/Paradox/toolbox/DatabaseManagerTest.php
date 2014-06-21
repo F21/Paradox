@@ -58,11 +58,11 @@ class DatabaseManagerTest extends Base
         } catch (\Exception $e) {
             //Ignore any errors
         }
-        
+
         try {
-        	$client->deleteDatabase($this->databaseName . '2');
+            $client->deleteDatabase($this->databaseName . '2');
         } catch (\Exception $e) {
-        	//Ignore any errors
+            //Ignore any errors
         }
     }
 
@@ -202,7 +202,7 @@ class DatabaseManagerTest extends Base
 
         foreach ($databases as $database) {
             $this->assertInternalType('string', $database, "Database name is not a string");
-        }     
+        }
     }
 
     /**
@@ -223,44 +223,44 @@ class DatabaseManagerTest extends Base
 
         $this->fail("Tried to get the databases of a nonexistent server but an exception was not thrown");
     }
-    
+
     /**
      * @covers Paradox\toolbox\DatabaseManager::getConnection
      */
     public function testGetConnectionWithNoDatabase()
     {
-    	$reflectionClass = new \ReflectionClass('Paradox\toolbox\DatabaseManager');
-    
-    	$method = $reflectionClass->getMethod('getConnection');
-    	$method->setAccessible(true);
-    
-    	$manager = new DatabaseManager($this->getClient()->getToolbox());
-    
-    	//With the ids being javascript properties
-    	$result = $method->invoke($manager);
-    	
-    	$this->assertInstanceOf('triagens\ArangoDb\Connection', $result, 'A triagens\ArangoDb\Connection should be returned');
-    	
-    	$this->assertEquals('_system', $result->getDatabase(), "The default database _system was not used when we requested a connection without specifying a database");
+        $reflectionClass = new \ReflectionClass('Paradox\toolbox\DatabaseManager');
+
+        $method = $reflectionClass->getMethod('getConnection');
+        $method->setAccessible(true);
+
+        $manager = new DatabaseManager($this->getClient()->getToolbox());
+
+        //With the ids being javascript properties
+        $result = $method->invoke($manager);
+
+        $this->assertInstanceOf('triagens\ArangoDb\Connection', $result, 'A triagens\ArangoDb\Connection should be returned');
+
+        $this->assertEquals('_system', $result->getDatabase(), "The default database _system was not used when we requested a connection without specifying a database");
     }
-    
+
     /**
      * @covers Paradox\toolbox\DatabaseManager::getConnection
      */
     public function testGetConnectionWithDatabase()
     {
-    	$reflectionClass = new \ReflectionClass('Paradox\toolbox\DatabaseManager');
-    
-    	$method = $reflectionClass->getMethod('getConnection');
-    	$method->setAccessible(true);
-    
-    	$manager = new DatabaseManager($this->getClient()->getToolbox());
-    
-    	//With the ids being javascript properties
-    	$result = $method->invoke($manager, 'testdatabase');
-    	 
-    	$this->assertInstanceOf('triagens\ArangoDb\Connection', $result, 'A triagens\ArangoDb\Connection should be returned');
-    	 
-    	$this->assertEquals('testdatabase', $result->getDatabase(), "The database 'testdatabase' was not used when we requested a connection specifying it");
+        $reflectionClass = new \ReflectionClass('Paradox\toolbox\DatabaseManager');
+
+        $method = $reflectionClass->getMethod('getConnection');
+        $method->setAccessible(true);
+
+        $manager = new DatabaseManager($this->getClient()->getToolbox());
+
+        //With the ids being javascript properties
+        $result = $method->invoke($manager, 'testdatabase');
+
+        $this->assertInstanceOf('triagens\ArangoDb\Connection', $result, 'A triagens\ArangoDb\Connection should be returned');
+
+        $this->assertEquals('testdatabase', $result->getDatabase(), "The database 'testdatabase' was not used when we requested a connection specifying it");
     }
 }
