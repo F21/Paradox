@@ -786,7 +786,8 @@ class ClientTest extends Base
         $collectionInfo = $this->client->listCollections(true, true);
 
         //Status 2 = unloaded
-        $this->assertEquals(2, $collectionInfo[$this->collectionName]['status'], "The collection was not unloaded");
+        //Status 4 = in process of being unloaded
+        $this->assertContains($collectionInfo[$this->collectionName]['status'], array(2, 4), "The collection was not unloaded");
 
         //Load the collection
         $this->client->loadCollection($this->collectionName);
@@ -817,8 +818,9 @@ class ClientTest extends Base
         //Verify it is unloaded. Note that we list collections, because using getCollectionInfo() loads the collection.
         $collectionInfo = $this->client->listCollections(true, true);
 
-        //Status 2 = loaded
-        $this->assertEquals(2, $collectionInfo[$this->collectionName]['status'], "The collection was not unloaded");
+        //Status 2 = unloaded
+        //Status 4 = in process of being unloaded
+        $this->assertContains($collectionInfo[$this->collectionName]['status'], array(2, 4), "The collection was not unloaded");
     }
 
     /**
