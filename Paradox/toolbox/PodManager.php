@@ -138,8 +138,8 @@ class PodManager extends AObservable
                    case $pod instanceof Edge:
 
                        //Check to see if we have existing keys for the _to and _from vertices
-                       $fromKey = $pod->getFromKey();
-                       $toKey = $pod->getToKey();
+                       $fromKey = $pod->getFromId();
+                       $toKey = $pod->getToId();
                        $fromKeyIsJSVar = false;
                        $toKeyIsJSVar = false;
 
@@ -159,6 +159,7 @@ class PodManager extends AObservable
                                    } else {
                                        $this->store($from);
                                        $fromKey = $from->getPod()->getId();
+                                       $pod->setFrom($from);
                                    }
                                }
 
@@ -184,6 +185,7 @@ class PodManager extends AObservable
                                    } else {
                                        $this->store($to);
                                        $toKey = $to->getPod()->getId();
+                                       $pod->setTo($to);
                                    }
                                }
 

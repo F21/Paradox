@@ -82,25 +82,24 @@ class GraphManager
      */
     public function getGraphInfo($name)
     {
-        try {
-            $graphHandler = $this->_toolbox->getGraphHandler();
+        $graphHandler = $this->_toolbox->getGraphHandler();
 
-            $graph = $graphHandler->getGraph($name);
+        $graph = $graphHandler->getGraph($name);
 
-            $result = array();
-
-            $result['id'] = $graph->getKey();
-            $result['name'] = $graph->getKey();
-            $result['revision'] = $graph->getRevision();
-            $result['verticesCollection'] = $graph->getVerticesCollection();
-            $result['edgesCollection'] = $graph->getEdgesCollection();
-
-            return $result;
-
-        } catch (\Exception $e) {
-            $normalised = $this->_toolbox->normaliseDriverExceptions($e);
-            throw new GraphManagerException($normalised['message'], $normalised['code']);
+        if(!$graph){
+            throw new GraphManagerException("Graph does not exist");
         }
+
+        $result = array();
+
+        $result['id'] = $graph->getKey();
+        $result['name'] = $graph->getKey();
+        $result['revision'] = $graph->getRevision();
+        $result['verticesCollection'] = $graph->getVerticesCollection();
+        $result['edgesCollection'] = $graph->getEdgesCollection();
+
+        return $result;
+
     }
 
     /**

@@ -92,6 +92,23 @@ class Edge extends Document
     }
 
     /**
+     * Get the id of the to node by checking for it in the actual _to property or checking an internal property.
+     * This is used because when documents are retrieved from the server, we will not have a model in the _to property.
+     * This allows us to lazy load any vertices we need later.
+     * @return null|string
+     */
+    public function getToId()
+    {
+        if (isset($this->_to)) {
+            return $this->_to->getPod()->getId();
+        } elseif (isset($this->_data['_to'])) {
+            return $this->_data['_to'];
+        } else {
+            return null;
+        }
+    }
+
+    /**
      * Set the "from" vertex of the edge.
      * @param AModel $from
      */
@@ -113,6 +130,23 @@ class Edge extends Document
             return $this->_from->getPod()->getKey();
         } elseif (isset($this->_data['_from'])) {
             return $this->parseIdForKey($this->_data['_from']);
+        } else {
+            return null;
+        }
+    }
+
+    /**
+     * Get the id of the to node by checking for it in the actual _from property or checking an internal property.
+     * This is used because when documents are retrieved from the server, we will not have a model in the _from property.
+     * This allows us to lazy load any vertices we need later.
+     * @return null|string
+     */
+    public function getFromId()
+    {
+        if (isset($this->_from)) {
+            return $this->_from->getPod()->getId();
+        } elseif (isset($this->_data['_from'])) {
+            return $this->_data['_from'];
         } else {
             return null;
         }

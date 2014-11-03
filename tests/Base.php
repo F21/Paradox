@@ -17,6 +17,7 @@ class Base extends \PHPUnit_Framework_TestCase
      * @param  string          $username The username.
      * @param  string          $password The password.
      * @param  string          $graph    The optional name of the graph to manage.
+     * @param  string          $database The optional database to use.
      * @return \Paradox\Client
      */
     protected function getClient($endpoint = 'tcp://localhost:8529', $username = 'root', $password = '', $graph = null, $database = null)

@@ -64,9 +64,10 @@ class EdgeTest extends Base
      * @param  string          $username The username.
      * @param  string          $password The password.
      * @param  string          $graph    The optional name of the graph to manage.
+     * @param  string          $database The optional database to use.
      * @return \Paradox\Client
      */
-    protected function getClient($endpoint = null, $username = null, $password = null, $graph = null)
+    protected function getClient($endpoint = null, $username = null, $password = null, $graph = null, $database = null)
     {
         if (!$endpoint) {
             $endpoint = $this->getDefaultEndpoint();
