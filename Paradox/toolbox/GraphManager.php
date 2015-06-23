@@ -298,7 +298,7 @@ class GraphManager
         $directionParameter = $this->_toolbox->generateBindingParameter('direction', $params);
 
         if (!$labels) {
-            $query = "FOR $placeholder in NEIGHBORS(@$vertexCollection, @$edgeCollection, @$vertexParameter, @$directionParameter) " . $aql . " return $placeholder.vertex";
+            $query = "FOR $placeholder in NEIGHBORS(@$vertexCollection, @$edgeCollection, @$vertexParameter, @$directionParameter, {includeData: true}) " . $aql . " return $placeholder";
         } else {
             $count = 0;
 
@@ -317,7 +317,7 @@ class GraphManager
                 $count++;
             }
 
-            $query = "FOR $placeholder in NEIGHBORS(@$vertexCollection, @$edgeCollection, @$vertexParameter, @$directionParameter, [$labelString]) " . $aql . " return $placeholder.vertex";
+            $query = "FOR $placeholder in NEIGHBORS(@$vertexCollection, @$edgeCollection, @$vertexParameter, @$directionParameter, [$labelString], {includeData: true}) " . $aql . " return $placeholder";
         }
 
         $params[$vertexCollection] = $this->_toolbox->getVertexCollectionName();
